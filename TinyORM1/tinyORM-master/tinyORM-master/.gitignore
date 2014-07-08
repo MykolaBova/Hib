@@ -1,0 +1,4 @@
+locallib/
+*.sqlite
+*.swp
+*.class

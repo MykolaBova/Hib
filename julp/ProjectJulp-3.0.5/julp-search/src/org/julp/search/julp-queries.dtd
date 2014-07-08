@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary indentification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/q3.dtd
+
+--><!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE queries SYSTEM "q3.dtd">
+
+    <queries>
+    ...
+    </queries>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT queries (query|executable)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT executable (#PCDATA)>
+<!ATTLIST executable id CDATA #IMPLIED>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT query (order_by|having|group_by|adhoc_mappings|where|joins|from|ansi_join|select)*>
+<!ATTLIST query
+    id CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT select (#PCDATA)>
+<!ATTLIST select
+    distinct CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT ansi_join EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT from (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT joins (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT where (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT adhoc_mappings (adhoc)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT adhoc (tables|conditions|columns)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT columns (column)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT conditions (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT group_by (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT having (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT order_by (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT column (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT tables (#PCDATA)>

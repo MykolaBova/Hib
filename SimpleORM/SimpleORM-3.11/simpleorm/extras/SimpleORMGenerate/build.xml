@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!-- 
+====================================================================== 
+    2008-12-01
+	SimpleORMGenerate
+	Ant build file and porting of generator code to 3.9 by Martin Holst Swende,
+	Generator code mostly by Richard Schmidt,
+	
+	You can compile it to be used as an ant-task, but that is optional. If you
+	want to minimize third-party dependencies, you can run jar-no-ant and
+	call the generator by main()-method.
+    ====================================================================== 
+     -->
+<project basedir="." default="jar" name="SimpleORMGenerate">
+
+
+	<path id="cp">
+		<fileset dir="${ant.library.dir}">
+			<include name="**/ant.jar" />
+		</fileset>
+	</path>
+
+
+	<target name="init">
+		<mkdir dir="built/classes" />
+	</target>
+	
+	<target name="clean">
+	   <delete dir="built"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src;src-optional" destdir="built/classes" debug="on" classpath="${cp}"/>
+	</target>
+	<target name="compile-no-ant" depends="init">
+		<javac srcdir="." destdir="built/classes" verbose="yes" debug="on" classpath="${cp}">
+			<include name="src/**" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<copy verbose="false" file="src-optional/simpleorm/quickstart/generatortasks" todir="built/classes" />
+		<jar basedir="built/classes" jarfile="built/SimpleORMGenerate.jar">
+			<manifest>
+				<attribute name="Main-Class" value="${mainclass}" />
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="jar-no-ant" depends="compile-no-ant">
+		<copy verbose="false" file="generatortasks" todir="built" />
+		<jar basedir="built/classes" jarfile="built/SimpleORMGenerate_noant.jar">
+			<manifest>
+				<attribute name="Main-Class" value="${mainclass}" />
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+	</target>
+
+
+	<taskdef resource="generatortasks" classpath="built/SimpleORMGenerate.jar;../../lib/hsqldb-1_8_0_10.jar" />
+	<target name="test" depends="jar" description="Creates Simpleorm classes for the hsql database created by main Simpleorm tests in ../..">
+			<property name="database.url" value="jdbc:hsqldb:../../hsqlTempFiles" />
+			<property name="database.user" value="sa"/>
+			<property name="database.password" value=""/>
+			<property name="database.driver" value="org.hsqldb.jdbcDriver" />
+			<property name="quickstart.getters_and_setters" value="true"/><!-- Generate getters and setters ? -->
+			<property name="quickstart.file" value="built/src-generated"/><!-- Where to place the generated classes  -->
+			<property name="quickstart.INiceNameFormatter" value="simpleorm.quickstart.DefaultFormatter"/> 
+			<property name="quickstart.use_one_package" value="true"/>
+			<property name="quickstart.packagename" value="simpleorm.new_db"/><!-- The package name for the generated classes -->
+		<generate_sorm/>
+	</target>
+
+</project>

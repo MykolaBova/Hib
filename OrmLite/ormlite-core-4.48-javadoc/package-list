@@ -1,0 +1,10 @@
+com.j256.ormlite.dao
+com.j256.ormlite.db
+com.j256.ormlite.field
+com.j256.ormlite.field.types
+com.j256.ormlite.logger
+com.j256.ormlite.misc
+com.j256.ormlite.stmt
+com.j256.ormlite.stmt.mapped
+com.j256.ormlite.support
+com.j256.ormlite.table

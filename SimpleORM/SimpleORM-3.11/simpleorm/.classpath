@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="dataset"/>
+	<classpathentry kind="src" path="sessionJdbc"/>
+	<classpathentry kind="src" path="examples"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/msbase.jar"/>
+	<classpathentry kind="lib" path="lib/mssqlserver.jar"/>
+	<classpathentry kind="lib" path="lib/msutil.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-8.2dev-500.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1_8_0_10.jar"/>
+	<classpathentry kind="output" path="built/classes"/>
+</classpath>

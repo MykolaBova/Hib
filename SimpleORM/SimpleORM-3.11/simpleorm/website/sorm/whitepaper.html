@@ -1,0 +1,1273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>SimpleORM White Paper/Tutorial</title>
+
+<link rel="Stylesheet" type="text/css" media="all" href="styles.css">
+<style></style></head>
+<body>
+<div>
+<table style="width: 100%;" border="0" cellpadding="0" width="100%">
+<tbody>
+<tr style="">
+<td style="padding: 0.75pt;" valign="bottom">
+<h1><a class="mozTocH1" name="mozTocId554959"></a><span style="font-weight: normal;">SimpleORM
+White Paper/Tutorial</span></h1>
+<p><i><span style="font-size: 18pt;">Simple Java Object Relational
+Mapping</span></i> </p>
+</td>
+<td style="padding: 0.75pt;" halign="right" valign="bottom">
+<p><img src="logo.png" style="height: 107px; width: 175px;" alt="Logo" title="" height="107" width="175"><br>
+<i>Power without complexity.</i> </p>
+</td>
+</tr>
+</tbody>
+</table>
+<div style="text-align: center;" align="center">
+<hr align="center" size="2" width="100%"></div>
+<p>Dr Anthony Berglas<br>
+August 2009<br>
+SimpleORM v 3</p>
+<p><i>Just because it is possible to push twigs along the
+ground with ones nose
+does not necessarily mean that is the best way to collect firewood.</i><o:p></o:p></p>
+<ul id="mozToc" type="disc"><!--mozToc h2 1 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId396825">Why SimpleORM?</a></li><li><a href="#mozTocId26310">SimpleORM
+Generalized Records</a></li><li><a href="#mozTocId807387">Data Definition Example</a></li><li><a href="#mozTocId38196">Data
+Manipulation Example</a></li><li><a href="#mozTocId968781">Instance Queries</a></li><li><a href="#mozTocId436695">Transient Queries</a></li><li><a href="#mozTocId160850">SimpleORM
+Transactions</a></li><li><a href="#mozTocId911291">Record
+Locking and Isolation</a></li><li><a href="#mozTocId716390">SimpleORM
+DataSets</a></li><li><a href="#mozTocId784116">Associations
+Between Records</a></li><li><a href="#mozTocId381239">Flexible
+Record Definitions</a></li><li><a href="#mozTocId719249">Business Rule
+Framework</a></li><li><a href="#mozTocId975885">Configuration</a></li><li><a href="#mozTocId484049">Conclusion</a></li></ul>
+<p><o:p>&nbsp;</o:p></p>
+<h2><a name="mozTocId396825"></a>Why SimpleORM?</h2>
+<p>SimpleORM provides a full featured
+object /relational mapping
+and persistence system in a tiny package that is easy to understand and
+safe to
+work with. <br>
+<br>
+A key technology is to represent objects as essentially a strongly
+typed map of
+attributes to their values. This avoids the&nbsp;complex reflection
+and byte
+code generation needed to represent the private fields in pseudo POJOs of other
+ORMs. &nbsp;SimpleORM objects can still look like POJOs with values&nbsp;accessed by convetional (but optional) public <tt>get</tt> and <tt>set</tt> methods. &nbsp;The simple structure&nbsp;facilitates a clean, string free query language and
+provides
+access to extended field state information such as the
+initial&nbsp;queried
+value. &nbsp;</p><p>SimpleORM
+also packages objects into "DataSets",
+which&nbsp;enables it to provide well defined semantics for
+relationships and
+detached records (unlike other ORMs). &nbsp; Records in DataSets can be
+manipulated independently from any database connection. &nbsp;SimpleORM
+also
+provides
+transparent access to user extensible meta data, and can also enable
+different
+modules to extend that meta data which can provide very flexible
+application
+architectures.<br>
+<br>
+Other less flexible ORMs are far too complex for ordinary developers to
+understand their detailed semantics or implementation. &nbsp;This
+introduces
+substantial technical risk when problems arise. &nbsp;On the other
+hand, the absence
+of complex reflection, query parsers, byte code generation etc. makes
+the
+SimpleORM behavior and source code very transparent. &nbsp;If
+necessary any
+competent developer can read from the SimpleORM&nbsp;API to the
+underlying JDBC
+calls in a very few clicks of the mouse. &nbsp;&nbsp;The entire
+SimpleORM jars
+are just 79K and 52K in size, with only one small and optional
+dependency
+(Slf4j). &nbsp;(Hibernate is over 2400K plus about 2000K of
+dependent Jars.)<br>
+<br>
+It
+should be noted that although simply implemented, SimpleORM is a full
+featured ORM and not just a database row reader/writer.
+&nbsp;Queries
+can be specified safely in terms of Java objects, object
+identity is aligned with database keys, relationships between objects
+are maintained and modified objects are automatically flushed to the
+database with optimistic locks. &nbsp; Optimistic locks are
+critical
+for the integrity of multi user web applications.
+&nbsp;And&nbsp;object
+identity is important in larger systems to prevent independent business
+rules from overriding each other's data. &nbsp;SimpleORM
+functionality
+is therefor much closer to Hibernate and entity beans than basic tools
+such as iBatis, DdlUtils, Butler, JaQu, Persist, Ammentos etc.
+</p>
+<h2><a name="mozTocId26310"></a>SimpleORM
+Generalized Records</h2>
+<p style="margin-bottom: 12pt;">SimpleORM
+represents individual
+records as a map of fields to values.&nbsp; The use of rich record
+structures
+enables greater control of ORM functionality while simplifying their
+use.<br>
+<i><br>
+</i>Record and field <i>definitions</i> are just
+instances of SimpleORM classes
+which are normally declared as constants.&nbsp; For example:-</p>
+<pre style="margin: 2.25pt 0cm 12pt;"><span style="">&nbsp;</span>class <b>Employee</b>...<br><span style="">&nbsp;</span>private static final SRecordMeta <b>EMPLOYEE</b> // the record<br><span style="">&nbsp;&nbsp; </span>= new SRecordMeta(<b>Employee.class, "EMPLOYEE_TABLE"</b>);<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>public static final SFieldString <b>PHONE_NR</b> // a field<br><span style="">&nbsp;&nbsp; </span>= new SFieldString(<b>EMPLOYEE, "PHONE_NR", 30</b>);<br><span style="">&nbsp;</span><br><span style="">&nbsp;</span>public String <b>getPhoneNr</b>() { // Optional get method if you like them<br><span style="">&nbsp;&nbsp; </span>return getString(<b>PHONE_NR</b>);<br><span style="">&nbsp;</span>}</pre>
+<p><code><span style="font-size: 10pt;">EMPLOYEE </span></code>contains
+an object that represents the Employee record&nbsp;(SQL Table) meta
+data, and <code><span style="font-size: 10pt;">PHONE_NR</span></code>&nbsp;
+contains meta data for a
+Phone Number field (SQL Column) that might be contained within that
+record.<br>
+<br>
+One can then access the field as</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>Employee <b>employee</b> = session.<b>mustFind</b>(Employee.EMPLOYEE, "Emp101");<br><span style="">&nbsp;</span>String <b>phone</b> = <b>employee</b>.getString(Employee.<b>PHONE_NR</b>);<br>&nbsp;String <b>phone</b> = <b>employee</b>.<b>getPhoneNr</b>(); // Indistinguishable from a complex pseudo POJO<br> &lt;c:out value="${employee.NAME}"/&gt;  // Integrated with JSP etc. without need for get/set methods.<br></pre>
+<p>
+This generalized structure has the following advantages:-</p>
+<ul type="disc">
+<li style="">The ORM
+declarations are very succinct and thus easy to maintain.&nbsp;
+Only one Java statement per field is normally required. &nbsp;No
+XML.</li>
+<li style="">SimpleORM
+records&nbsp;are indistinguishable from POJOs if get/set methods
+are used (eg. <code><span style="font-size: 10pt;">employee.getPhoneNr()</span></code>).
+&nbsp;(Pseudo POJOs can behave very inconsistently&nbsp;if
+their fields are accessed directly without get/set methods.) &nbsp;</li>
+<li style="">We have an
+accessible object that represents the field itself independently of the
+getters and setters.&nbsp; So one can write efficient, fully
+compile time checked code that is easy to refactor such as</li>
+</ul>
+<pre style="margin: 2.25pt 0cm 2.25pt 36pt;"><span style="">&nbsp;</span>newQuery(EMPLOYEE).greaterThan(<b><i>Employee.NAME</i></b>, "J")</pre>
+<p style="margin-left: 36pt;">instead
+of run-time string based queries like</p>
+<pre style="margin: 2.25pt 0cm 2.25pt 36pt;"><span style="">&nbsp;</span>createQuery("from EMPLOYEE E where E.NAME &gt; 'J'");</pre>
+<p style="margin-left: 36pt;">or </p>
+<pre style="margin: 2.25pt 0cm 2.25pt 36pt;"><span style="">&nbsp;</span>createCriteria(EMPLOYEE.class).add(Expression.greaterThan("NAME", "J");</pre>
+<ul type="disc">
+<li style="">likewise <tt><span style="font-size: 10pt;">isNull(Employee.SALARY)</span></tt>,
+<code><span style="font-size: 10pt;">isValid(Employee.MANAGER)</span></code><tt><span style="font-size: 10pt;">,
+Employee.PHONE_NR.addValidator(validator)</span></tt>
+etc.&nbsp; There are many things that one needs to do with <i>persisted</i>
+fields other than just get and set their values.</li>
+<li style="">The rich record
+structure makes it easy to distinguish null from zero from
+invalid.&nbsp; Likewise one can distinguish an Employee without a
+Department from an Employee whose Department has simply not been
+retrieved (for detached records).&nbsp;&nbsp; You can also
+access the <code><span style="font-size: 10pt;">Employee.DEPT_ID</span></code>&nbsp;scalar
+field without having to retrieve the Department record.&nbsp; <code><span style="font-size: 10pt;">myRec.getInitialValue(FIELD)</span></code>
+retrieves the value as read from the database and used for optimistic
+locking. &nbsp; Pseudo POJOs do not provide a place to store
+anything other than&nbsp;shallow field values.</li>
+<li style="">Attempts to access
+data that is inconsistent with the current transaction state can
+produce fail fast exceptions rather than obscure errors.&nbsp; We
+can also automatically fail fast for common restrictions such as
+strings that are too long.</li>
+<li style="">SimpleORM records
+live within a DataSet. &nbsp;This provides well defined semantics
+for relationships and detached records. &nbsp;Unlike&nbsp;
+Hibernate (say) a child's parents and the parent's children must alway
+be consistent.</li>
+<li style="">SimpleORM records
+can be accessed without any connection to a database. &nbsp;Pseudo
+POJOs have no real advantage.</li>
+<li style="">It is easy to
+access and also create meta data. &nbsp;For example,&nbsp;</li>
+</ul>
+<pre style="margin: 2.25pt 0cm 2.25pt 36pt;"><span style="">&nbsp;</span>EMPEE_ID...putUserProperty("DISPLAY_LABEL", "Telephone Number")...<br><span style="">&nbsp;</span>... EMPEE_ID.getMaxSize() ...</pre>
+<ul type="disc">
+<li style="">The generalized
+design makes it very easy for <i>users</i> to build
+powerful extra layers with methods like <tt><span style="font-size: 10pt;">makeHtmlInput(SFieldMeta theField)</span></tt>.
+One can simply write code like <tt><span style="font-size: 10pt;">getString(theField)</span></tt>
+without any need for reflection. &nbsp; Labels (like "<code><span style="font-size: 10pt;">Telephone Number</span></code>")
+can default from the meta data. &nbsp;SimpleWebApp provides meta
+data driven JSP tags that do this.</li>
+<li style="">It is easy to
+augment or change schema definitions at run time -- they are just
+simple data structures.&nbsp; This can be be used to build very
+customizable applications in which add on modules augment schema
+definitions in a core module. &nbsp;(This is very difficult to do
+with reflection.)</li>
+<li style="">It is
+also&nbsp;easy to associate real POJOs with SimpleORM records, but
+this is rarely done in practice.</li>
+<li style="">There is no need
+for complex reflection or byte code post processing to access and
+intercept pseudo POJO field values.&nbsp; For example,&nbsp; in
+Hibernate <code><span style="font-size: 10pt;">session.load(MyClass.class,
+13)</span></code> often does not return a MyClass object,
+rather it returns a magic byte coded subclass of MyClass to handle lazy
+loading.&nbsp; This can cause nasty bugs if it is processed by
+other reflecting software such as a web service serializer. &nbsp;</li>
+<li style="">Keeping it simple
+means that <i>you</i> can really understand what is going
+on.&nbsp; This is critical if problems arise&nbsp;and greatly
+reduces the technical risk of using an overly complicated tool.
+&nbsp;You are not at the mercy of a mailing list. &nbsp;</li>
+<li style="">The 7 pages in
+this document are sufficient to understand SimpleORM, vs&nbsp; the
+841 pages in the book Java Persistence with Hibernate (say).</li>
+</ul>
+<p><br>
+SimpleORM <i>Automates</i> persistence, but unlike
+Hibernate and JPA it does
+not pretend to make persistence <i>Transparent.</i>&nbsp;
+Transparent
+persistence attempts to hide persistence issues from the business
+logic.&nbsp;
+However, for most information systems persisting and querying the
+information
+is pervasive and tends to dominate the "business logic".&nbsp;
+So&nbsp;running the "business logic" without the persistence layer
+is
+meaningless in practice. &nbsp;SimpleORM's independent DataSet
+layer
+facilitates unit tests and detached processing without a database
+connection,
+and get/set methods make records look identical to POJOs anyway.
+&nbsp;SimpleORM does not pretend that persistence can be added to
+an existing
+application as an afterthought. &nbsp;<br>
+<br>
+It should be noted that SimpleORM is a "real" ORM.&nbsp; DataSets
+provide a proper&nbsp;object cache, and each record is only
+represented once
+within each transaction.&nbsp; Object identity is tied to database
+identity.&nbsp;
+This means that business rules can be written largely independently of
+each
+other without the need to coordinate data retrieval.&nbsp; This
+distinguishes
+SimpleORM from iBATIS, Apache DdlUtils, Butler etc.&nbsp; <br>
+<br>
+SimpleORM is full featured.&nbsp; For example, it is possible to
+detach
+DataSets and then reattach them to a new transaction using optimistic
+locks.&nbsp; Several primary key generators are provided.<span style="">&nbsp; </span>And unlike many
+other&nbsp;ORMs it also
+provides good support for multi column primary&nbsp;keys without
+the need to
+create special key objects.<br>
+<br>
+SimpleORM is open source with an easy Apache style license. </p>
+<h2><a name="mozTocId807387"></a><a name="example"></a>Data Definition Example</h2>
+<p>The following code fragments show
+everything that is
+required to declare and use a mapping to an Employee table. Each <code><span style="font-size: 10pt;">SRecordInstance</span></code>
+represents an individual
+record instances while <code><span style="font-size: 10pt;">SRecordMeta</span></code>
+objects represent the meta-data associated with each instance.&nbsp;<code><span style="font-size: 10pt;">SFieldMeta</span></code>
+objects describe the fields
+within the record. </p>
+<p>Note that in SimpleORM a database has "tables" and
+"columns", while a persisted class is a "record" which has
+"fields". A non persisted class is just a "class" which has
+"instance variables". </p>
+<pre style="margin: 2.25pt 0cm;">public class <b>Employee</b> extends SRecordInstance { // ie. a class mapped to a table.<br><span style="">&nbsp;</span><br><span style="">&nbsp;</span>private static final SRecordMeta <b>EMPLOYEE</b> = new SRecordMeta(Employee.class, "XX_EMPLOYEE");<br>&nbsp;<br><span style="">&nbsp;</span>public static final SFieldString <b>EMPEE_ID</b> <br><span style="">&nbsp;&nbsp; </span>= new SFieldString(EMPLOYEE, <b>"EMPEE_ID"</b>, 20, <b>SPRIMARY_KEY</b>);<br><br><span style="">&nbsp;</span>public static final SFieldString <b>NAME</b> <br><span style="">&nbsp;&nbsp; </span>= new SFieldString(EMPLOYEE, "ENAME", 40, S<b>MANDATORY</b>, S<b>DESCRIPTIVE</b>);<br><span style="">&nbsp;</span><br><span style="">&nbsp;</span>public static final SFieldString <b>PHONE_NR</b> <br><span style="">&nbsp;&nbsp; </span>= new SFieldString(EMPLOYEE, "PHONE_NR", 20)<br><span style="">&nbsp;&nbsp;&nbsp;&nbsp; </span>.putUserProperty("DISPLAY_LABEL", "Telephone Number");<br><br><span style="">&nbsp;</span>public static final SFieldDouble <b>SALARY</b> <br><span style="">&nbsp;&nbsp; </span>= new SFieldDouble(EMPLOYEE, "SALARY").addValidator(new SValidatorGreaterEqual(0));<br><br><span style="">&nbsp;</span>public static final SFieldString <b>DEPT_ID</b> = new SFieldString(EMPLOYEE, "DEPT_ID", 10);<br><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br><span style="">&nbsp;</span>static final SFieldReference&lt;Department&gt; <b>DEPARTMENT</b> <br><span style="">&nbsp;&nbsp; </span>= new SFieldReference(EMPLOYEE, Department.DEPARTMENT, "DEPT");<br><br><span style="">&nbsp;</span>public enum <b>EType</b>{PERMANENT, CASUAL, CONTRACT};<br><span style="">&nbsp;</span>static final SFieldEnum&lt;Type&gt; <b>ETYPE</b> = new SFieldEnum(EMPLOYEE, "ETYPE", EType.class);<br><br><span style="">&nbsp;</span>static final SFieldString <b>RESUME</b> // Curriculum Vitae<br><span style="">&nbsp;&nbsp; </span>= new SFieldString(EMPLOYEE, "RESUME", 200, SUNQUERIED)<br><span style="">&nbsp;&nbsp;&nbsp;&nbsp; </span>.overrideSqlDataType("VARCHAR ( 200)"); // Maybe LONG VARCHAR for Oracle etc.<br><br><span style="">&nbsp;</span>public @Override SRecordMeta&lt;Employee&gt; getMeta() {return EMPLOYEE;}; <br><br><span style="">&nbsp;</span>// Completely optional get/set methods.  NOT needed for JSP access.<br><span style="">&nbsp;</span>public String <b>getPhoneNumber</b>() {return getString(PHONE_NR);}<br><span style="">&nbsp;</span>public void <b>setPhoneNumber</b>(String value) {setString(PHONE_NR, value);}<br>}</pre>
+<p>The Employee record is mapped to the <tt><span style="font-size: 10pt;">XX_EMPLOYEE</span></tt>
+table. It has a primary key <code><span style="font-size: 10pt;">EMPEE_ID</span></code>,
+a <tt><span style="font-size: 10pt;">NAME</span></tt>
+and a <code><span style="font-size: 10pt;">PHONE_NR</span></code>
+field, and a direct reference
+to the <tt><span style="font-size: 10pt;">Department</span></tt>
+record. All
+these definitions simply define static constants which are threaded
+together
+via the <tt><span style="font-size: 10pt;">EMPLOYEE</span></tt>
+object.&nbsp;
+The <code><span style="font-size: 10pt;">EMPLOYEE</span></code>
+object is tied
+to the <code><span style="font-size: 10pt;">Employee.class</span></code>
+using
+the <code><span style="font-size: 10pt;">getMeta</span></code>
+method.</p>
+<h2><a name="mozTocId38196"></a>Data
+Manipulation Example</h2>
+<p>The following code then manipulates this data.</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>SSessionJdbc <b>session</b> = SSessionJdbc.open(myJdbcConnection, "MyInformativeLoggingLabel"); <br>   // or SSessionJdbc.<b>open</b>(myDataSource, "..."); <br><span style="">&nbsp;</span>session.<b>begin</b>();<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>Employee <b>employee</b> = session.<b>mustFind</b>(Employee.EMPLOYEE, SFOR_UPDATE, "123-45-6789");<br><br><span style="">&nbsp;</span>String <b>name</b> = employee.getString(Employee.<b>NAME</b>);<br><span style="">&nbsp;</span>String <b>phone</b> = employee.<b>getPhoneNr</b>(); // if getter defined<br><span style="">&nbsp;</span>employee.<b>setPhoneNr</b>("(123) 456 7890");<br><span style="">&nbsp;</span>Employee.EType <b>etype</b> = e100a.<b>getEnum</b>(e100a.<b>ETYPE</b>);<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>println(employee.getString(Employee.<b>DEPT_ID</b>));<br><span style="">&nbsp;</span>Department <b>department</b> = employee.findReference(employee.<b>DEPARTMENT</b>);<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>oldEmployee.<b>delete</b>();<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>session.<b>commit</b>();<br><span style="">&nbsp;</span>session.<b>begin</b>(); ... session.<b>commit</b>();<br><span style="">&nbsp;</span>session.<b>close</b>();</pre>
+<p>A SimpleORM session is created based on an
+ordinary java.sql.Connection (or java.sqlx.DataSource).&nbsp; A new transaction is
+then started.</p>
+<p><tt><span style="font-size: 10pt;">session.<b>mustFind</b>(Employee.EMPLOYEE,
+SFOR_UPDATE, "123-45-6789")</span></tt>&nbsp; finds a
+Employee object
+based on the primary key. If the object had been previously retrieved
+in the
+same transaction a pointer to it is returned, otherwise a JDBC query is
+issued
+to retrieve the row. If "<tt><span style="font-size: 10pt;">123-45-6789</span></tt>"
+does not exist in the database then a meaningful exception is thrown
+whose
+message includes the unfound primary key.<code><span style="font-size: 10pt;">&nbsp;</span></code></p>
+
+<p><code><span style="font-size: 10pt;">find(...)</span></code>
+returns null if the row was not found, <code><span style="font-size: 10pt;">create(...)</span></code>
+creates a new record, while <code><span style="font-size: 10pt;">findOrCreate(...)</span></code>
+can be used to insert
+a new row using exactly the same techniques as used to update a record.
+&nbsp; <tt><span style="font-size: 10pt;">SFOR_UPDATE
+</span></tt>adds a locking clause to the
+SQL for MVCC databases, but it is not strictly necessary as optimistic
+locking is always
+used.<span style="">&nbsp; </span>If there is a
+second column in the
+primary key then its value is simply provided as the fourth parameter &#8211;
+no need to create any special JPA/Hibernate-like key object.</p>
+<p>The <code><span style="font-size: 10pt;">NAME</span></code>
+and <tt><span style="font-size: 10pt;">PHONE_NR</span></tt>
+fields are then retrieved from
+the record, the first using the generalized syntax and the second using
+the get
+method that had been defined.&nbsp; The <code><span style="font-size: 10pt;">PHONE_NR</span></code>,
+is then set to a new value. The generalized design makes it easy for
+SimpleORM
+to mark the field and record as dirty when the <tt><span style="font-size: 10pt;">PHONE_NR</span></tt>
+is set.&nbsp; SimpleORM never needs to compare 200 records at
+commit time just
+to find the 2 that have changed. </p>
+<p>The employee's <code><span style="font-size: 10pt;">DEPARTMENT</span></code>
+record is then retrieved from either the cache or database by <code><span style="font-size: 10pt;">findReference</span></code>.
+&nbsp;Note that the
+actual scalar foreign key value&nbsp;<code><span style="font-size: 10pt;">Employee.DEPT_ID</span></code>
+is also available and can be accessed without the need to retrieve the
+department record.</p>
+<p>An <tt><span style="font-size: 10pt;">oldEmployee</span></tt><code><span style="font-size: 10pt;"> </span></code>is then
+flagged for deletion before the
+transaction is finally committed. As part of this process SimpleORM
+flushes all
+pending dirty objects to the database. Thus there is no need to
+manually track
+which records need to be updated. There is also no risk that separate
+parts of
+the same application will accidentally override changes to different in
+memory
+copies of the same database record.</p><h2><a name="mozTocId968781"></a>Instance Queries</h2>
+
+<p>SimpleORM queries are defined as a <code><span style="font-size: 10pt;">SQuery</span></code>
+object that can be executed in a <code><span style="font-size: 10pt;">SSession</span></code>
+to produce a <code><span style="font-size: 10pt;">List</span></code>
+of &nbsp;records. &nbsp;For example</p>
+<pre style="margin: 2.25pt 0cm;">Department d100q = session.findOrCreate(Department.DEPARTMENT, "100"); <br>SQuery&lt;Employee&gt; query = new SQuery(Employee.EMPLOYEE)<br><span style="">&nbsp;</span>.eq(Employee.DEPARTMENT, d100q) // and<br><span style="">&nbsp;</span>.like(Employee.NAME, "%One%")<br><span style="">&nbsp;</span>.descending(Employee.SALARY);<br>List&lt;Employee&gt; emps = session.query(query); </pre>
+<p>The query object contains details of the query, and is
+independent of the
+session. &nbsp;It can then be executed to produce a list of
+records. &nbsp;By
+default the cache is flushed (but not committed) before the query is
+executed
+so that query results take into account any changed values.</p>
+<p>Note that fields are refered to using the constants defined as
+part of the SRecord definitions. &nbsp;So we have <code>Employee.NAME</code>
+rather than the string <code>"NAME"</code>.&nbsp; The <code><span style="font-size: 10pt;">.eq</span></code> also
+refers
+directly to <code>Department</code>, and SimpleORM
+determines that the key to Department is <code><span style="font-size: 10pt;">DEPT_ID</span></code> (
+it could also be a multi
+column key).&nbsp;&nbsp;</p>
+<p style="margin-bottom: 12pt;">Records
+can be joined in to
+retrieve parents along with children and so avoid the "N+1" problem.
+&nbsp;In the following example all Employees are retrieved along
+with their
+departments in a single query. &nbsp;(If the number of parents is
+substantially
+less than the number of children then it maybe faster to simply fetch
+the parents
+lazily using <code><span style="font-size: 10pt;">findReference()</span></code>.)
+&nbsp;Recursive joins such as Employees to Managers&nbsp;are
+also supported with aliases.</p>
+<pre style="margin: 2.25pt 0cm;">SQuery&lt;Employee&gt; joinQ1 = new SQuery&lt;Employee&gt;(Employee.EMPLOYEE)</pre>
+<pre style="margin: 2.25pt 0cm;">&nbsp; .leftJoin(Employee.DEPARTMENT)<br></pre>
+<p>Not all columns need to be retrieved
+by a query. &nbsp;Both&nbsp;<code><span style="font-size: 10pt;">SQuery</span></code>
+and&nbsp;<code><span style="font-size: 10pt;">findOrCreate()</span></code>
+calls can take a list of
+fields to retrieve, or a <code><span style="font-size: 10pt;">SSelectMode</span></code>
+which defines which types of fields to retrieve. &nbsp; In the <code><span style="font-size: 10pt;">Employee</span></code>
+example above <code><span style="font-size: 10pt;">RESUME</span></code>
+is flagged as&nbsp;<code><span style="font-size: 10pt;">SUNQUERIED</span></code>
+so it is not retrieved by
+default, unless <code><span style="font-size: 10pt;">SSelectMode.ALL</span></code>
+is specified. &nbsp;Likewise, if<code><span style="font-size: 10pt;">
+SSelectMode.DESCRIPTIVE </span></code>is specified then
+only fields marked as <code><span style="font-size: 10pt;">DESCRIPTIVE
+</span></code>are returned, ie. <code><span style="font-size: 10pt;">NAME</span></code> in
+the example. &nbsp;Thus one
+never has to retrieve all 100 columns of an Employee Table just to
+obtain the
+Employee's Name. &nbsp;&nbsp;And any attempt to access a field
+that has not
+been queried produces fail fast exceptions. </p>
+<p><code><span style="font-size: 10pt;">SQuery.rawPredicate(query,
+parameters...)</span></code> can be used to append an
+arbitrary predicate to
+the <code><span style="font-size: 10pt;">WHERE</span></code>
+clause. &nbsp;
+SimpleORM also provides convenience methods for performing ad hoc
+business
+intelligence JDBC queries that do not produce normal objects are a
+result.
+&nbsp;For example:-</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>List&lt;Map&gt; sals = ses.rawQueryMaps(<br><span style="">&nbsp;&nbsp; </span>"SELECT E.DEPT_ID, SUM(E.SALARY) as \"SUMSAL\" FROM XX_EMPLOYEE E " +<br><span style="">&nbsp;&nbsp; </span>" WHERE E.DEPT_ID IS NOT NULL" +<br><span style="">&nbsp;&nbsp; </span>" GROUP BY E.DEPT_ID ORDER BY E.DEPT_ID");<br><span style="">&nbsp;</span>for (Map sal: sals) {<br><span style="">&nbsp;</span>&nbsp;...sal.get("SUMSAL")...} <o:p>&nbsp;<br></o:p></pre>
+<h2><a name="mozTocId436695"></a>Transient Queries</h2>Instance Queries creatd&nbsp;by <tt>SQuery</tt>
+above return normal SRecordInstances such as Employee and Department.
+&nbsp;They are identified by a primary key, and stored in the DataSet.
+&nbsp;If two queries would return the same row of a table then only one
+instance is created and added to the DataSet. &nbsp;<br><br>SimpleORM
+also alows Transient records to be returned by ad hoc queries that do
+not have a primary key and thus cannot be added to a DataSet.
+&nbsp;They are mainly used to implement aggregations, although
+arbitrary queries can be specified. &nbsp;For example<br><br><pre>SQuery&lt;Department&gt; leftQ = new SQuery(Department.DEPARTMENT).as("dept")</pre><pre>&nbsp;&nbsp;.innerJoin("dept", Employee.DEPARTMENT).as("emp");</pre><pre>SQueryTransient aggQry = new SQueryTransient(leftQ)</pre><pre>  .sum("emp", Employee.SALARY).as("sum_sal")</pre><pre>&nbsp; .groupBy("dept", Department.NAME).as("dname")</pre><pre>&nbsp; .ascending("dname");<br>List&lt;SRecordTransient&gt; result = ses.queryTransient(aggQry);<br>... result.get(0).getDouble("sum_sal") ...</pre><br>Internally, <tt>SRecordTransients</tt> are implemented as a <tt>Map</tt> of query aliases to values,whereas <tt>SRecordInstances</tt> are implemented more efficiently as arrays indexed by <tt>SFieldMeta.index</tt>. &nbsp; However, both&nbsp;<tt>SRecordInstance</tt> and <tt>SRecordTransient</tt> extend &nbsp;<tt>SRecordGeneric</tt> which does implement&nbsp;the <tt>Map</tt>
+interface. &nbsp;This means that the field values
+can be accessed directly from tools like JSP without the need to write explicit get
+and set methods. &nbsp;<br><br>The
+following is an extract from <tt>extras/Department.jsp</tt>&nbsp;that utilizes the Map feature to access&nbsp;the <tt>DEPT_ID</tt> field&nbsp;directly even though no <tt>Department.getDEPT_ID</tt> method has been defined:<br><br><pre>&nbsp;&nbsp; SQueryResult&lt;Department&gt; res&nbsp; = ses.query(new SQuery(Department.DEPARTMENT));</pre><pre>&nbsp;&nbsp; pageContext.setAttribute("Depts", res);</pre><pre>   ...</pre><pre>&nbsp; &lt;c:forEach items="${Depts}" var="dept"&gt;</pre><pre>&nbsp;&nbsp;&nbsp; Dept: &lt;c:out value="${dept.DEPT_ID}"/&gt;: &lt;c:out value="${dept.DNAME}&gt;/&gt;&lt;br&gt;</pre><pre>&nbsp; &lt;/c:forEach&gt;</pre><h2><a class="mozTocH2" name="mozTocId160850"></a>SimpleORM
+Transactions</h2>
+<p style="margin-bottom: 12pt;">The
+following shows the general
+flow:-</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>SSessionJdbc session0 = SSessionJdbc.open(myConnection, "MyInformativeLoggingLabel"); <br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>SSessionJdbc session = SSessionJdbc.getThreadLocalSession();<br><span style="">&nbsp;</span>session.begin(); <br><span style="">&nbsp;</span>... SSessionJdbc session = SSessionJdbc.getThreadLocalSession(); ...<br><span style="">&nbsp;</span>session.commit();<br><span style="">&nbsp;</span>session.begin(); ... session.commit();<br><span style="">&nbsp;</span>session.close();<br><br></pre>
+<p>
+All SimpleORM database manipulations occur within a SSessionJdbc
+object, which
+encapsulates an ordinary JDBC Connection. &nbsp;When sessions are
+opened they
+are automatically associated with the current thread. &nbsp; This
+means that
+they can be easily retrieved using <code><span style="font-size: 10pt;">getThreadLocalSession</span></code>
+without the need to pass the session object around explicitly.
+&nbsp; It also
+means that unclosed sessions left over from previous uses of the thread
+can be
+detected and fail fast exceptions thrown. &nbsp;Normally a given
+session can
+only be accessed by one thread, otherwise exceptions are
+thrown&nbsp;(<code><span style="font-size: 10pt;">detachFromThread</span></code>
+can override this.)
+&nbsp;The session description&nbsp;is displayed in logging
+messages and so can
+be helpful in multi threaded application. &nbsp;An optional third
+parameter can
+override the default SimpleORM&nbsp;database driver
+which&nbsp;is normally
+defaulted from the URL in the Connection.<br>
+<br>
+SimpleORM guarantees that each session will only contain&nbsp;one
+record
+from&nbsp;with a given primary key (and the same SRecordMeta).
+&nbsp;Thus if a
+record were to be retrieved several times by different parts of an
+application
+within the <i>same</i> session then the same
+SRecordInstance object will be
+returned each time. &nbsp;(If the a record with the same key
+is&nbsp;retrieved
+in <i>different</i> session then different SRecordInstance
+objects will be
+returned and normal database and optimistic locking will maintain
+database
+integrity.)<br>
+<br>
+Records are normally flushed from the session to the database when a
+transaction commits. &nbsp;Records are also normally flushed before
+queries are
+executed to ensure that their results represent the current state of
+the
+database. &nbsp;Records&nbsp;can also be flushed manually
+without committing
+the transaction. &nbsp; They are flushed in the order that they
+were first made
+dirty, which provides a simple and&nbsp;<i>predictable</i>
+update order.
+&nbsp;Fail fast exceptions are raised if this would create a
+referential
+integrity violation.<br>
+<br>
+Records may also be purged from a DataSet to force a re query should
+the
+database be updated using raw JDBC calls or stored procedures.
+&nbsp;Raw JDBC
+can be <em>much</em> more efficient than any ORM for
+certain types of
+operations. For example a single SQL <tt><span style="font-size: 10pt;">DELETE</span></tt>
+statement that deletes all transaction details over 12 months old is
+much more
+efficient than having to read each of the transaction details into the
+JVM and
+then delete them individually.</p>
+<p>SimpleORM retrieves values from records in the same way
+as&nbsp;ordinary
+JDBC.&nbsp; Multiple <tt><span style="font-size: 10pt;">get*</span></tt>
+methods retrieve values in different ways. <tt><span style="font-size: 10pt;">getString</span></tt>
+returns the value as a String, <tt><span style="font-size: 10pt;">getInt</span></tt>
+returns an int&nbsp;or 0 if the column is null.&nbsp; <tt><span style="font-size: 10pt;">isNull&nbsp;</span></tt>can
+then be used to determine
+whether the column is actually null.&nbsp; Note that the actual
+column type is
+somewhat independent of the get method used, eg. <code><span style="font-size: 10pt;">getString</span></code>
+can be used on an integer column -- it will
+just return the value as a string.&nbsp; Like basic JDBC, <tt><span style="font-size: 10pt;">getObject</span></tt>
+provides the most general access
+and can be used for any type, including Blobs, Clobs, Arrays and any
+new ones
+that may be added in the future. </p>
+<p>Internally each field type is processed by its own driver
+which handles
+conversions etc. This makes it easy to add new types. Existing types
+include <tt><span style="font-size: 10pt;">TimeStamp</span></tt><code><span style="font-size: 10pt;"> </span></code>and <tt><span style="font-size: 10pt;">BigDecimal</span></tt>.&nbsp;
+There are several <code><span style="font-size: 10pt;">SFieldBoolean*</span></code>
+types depending on how one wants to represent a boolean, eg. 'Y'/'N',
+'T'/'F',
+1/0 (SQL does not have an intrinsic boolean type).</p>
+<p>SimpleORM can be used to
+automatically generate keys using a
+number of different approaches depending what the DataBase supports.
+&nbsp;For
+example, the following code causes a <code><span style="font-size: 10pt;">INVOICE_NR</span></code>
+field to be created.</p>
+<pre style="margin: 2.25pt 0cm 12pt;"><span style="">&nbsp;</span>public static final SFieldInteger INVOICE_NR = new SFieldInteger(INVOICE, "INVOICE_NR", SFieldFlags.PRIMARY_KEY)<br><span style="">&nbsp;</span>.setGeneratorMode(SSEQUENCE, "invoice_seq");<br><span style="">&nbsp;</span>...<br><span style="">&nbsp;</span>Invoice inv1 = session.createWithGeneratedKey(Invoice.INVOICE);</pre>
+<p>Generating sequence numbers is
+difficult due to record
+locking problems. &nbsp;Sequence mode uses a database specific
+sequence object
+to do this, which is named&nbsp;<code><span style="font-size: 10pt;">invoice_seq</span></code>
+in the example. &nbsp;Other methods are provided, including a
+generic <code><span style="font-size: 10pt;">SELECT_MAX</span></code>
+&nbsp;method that will work
+on any database albeit with dubious locking semantics. &nbsp;The
+identities are
+normally generated when the record is first <code><span style="font-size: 10pt;">create</span></code>d
+by SimpleORM which avoids problems with the identities of unsaved
+pseudo
+objects.<br>
+<br>
+(While generated "surrogate" keys can be very useful, we would suggest
+that they be avoided where solid natural keys are available.
+&nbsp;Excessive
+use of hidden surrogate keys complicates the design, makes it hard to
+do ad hoc
+queries, and are somewhat less efficient. &nbsp;If secondary unique
+indexes are
+not declared appropriately then surrogate keys can also enable invalid
+data to
+be stored. &nbsp;Solid application keys such as Product Numbers do
+not
+change.&nbsp; This is because they are distributed across many
+databases,
+including suppliers, customers and regulators.&nbsp; Updating one
+database is
+the least of the issues involved if they were to change.)</p>
+<h2><a name="mozTocId911291"></a>Record
+Locking and Isolation</h2>
+<p style="margin-bottom: 12pt;">Proper
+record locking and
+transaction isolation is essential to maintain database integrity in a
+multi
+transaction production environment. &nbsp;But it is also very
+complex and
+has&nbsp;subtly but importantly different semantics in each type of
+database.
+&nbsp;SimpleORM avoids mush of this complexity&nbsp;by using
+optimistic locks
+that work largely independently of individual database locking
+behaviors.
+&nbsp;<br>
+<br>
+When a record would be updated in the database an optimistic locking
+strategy&nbsp;simply checks that each record has not in fact been
+changed since
+it was queried. &nbsp;This can be performed efficiently by adding
+redundant
+terms to the <code><span style="font-size: 10pt;">WHERE</span></code>
+clause
+of&nbsp; <code><span style="font-size: 10pt;">UPDATE</span></code>
+and <code><span style="font-size: 10pt;">DELETE</span></code>
+statements. &nbsp; If the value
+had been changed by a different transaction then an exception is thrown.<br>
+<br>
+These exceptions can be avoided by explicitly locking the record when
+it is
+queried using the <code><span style="font-size: 10pt;">SQueryMode.SFOR_UPDATE.</span></code>
+This adds <code><span style="font-size: 10pt;">FOR
+UPDATE</span></code> clauses
+on many databases, but the optimistic lock checks are still performed
+for
+safety. &nbsp;<code><span style="font-size: 10pt;">SFOR_UPDATE</span></code>
+reduces broken optimistic lock exceptions, but can increase deadlock
+exceptions. &nbsp;It should be used on records that are likely to
+be updated,
+or whose current value is critical for an update, but not for general
+queries.<br>
+<br>
+SimpleORM always sets&nbsp;AutoCommit Off, but it does
+not&nbsp;change the
+database's default isolation level (see&nbsp;<code><span style="font-size: 10pt;">session.setIsolationLevel</span></code>).&nbsp;
+&nbsp;But one should strongly consider raising it to <code><span style="font-size: 10pt;">TRANSACTION_SERIALIZABLE</span></code>
+to avoid
+potential integrity issues. &nbsp;In particular if a transaction is
+summing a
+value over a number of detail records to store the total in a master
+record,
+then the detail records should be retrieved&nbsp;<code><span style="font-size: 10pt;">SFOR_UPDATE&nbsp;</span></code>and
+the transaction should be
+serializable to avoid the details being changed while the master is
+being
+updated. &nbsp;The performance and concurrency issues with
+serializable
+transactions are often greatly overstated -- start safe and then tune
+for
+performance based on actual measurements.<br>
+<br>
+To understand the effect of <code><span style="font-size: 10pt;">SFOR_UPDATE</span></code>
+one needs to understand the advanced Multi Version Concurrency Control
+(MVCC)
+now provided by most databases.&nbsp; These include Oracle,
+PostgreSQL,
+DaffodilDB,&nbsp;MS SQL after 2005 ("Snapshots"), but not
+Cloudscape/Derby, DB2. &nbsp;We describe this below because much of
+what has
+been written about locking and isolation levels is very misleading
+because it
+implicitly assumes a conventional, non MVCC locking mechanisms.<br>
+<br>
+MVCC means that queries normally retrieve values at the time that the
+transaction <i>started</i>, not their current values.
+&nbsp;Consider the
+following sequence:-</p>
+<table style="width: 100%;" border="1" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>Step</p>
+</td>
+<td style="padding: 1.5pt;">
+<p>Transaction &nbsp;A</p>
+</td>
+<td style="padding: 1.5pt;">
+<p>Transaction &nbsp;B</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>1</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">BEGIN; SELECT something...</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>2</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">BEGIN</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>3</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">SELECT BALANCE INTO :BAL FROM
+LEDGER WHERE ID=123</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p>returns 1000</p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>4</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">UPDATE LEDGER SET BALANCE = BAL +
+100 WHERE ID=123</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p>set to 1100</p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>5</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">SELECT BALANCE INTO :BAL FROM
+LEDGER WHERE ID=123</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><b>MVCC returns 1000, not
+1100</b></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>6</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">COMMIT</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>7</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">UPDATE LEDGER SET BALANCE = BAL +
+200 WHERE ID=123</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p>Set to 1200, NOT 1300. </p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 1.5pt;">
+<p>8</p>
+</td>
+<td style="padding: 1.5pt;">
+<p><code><span style="font-size: 10pt;">COMMIT</span></code></p>
+</td>
+<td style="padding: 1.5pt;">
+<p><o:p>&nbsp;</o:p></p>
+</td>
+<td style="padding: 1.5pt;">
+<p>Database corrupted.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-bottom: 12pt;"><br>
+In a conventional locking system the query in step 5 would normally
+wait until
+transaction B commits, and then return 1100. &nbsp;However,
+&nbsp;an MVCC
+system would immediately return 1000 in step 5&nbsp; because that
+was the value
+of the balance at the <i>beginning</i> of the transaction
+in step 1. &nbsp;So
+MVCC provides a consistent snapshot of the data, which is very good for
+reporting. &nbsp;However, for transaction processing it can lead to
+lost and
+inconsistent data&nbsp;as the update from Transaction B is
+clobbered by the
+update in Transaction A.<br>
+<br>
+The precise behavior is database dependent. &nbsp;Oracle will
+detect the
+anomaly if and only if it is set to the strictest&nbsp;Serializable
+transaction
+level, otherwise it will be silently ignored unless optimistic locks
+are also
+used. &nbsp;Many authors dangerously advise against Serialization
+mode.
+&nbsp;(Note that this use of Serialization has nothing to do with
+"Phantom"
+records.)<br>
+<br>
+SimpleORMs optimistic locking would change the query in step 7
+to&nbsp; <code><span style="font-size: 10pt;">UPDATE
+LEDGER SET BALANCE = BAL + 200 WHERE ID=123 <i>AND
+BALANCE = 1000</i></span></code>. &nbsp;All
+databases seem to apply the <code><span style="font-size: 10pt;">WHERE</span></code>&nbsp;condition&nbsp;to
+the current
+value that is in the database (unlike the <code><span style="font-size: 10pt;">SELECT</span></code>
+in step 5) so the update will fail because by step 7 the
+balance&nbsp;is 1100.
+&nbsp;This failure can be detected by SimpleORM and an exception
+thrown.
+&nbsp;(It is also possible to add special TimeStamps or update
+number columns
+to implement optimistic locking, but this is generally unnecessary with
+SimpleORM because it does not use pseudo POJOs and therefor always
+knows
+the&nbsp;value of each column when it was retrieved.)<br>
+<br>
+The exception can be prevented by&nbsp;adding a <code><span style="font-size: 10pt;">FOR UPDATE</span></code>-like
+clause to&nbsp;<code><span style="font-size: 10pt;">SELECT</span></code>
+statements. &nbsp; This produces
+conventional locking behavior in which Transaction A waits at step 5
+for
+Transaction B to commit. &nbsp;(The lock is also normally an
+exclusive lock,
+not a shared read lock.) &nbsp; However, if too many <code><span style="font-size: 10pt;">FOR UPDATE </span></code>locks
+are held then
+concurrency will be severely reduced and excessive deadlocks will
+arise.
+&nbsp;(There will always be some exceptions in a highly concurrent
+database
+system, applications have to be programmed to cope with them.)<br>
+<br>
+Locking is very important&nbsp;not because locking problems cause
+many errors,
+but rather because they cause very few errors. Badly constructed
+transactions
+that do not lock data properly will work perfectly when unit tested.
+They will
+also work most of the time in production. But every so often records
+will be
+corrupted in ways that are impossible to reproduce and thus extremely
+difficult
+to fix. And worse, the problems usually only arise&nbsp;after the
+project&nbsp;becomes heavily used. </p>
+<h2><a name="mozTocId716390"></a>SimpleORM
+DataSets</h2>
+<p style="margin-bottom: 12pt;">SimpleORM
+actually consists of
+two distinct modules, namely the DataSet module that actually stores
+the
+SRecordInsances and the&nbsp;SSessionJdbc module that moves data
+between the
+DataSet and the JDBC accessed database.&nbsp;<br>
+<br>
+A DataSet is simply a collection of heterogeneous SRecordInstances and
+their
+meta data. &nbsp;Records can be added, removed or updated within a
+dataset.
+SimpleORM SRecordInstances are only ever stored within an SDataSet.
+&nbsp;DataSets are independent of any database manipulation.<br>
+<br>
+By default, each SSessionJdbc has a default SDataSet that is created
+each time
+a transaction is begun. &nbsp;The DataSet stores the "cache" of
+records. &nbsp; It is&nbsp;normally destroyed when the
+transaction is committed
+or rolled back. &nbsp;When the DataSet is destroyed, so are all the
+records
+within it and any attempt to access them will result in a fail fast
+exception
+(unlike pseudo POJO based ORMs).<br>
+<br>
+It is also possible to detach the DataSet&nbsp;from a transaction,
+serialize
+it, move it to a different JVM, manipulate it without access to the
+database,
+and then reattach it to a different transaction. &nbsp;The DataSet
+automatically tracks the records that have changed and the previous
+values of
+fields used for optimistic locking when &nbsp;the record is
+reattached.
+&nbsp;This is much easier and more correct&nbsp;than
+creating&nbsp;special Data
+Transfer Objects (DTOs). &nbsp;<br>
+<br>
+For Example:-</p>
+<pre style="margin: 2.25pt 0cm;">session.begin();<br><br>Department dept400a = ses.mustFind(Department.DEPARTMENT, "400"); <br>Employee emp200e = ses.mustFind(Employee.EMPLOYEE, "200"); ...<br>Department dept500a = ses.mustFind(Department.DEPARTMENT, "500");<br><br>SDataSet ds = ses.commitAndDetachDataSet();<br>ses.close();<br><br>// DataSet ds now contains the three records.<br>// ds has been detached from database, can be moved far away.<br><span style="">&nbsp;</span><br>Department d400d = ds.find(Department.DEPARTMENT, "400");<br>d400d.setDouble(d400d.BUDGET, 50001);<br>e200d.setReference(e200d.DEPARTMENT, d400d);<br>Department d500d = ds.find(Department.DEPARTMENT, "500");<br>d500d.deleteRecord(); // Deletion will actually happen upon reattachment.<br><span style="">&nbsp;</span><br>Department d600 = ds.create(Department.DEPARTMENT, "600");...<br>Department d700 = ds.createWithNullKey(Department.DEPARTMENT); // Can set the key after attaching<br><span style="">&nbsp;</span><br>// Reattach the dataset to the database. session.begin(ds);<br>d700.setString(d700.DEPT_ID, "700"); // Must set key before commit (or be generated).session.commit();</pre>
+<p style="margin-bottom: 12pt;"><br>
+There are several semantic issues that are resolved by having a well
+defined
+concept of DataSet. &nbsp;For example, records can only reference
+other records
+within the same DataSet, which must be detached as a whole.
+&nbsp;This resolves
+the issues of dangling references to non-detached records. &nbsp;It
+also clarifies
+the meaning of the many end of associations, which will be discussed
+below.
+&nbsp;(Microsoft ADO uses a similar approach.)<br>
+<br>
+DataSets&nbsp;also provides a clean architecture for SimpleORM
+internally.
+&nbsp;The&nbsp;two modules&nbsp;are packaged into two jars,
+namely
+simpleorm-dataset.jar and simpleorm-sessionJdbc.jar. &nbsp;The
+DataSet module
+contains the record and field meta data, plus a list of all the record
+instances. &nbsp; The sessionJdbc module is responsible for
+communicating with
+generating SQL and communicating with the JDBC driver. &nbsp; There
+is no
+dependency from DataSet to sessionJdbc, so other session modules could
+be
+developed such as one for XML. &nbsp;simpleorm-dataset.jar may also
+be used on
+its own for unit testing without a database. &nbsp;<br>
+<br>
+(ADO.NET uses a similar architecture, and shares its benefits for
+remoting etc.
+&nbsp;But it does not have SimpleORM's SFieldMeta objects, using
+raws strings
+to access data instead. The APIs are also a bit more clumsy, IMHO.)</p>
+<h2><a name="mozTocId784116"></a>Associations
+Between Records</h2>
+<p>SimpleORM stores relations between
+records in SFieldReference
+objects that point directly to the referenced record and also
+track&nbsp;the
+underlying scalar fields that make up the foreign key. &nbsp;<br>
+<br>
+By default the scalar field is assumed to have the same name as the
+primary key
+column(s) of the referenced record. &nbsp;So in the following
+example the <code><span style="font-size: 10pt;">EMPLOYEE.DEPARTMENT</span></code>
+foreign key uses the
+<code><span style="font-size: 10pt;">DEPT_ID</span></code>
+string field because
+the primary key of <code><span style="font-size: 10pt;">DEPARTMENT</span></code>
+is named "<code><span style="font-size: 10pt;">DEPT_ID</span></code>".</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>public static final SFieldString <b>DEPT_ID</b> = new SFieldString(EMPLOYEE, "DEPT_ID", 10);<br>&nbsp;static final SFieldReference&lt;Department&gt; <b>DEPARTMENT</b> <br><span style=""> &nbsp;</span>= new SFieldReference(EMPLOYEE, Department.DEPARTMENT, "DEPT");</pre>
+<p><br>
+findReference can then be used to retrieve the record lazily from
+either the
+database or the DataSet if it had already been retrieved.
+&nbsp;(Finding a
+record in the DataSet is just a pointer dereference and so very fast.)</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>Department department = employee.findReference(employee.DEPARTMENT);</pre>
+<p><br>
+The normal way to find all Employees in a Department (say) is to simply
+query
+the database</p>
+<pre style="margin: 2.25pt 0cm;">&nbsp; &nbsp;...new SQuery(Employee.EMPLOYEE).eq(Employee.DEPARTMENT, department)...</pre>
+<p><br>
+But it is also possible to query a dataset directly which is useful if
+the
+dataset is detached from the database. &nbsp;For example</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp;</span>List&lt;Employee&gt; emps = dataset.queryReferencing(department, Employee.DEPARTMENT)</pre>
+<p>retrieves all the Employees
+in&nbsp;<code><span style="font-size: 10pt;">department</span></code>
+<i>that are in the dataset.
+&nbsp;</i>So if just Employees with <code><span style="font-size: 10pt;">.gt(Employee.SALARY,
+100000).ascending(Employee.NAME)</span></code> had been
+loaded into the dataset
+then just those would be returned, and in the sorted order.
+&nbsp;It does not
+attempt to retrieve all Employees in the department in a random order.
+&nbsp;In
+this way datasets provide sound and useful semantics to associations.
+&nbsp;<code><span style="font-size: 10pt;">queryReferencing</span></code>
+can never throw a
+LazyInitializationException.<br>
+<br>
+Many to many relationships&nbsp;handled in a similar way, but the
+intersection
+table needs to be explicitly referenced. &nbsp;This is almost
+always required
+in practice anyway because there is almost always important information
+pertaining to the relationship itself. &nbsp;For example many
+Students may be
+enrolled in many Subjects, but one probably wants to know the grade
+achieved
+for each Student for each Subject. &nbsp;Likewise many Players may
+play for
+many Teams, but one probably wants to record the position of each
+Player in each
+Team.</p>
+<p>There is no attempt to cascade deletion of parents to their
+children.&nbsp;
+This avoids many thorny problems.&nbsp; So it is the programmer's
+responsibility to explicitly delete any dependent rows. We also
+recommend
+against declaring <tt><span style="font-size: 10pt;">DELETE
+CASCADE</span></tt>
+at the database level as this will confuse SimpleORM (and most other
+tools).</p>
+<p>It should be noted that trying to model associations as in
+POJOs has major
+problems because&nbsp;each end of the association normally needs to
+be updated
+as distinct statements:-</p>
+<pre style="margin: 2.25pt 0cm;">&nbsp; sales.getEmployees().add(fred);<br><span style="">&nbsp; </span>fred.setDepartment(sales);</pre>
+<p>Some pseudo POJO&nbsp;ORMs such
+as Hibernate actually
+attempt to map both these statements into the one <code><span style="font-size: 10pt;">EMPLOYEE.DEPARTMENT</span></code>
+column.&nbsp; But in Java there is no
+need for these two statements to be consistent, one could write:-</p>
+<pre style="margin: 2.25pt 0cm;">&nbsp; <b>sales</b>.getEmployees().add(fred);<br><span style="">&nbsp; </span>fred.setDepartment(<b>engineering</b>);</pre>
+<p style="margin-bottom: 12pt;">The
+semantics of the above
+statements is not well defined.&nbsp; The essential problem is that
+POJOs make
+you have to update the<code><span style="font-size: 10pt;">
+department.employees</span></code> index manually, where a
+database does it
+automatically.<br>
+<br>
+(In Hibernate the semantics seems to depend upon the order in which
+they each
+happen to update the database.&nbsp; One can also specify <code><span style="font-size: 10pt;">inverse="true"</span></code>
+which means
+just ignore one end of the association. The excellent <i>Hibernate
+In Action</i>
+book is somewhat apologetic on this point,&nbsp; p106.) </p>
+<h2><a name="mozTocId381239"></a>Flexible
+Record Definitions</h2>
+<p>SimpleORM's generalized record
+definitions allow plug in
+modules to extend the schema of a core application with extra
+information that
+they need.&nbsp; For example, a security plug in could include code
+such as the
+following.</p>
+<pre style="margin: 2.25pt 0cm;"><br><br>static final SFieldString PUBLIC_KEY ;<br>@Override void extendApplication() {<br><span style="">&nbsp; </span>PUBLIC_KEY = new SFieldString(Employee.EMPLOYEE, "PUBLIC_KEY", 200);<br>}<br>...<br><span style="">&nbsp; </span>ses.begin();<br><span style="">&nbsp; </span>Employee fred = ses.create(Employee.EMPLOYEE, "100");<br><span style="">&nbsp; </span>fred.setString(fred.NAME, "Fred");<br><span style="">&nbsp; </span>fred.setString(PUBLIC_KEY, "ae6d82f9a7e9c...");<br><span style="">&nbsp; </span>ses.commit();</pre>
+<p>The core application calls <code><span style="font-size: 10pt;">SecurityPlugIn.extendApplication</span></code>
+at the appropriate time,
+and the <code><span style="font-size: 10pt;">PUBLIC_KEY</span></code>
+field is
+added. &nbsp;The plug in can then access the new field.
+&nbsp;The new field
+will be stored in the database etc. &nbsp;<br>
+<br>
+The ability to extend a core application with plug ins is important for
+modern,
+flexible software. &nbsp;But a plug in is of little value if it
+cannot store
+additional information in the database. &nbsp;SalesForce.com use
+this technique
+extensively in there extension architecture. &nbsp;This type of
+extensibility
+cannot be achieved with rigid pseudo POJOs.<br>
+<br>
+Another example&nbsp;of the generalized structures is the following
+code
+which&nbsp;creates 13<code><span style="font-size: 10pt;">
+MONTH_nn</span></code>&nbsp;columns:-
+</p>
+<br>
+<pre> SFieldBigDecimal MONTHLY_TOTALS = new SFieldBigDecimal[13];<br> static {<br> for (int mx=0; mx&lt;SFieldBigDecimal.length; mx++)<br> MONTHLY_TOTALS[mx] = new SFieldBigDecimal(LEDGER, "MONTH_" + mx);<br> }<br> ...<br> total = myRecord.getBigDecimal(MonthlyTotals[3]);</pre>
+<p>There is nothing special about this code, it just creates
+SFieldMeta objects
+and references them using an array instead of individual
+constants.&nbsp;
+Simple.</p>
+<p>Basic subtypes and inheritance can be
+easily implemented
+using SimpleORM's generalized structure as demonstrated in <code><span style="font-size: 10pt;">examples.SubTypeTest</span></code>.
+&nbsp;But more
+complex mapping between Java (sub)classes and SQL tables are not
+supported.&nbsp; There are many subtle and confusing issues that
+arise with
+more complex mappings. &nbsp;And&nbsp; simple relational Views
+can provide much
+more powerful mappings than any ORM should that really be required.</p>
+<h2><a name="mozTocId719249"></a>Business Rule
+Framework</h2>
+<p>SimpleORM provides events that allow&nbsp;business rules
+to be added to
+database operations. &nbsp;&nbsp;In particular <code><span style="font-size: 10pt;">SRecordInstance.onValidateField</span></code>
+is called each time a
+field is set to a value,&nbsp;<code><span style="font-size: 10pt;">SRecordInstance.onValidateRecord</span></code>
+whenever a record is about to be flushed to the database, and&nbsp;<code><span style="font-size: 10pt;">SRecordInstance.onQueryRecord</span></code>
+when a
+record is read from the database. &nbsp;These can simply be
+overridden to
+provide extra validation or other functionality.</p>
+<p>The following example checks that an employee's salary does
+not exceed the
+department's maximum salary. &nbsp;(It needs to be on the record
+flush rather
+than the field to ensure that both <code><span style="font-size: 10pt;">DEPARTMENT</span></code>
+and <code><span style="font-size: 10pt;">SALARY</span></code>
+are valid.)</p>
+<pre style="margin: 2.25pt 0cm;">static public class Validated extends SRecordInstance {...<br><span style="">&nbsp; </span>@Override public void onValidateRecord() {<br><span style="">&nbsp;&nbsp;&nbsp; </span>double sal = getDouble(SALARY);<br><span style="">&nbsp;&nbsp;&nbsp; </span>Department dept = findReference(Validated.DEPARTMENT);<br><span style="">&nbsp;&nbsp;&nbsp; </span>double max = dept.getDouble(Department.MAX_SALARY);<br><span style="">&nbsp;&nbsp;&nbsp; </span>if (<b>sal &gt; max</b>) throw new SException.Validation(<br><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>"Salary " + sal + " is greater than the Departments Maximum " + max, max);<br><span style="">&nbsp; </span>}</pre>
+<p>It is also possible to add validators to individual fields.</p>
+<pre style="margin: 2.25pt 0cm;"><span style="">&nbsp; </span>public static final SFieldString THIS_THAT = new SFieldString(RECORD, "THIS_THAT", 20)<br><span style="">&nbsp;&nbsp; </span>.addValidator(new SValidatorEnumeratedValues("THIS", "THAT"));</pre>
+<p>If <code><span style="font-size: 10pt;">SException.Validation</span></code>
+are thrown then SimpleORM adds extra information to the exception such
+as the
+record instance and the new field value. &nbsp;These can be trapped
+at a higher
+level, or simply reported directly to the end user.</p>
+<p>This allows data oriented business rules to be associated with
+the data. No
+matter what modules use Employee, the salary rule will be enforced.
+&nbsp;&nbsp;It is, of course, also possible to add arbitrary
+methods on the
+Employee class for business rules related to Employees that are
+explicitly
+called.&nbsp;</p>
+<p>The goal is to reduce the amount of indirection.&nbsp; We
+do not recommend a
+DAO approach (although it is certainly possible).&nbsp; Try, in
+general, to
+reduce the amount of indirection and code.&nbsp; Just get the job
+done
+directly.</p>
+<p>It also should be noted that this approach means that one only
+needs to add
+code for real business rules. The traditional approach of writing
+getter and
+setter methods means that one needs to write two dummy methods for <i>every</i>
+field in an object just to allow for the <i>possibility</i>
+of adding a rule
+later. This framework makes that unnecessary because the generalized <tt><span style="font-size: 10pt;">get*</span></tt> and <tt><span style="font-size: 10pt;">set*</span></tt>
+methods are used in the same way regardless of whether there is a
+validation&nbsp;method is actually written for the field. In
+practice this
+substantially reduces the amount of code that needs to be <i>read</i>.
+</p>
+<h2><a name="mozTocId975885"></a>Configuration</h2>
+<p>There isn't any. &nbsp;
+&nbsp;At least nothing beyond
+occasionally setting a property on a class.<br>
+<br>
+The SimpleORM connection is derived from an ordinary
+java.sql.Connection or java.sqlx.DataSource
+object which would normally be obtained from connection pool software.
+&nbsp;If
+the number of transactions is not large it can be simpler and safer to
+just use
+the old java.sql.DriverManager to create a non-pooled connections (<code><span style="font-size: 10pt;">examples/A0TinyExample.java</span></code>
+has a few lines of
+code that demonstrates how to do this). &nbsp;But SimpleORM itself
+does not
+care how the Connection has been created. &nbsp;The user
+simply&nbsp;writes a
+small method such as <code><span style="font-size: 10pt;">TestUte.initializeTest</span></code>
+to provide it.<br>
+<br>
+<code><span style="font-size: 10pt;">SLog.setLogClass</span></code>
+can be used
+to provide more complex logging, the provided <code><span style="font-size: 10pt;">SLogSlf4j</span></code>
+interface is recommended. &nbsp; </p>
+<p>SimpleORM itself is&nbsp;built with <st1:place w:st="on">Ant.</st1:place>&nbsp;&nbsp;<code><span style="font-size: 10pt;">build.xml</span></code>
+is very simple, and the
+default task compiles SimpleORM and runs all the tests on the provided
+Hsqldb
+database. &nbsp; Examples&nbsp;are classes with a main method,
+and there is one
+<code><span style="font-size: 10pt;">TestAll</span></code>
+class that simply
+calls the others so it is easy to run directly from IDEs. &nbsp;
+The <tt><span style="font-size: 10pt;">SDataLoad</span></tt>er
+is used to load test data (and
+the generalized design makes this easy to implement and use).</p>
+<p>There should be a single source of
+truth for the database
+table definitions. If most of the development is to be done with
+SimpleORM then
+this source of truth should be the SimpleORM Record definitions.<tt><span style="font-size: 10pt;">&nbsp;
+SRecordMeta.createTableSQL</span></tt> returns
+a string that contains the <tt><span style="font-size: 10pt;">CREATE
+TABLE</span></tt>
+statement. It is also possible to augment and override the basic
+SimpleORM
+definitions with database specific physical clauses. This makes it easy
+to
+generates a complete <tt><span style="font-size: 10pt;">.sql</span></tt>
+script
+that recreates the database.</p>
+<p>There is also a separate SimpleORMGenerate package that can
+generate
+SimpleORM definitions from an existing database schema.</p>
+<p>An&nbsp;Entity-Relationship&nbsp;tool can be used to
+view the resulting
+database, but tight integration remains future work. Existing tools do
+not seem
+to have the flexibility to add SimpleORM specific annotations. UML
+tools tend
+to be too low level for database modeling. </p>
+<p>If you wish to temporarily extend SimpleORM itself then note
+that most local
+variables and methods have package scope rather than private scope, and
+the
+.jar file is not sealed. Thus rather than changing the actual source,
+you can
+usually just poke extra classes into the <tt><span style="font-size: 10pt;">SimpleORM.core</span></tt>
+package and then access everything with static methods. This is
+obviously not
+supported, and you should make sure that your changes are folded back
+into the
+main source.</p>
+<h2><a name="mozTocId484049"></a>Conclusion</h2>
+<p>SimpleORM provides a&nbsp;simple
+yet powerful
+&nbsp;persistence framework without the need for complex
+configuration,
+reflection, parsing, byte code processing etc. &nbsp;&nbsp;It
+is full featured,
+yet only about 5% of the size of comparable frameworks such as
+Hibernate.
+&nbsp;This makes it easy to understand and work with and greatly
+reduces
+technical risk.<br>
+<br>
+SimpleORM represents objects as a mapping from field objects to their
+values.
+&nbsp;This avoids many of the complexities of attempting to
+represent them as
+pseudo POJOs. &nbsp;It also provides solid handles to fields and
+meta data.
+&nbsp;If <code><span style="font-size: 10pt;">get</span></code>
+and <code><span style="font-size: 10pt;">set</span></code>
+methods are added then they can also
+look exactly like POJOs to other classes should that be a requirement.<br>
+<br>
+The objects are packaged into DataSets which provides sound semantics
+for
+objects detached from a connection. &nbsp;It also ensures that
+associations are
+properly defined and that parents and children are always consistent.
+&nbsp;Internally, DataSets are independent of the database access
+layer, which
+facilitates other interfaces.<br>
+<br>
+The explicit use of meta data makes it easy to create meta data driven
+user
+interfaces such as SimpleWebApp. &nbsp;It also
+enables&nbsp;very flexible
+architectures to be constructed in which a core package's data schema
+can be
+cleanly extended by plug ins.<br>
+<br>
+<i>The superior pilot uses his superior judgment to avoid the
+need for his
+superior skills.</i> -- Aviation adage that also applies to
+software.<br>
+<br>
+<i><br>
+<em>"Simple. Flexible. Open Source. Doesn't require me to do a
+crash
+course in yet-another-application-server to get practical ORM. Doesn't
+require
+me to go on a search for tools to help me code due to excessive
+implementation
+complexity (you want how many classes for one ejb?). XML is great, but
+XML is
+not a programming language. Yay for less XML. I like that it allows the
+use of
+specific SQL when that is the better option. I like the performance,
+especially
+Query Random and Query Field. I like the adaptability, I can use/put it
+anywhere."</em><br>
+<em>Luke</em></i></p>
+</div>
+</body></html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/style-java.css"/>
+    <title>Open Source Persistence Frameworks in Java</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    window.google_analytics_uacct = "UA-76305-1";
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-76305-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+    })();
+
+</script><div id="page">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+        <tr class="headerbox">
+            <td rowspan="2" height="70">
+                <a href="/">
+                            <img src="/images/logo-java.png" border="0"
+                                 height="70" width="221" alt="" align="left"/>
+                        </a>
+                    </td>
+
+            <td class="searchbox">
+                <!--form id="searchform" method="get" action="/search">
+                    <input name="query" size="25" value="" type="text"/>
+                    <input value="Search" type="submit"/>
+                </form-->
+            </td>
+        </tr>
+        <tr class="menutr">
+            <td align="right" class="menu" valign="bottom" height="31">
+                <div>
+                    <a href="/last-projects">Recent Projects</a>
+                    <a href="/suggest-project">Suggest Project</a>
+                    <a href="/contact">Contact Us</a>
+                    <a id="login" href="/login" style="margin-right: 10px;">Login</a>
+
+                    <script type="text/javascript" xml:space="preserve">
+                        var start = document.cookie.indexOf('uid=');
+                        if (start != -1) {
+                            var end = document.cookie.indexOf(';', start);
+                            var uid = document.cookie.substring(start + 4, end)
+                            var login = document.getElementById('login');
+                            login.href = 'logout';
+                            login.innerHTML = 'Logout';
+                        }
+                    </script>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+        <tr valign="top">
+            <td style="width: 155px; background: #FFFEFE;">
+                <table border="0" id="leftmenu" cellpadding="0" cellspacing="0">
+ <tbody>
+    <tr><td class="category"><span>A</span></td></tr>
+          <tr><td class="first"><a href="/open-source/ajax">Ajax</a></td></tr>
+    <tr><td><a href="/open-source/aspect-oriented-frameworks">Aspect-Oriented</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>B</span></td></tr>
+          <tr><td class="first"><a href="/open-source/bloggers">Bloggers</a></td></tr>
+    <tr><td><a href="/open-source/build-systems">Build Systems</a></td></tr>
+    <tr><td><a href="/open-source/business-intelligence">Business Intelligence</a></td></tr>
+    <tr><td><a href="/open-source/bytecode-libraries">ByteCode</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>C</span></td></tr>
+          <tr><td class="first"><a href="/open-source/content-managment-systems">CMS</a></td></tr>
+    <tr><td><a href="/open-source/cache-solutions">Cache Solutions</a></td></tr>
+    <tr><td><a href="/open-source/charting-and-reporting">Charting & Reporting</a></td></tr>
+    <tr><td><a href="/open-source/chat-servers">Chat Servers</a></td></tr>
+    <tr><td><a href="/open-source/code-analyzers">Code Analyzers</a></td></tr>
+    <tr><td><a href="/open-source/code-beautifiers">Code Beautifiers</a></td></tr>
+    <tr><td><a href="/open-source/code-coverage">Code Coverage</a></td></tr>
+    <tr><td><a href="/open-source/collection-libraries">Collections</a></td></tr>
+    <tr><td><a href="/open-source/command-line">Command Line</a></td></tr>
+    <tr><td><a href="/open-source/connection-pools">Connection Pools</a></td></tr>
+    <tr><td><a href="/open-source/crawlers">Crawlers</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>D</span></td></tr>
+          <tr><td class="first"><a href="/open-source/database-engines">Databases</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>E</span></td></tr>
+          <tr><td class="first"><a href="/open-source/ejb-servers">EJB Servers</a></td></tr>
+    <tr><td><a href="/open-source/erp-crm">ERP & CRM</a></td></tr>
+    <tr><td><a href="/open-source/enterprise-service-bus">ESB</a></td></tr>
+    <tr><td><a href="/open-source/eclipse-plugins">Eclipse Plugins</a></td></tr>
+    <tr><td><a href="/open-source/expression-languages">Expression Languages</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>F</span></td></tr>
+          <tr><td class="first"><a href="/open-source/finance">Financial Soft</a></td></tr>
+    <tr><td><a href="/open-source/forum-software">Forum Soft</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>G</span></td></tr>
+          <tr><td class="first"><a href="/open-source/general-purpose">General Purpose</a></td></tr>
+    <tr><td><a href="/open-source/geospatial">Geospatial</a></td></tr>
+    <tr><td><a href="/open-source/groupware">Groupware</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>H</span></td></tr>
+          <tr><td class="first"><a href="/open-source/html-parsers">HTML Parsers</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>I</span></td></tr>
+          <tr><td class="first"><a href="/open-source/ides">IDEs</a></td></tr>
+    <tr><td><a href="/open-source/installer-generators">Installers</a></td></tr>
+    <tr><td><a href="/open-source/containers">Inversion of Control</a></td></tr>
+    <tr><td><a href="/open-source/issue-trackers">Issue Tracking</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>J</span></td></tr>
+          <tr><td class="first"><a href="/open-source/j2ee-frameworks">J2EE Frameworks</a></td></tr>
+    <tr><td><a href="/open-source/jdbc">JDBC</a></td></tr>
+    <tr><td><a href="/open-source/jms">JMS</a></td></tr>
+    <tr><td><a href="/open-source/jmx">JMX</a></td></tr>
+    <tr><td><a href="/open-source/jsp-tag-libraries">JSP Tag Libraries</a></td></tr>
+    <tr><td><a href="/open-source/job-schedulers">Job Schedulers</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>L</span></td></tr>
+          <tr><td class="first"><a href="/open-source/localization">Localization</a></td></tr>
+    <tr><td><a href="/open-source/logging">Logging Tools</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>M</span></td></tr>
+          <tr><td class="first"><a href="/open-source/mail-clients">Mail Clients</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>N</span></td></tr>
+          <tr><td class="first"><a href="/open-source/network-clients">Network Clients</a></td></tr>
+    <tr><td><a href="/open-source/network-servers">Network Servers</a></td></tr>
+    <tr><td><a href="/open-source/nosql">NoSQL Databases</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>O</span></td></tr>
+          <tr><td class="first"><a href="/open-source/obfuscators">Obfuscators</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>P</span></td></tr>
+          <tr><td class="first"><a href="/open-source/pdf-libraries">PDF Libraries</a></td></tr>
+    <tr><td><a href="/open-source/parser-generators">Parser Generators</a></td></tr>
+    <tr><td><a href="/open-source/persistence">Persistence</a></td></tr>
+    <tr><td><a href="/open-source/portals">Portals</a></td></tr>
+    <tr><td><a href="/open-source/profilers">Profilers</a></td></tr>
+    <tr><td><a href="/open-source/project-management">Project Management</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>R</span></td></tr>
+          <tr><td class="first"><a href="/open-source/rss-rdf-tools">RSS & RDF Tools</a></td></tr>
+    <tr><td><a href="/open-source/rule-engines">Rule Engines</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>S</span></td></tr>
+          <tr><td class="first"><a href="/open-source/sql-clients">SQL Clients</a></td></tr>
+    <tr><td><a href="/open-source/scripting-languages">Scripting Languages</a></td></tr>
+    <tr><td><a href="/open-source/search-engines">Search Engines</a></td></tr>
+    <tr><td><a href="/open-source/security">Security</a></td></tr>
+    <tr><td><a href="/open-source/source-control">Source Control</a></td></tr>
+    <tr><td><a href="/open-source/swing">Swing</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>T</span></td></tr>
+          <tr><td class="first"><a href="/open-source/template-engines">Template Engines</a></td></tr>
+    <tr><td><a href="/open-source/testing-tools">Testing Tools</a></td></tr>
+    <tr><td><a href="/open-source/text-processing">Text Processing</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>U</span></td></tr>
+          <tr><td class="first"><a href="/open-source/uml-modeling">UML & Modeling</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>V</span></td></tr>
+          <tr><td class="first"><a href="/open-source/validation">Validation</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>W</span></td></tr>
+          <tr><td class="first"><a href="/open-source/web-frameworks">Web Frameworks</a></td></tr>
+    <tr><td><a href="/open-source/web-mail">Web Mail</a></td></tr>
+    <tr><td><a href="/open-source/web-servers">Web Servers</a></td></tr>
+    <tr><td><a href="/open-source/web-services-tools">Web Services</a></td></tr>
+    <tr><td><a href="/open-source/web-testing-tools">Web Testing</a></td></tr>
+    <tr><td><a href="/open-source/wiki-engines">Wiki Engines</a></td></tr>
+    <tr><td><a href="/open-source/workflow-engines">Workflow Engines</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+<tr><td class="category"><span>X</span></td></tr>
+          <tr><td class="first"><a href="/open-source/xml-parsers">XML Parsers</a></td></tr>
+    <tr><td><a href="/open-source/xml-user-interface-toolkits">XML UI Toolkits</a></td></tr>
+    <tr><td class="spacer">&nbsp;</td></tr>
+ </tbody>
+</table>
+</td>
+
+            <td style="padding: 7px" id="main">
+                <div id="body">
+                    
+
+<h1>Open Source Persistence Frameworks in Java</h1>
+
+<h3><span><a href="/open-source/persistence/ibatis-sql-maps">Ibatis SQL Maps</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+The SQL Maps framework will help to significantly reduce the amount of Java code that is normally needed to access a relational database. This framework maps JavaBeans to SQL statements using a very simple XML descriptor. Simplicity is the biggest advantage of SQL Maps over other frameworks and object relational mapping tools. To use SQL Maps you need only be familiar with JavaBeans, XML and SQL. There is very little else to learn. There is no complex scheme required to join tables or execute complex queries. Using SQL Maps you have the full power of real SQL at your fingertips. The SQL Maps framework can map nearly any database to any object model and is very tolerant of legacy designs, or even bad designs. This is all achieved without special database tables, peer objects or code generation.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=405"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ibatis-sql-maps">Go To Ibatis SQL Maps</a></p>
+
+<h3><span><a href="/open-source/persistence/hibernate">Hibernate</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Hibernate is a powerful, ultra-high performance object/relational persistence and query service for Java. Hibernate lets you develop persistent objects following common Java idiom - including association, inheritance, polymorphism, composition and the Java collections framework. Extremely fine-grained, richly typed object models are possible. The Hibernate Query Language, designed as a "minimal" object-oriented extension to SQL, provides an elegant bridge between the object and relational worlds. Hibernate is now the most popular ORM solution for Java.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=173"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/hibernate">Go To Hibernate</a></p>
+
+<h3><span><a href="/open-source/persistence/ojb">OJB</a></span></h3>
+
+    <p>
+        <script type="text/javascript"><!--
+        google_ad_client = "ca-pub-1185571689816607";
+        /* XSource - Category */
+        google_ad_slot = "6382580408";
+        google_ad_width = 300;
+        google_ad_height = 250;
+        //-->
+        </script>
+        <script type="text/javascript"
+                src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script>
+
+        <script type="text/javascript"><!--
+        google_ad_client = "ca-pub-1185571689816607";
+        /* XSource - Category */
+        google_ad_slot = "6382580408";
+        google_ad_width = 300;
+        google_ad_height = 250;
+        //-->
+        </script>
+        <script type="text/javascript"
+                src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script>
+    </p>
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+ObJectRelationalBridge (OJB) is an Object/Relational mapping tool that allows transparent persistence for Java Objects against relational databases.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=174"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ojb">Go To OJB</a></p>
+
+<h3><span><a href="/open-source/persistence/torque">Torque</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Torque is a persistence layer. Torque includes a generator to generate all the database resources required by your application and includes a runtime environment to run the generated classes.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=175"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/torque">Go To Torque</a></p>
+
+<h3><span><a href="/open-source/persistence/castor">Castor</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Castor is an open source data binding framework for Javatm?. It's basically the shortest path between Java objects, XML documents and SQL tables. Castor provides Java to XML binding, Java to SQL persistence, and then some more.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=176"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/castor">Go To Castor</a></p>
+
+<h3><span><a href="/open-source/persistence/cayenne">Cayenne</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Cayenne is a powerful, full-featured Java Object Relational Mapping framework. It is open source and completely free. One of the main Cayenne distinctions is that it comes with cross-platform modeling GUI tools. This places Cayenne in the league of its own, making it a very attractive choice over both closed source commerical products and traditional "edit your own XML" open source solutions.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=177"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/cayenne">Go To Cayenne</a></p>
+
+<h3><span><a href="/open-source/persistence/tjdo">TJDO</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+TriActive JDO (TJDO) is an open source implementation of Sun's JDO specification (JSR 12), designed to support transparent persistence using any JDBC-compliant database. TJDO has been deployed and running successfully in many commercial installations since 2001.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=178"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/tjdo">Go To TJDO</a></p>
+
+<h3><span><a href="/open-source/persistence/jaxor">Jaxor</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Jaxor is a code-generating OR mapping tool which takes information defined in XML relating to the relational entities to be mapped and generates classes, interfaces and finder objects which can be used from any Java application (including JFC/Swing, J2EE and command-line tools). The actual code generation is handled by Velocity templates rather than by fixed mechanisms within the tool. This flexability allows easy tailoring and modification to the formatting or even the code that gets generated.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=179"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jaxor">Go To Jaxor</a></p>
+
+<h3><span><a href="/open-source/persistence/jdbm">JDBM</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+JDBM is a transactional persistence engine for Java. It aims to be for Java what GDBM is for other languages (C/C++, Python, Perl, etc.): a fast, simple persistence engine. You can use it to store a mix of objects and BLOBs, and all updates are done in a transactionally safe manner. JDBM also provides scalable data structures, such as HTree and B+Tree, to support persistence of large object collections.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=180"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jdbm">Go To JDBM</a></p>
+
+<h3><span><a href="/open-source/persistence/pbeans">pBeans</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+pBeans is a Java based persistence framework and an Object/Relational (O/R) database mapping layer. It is designed to be simple to use and completely automated.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=181"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/pbeans">Go To pBeans</a></p>
+
+<h3><span><a href="/open-source/persistence/simpleorm">SimpleORM</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+SimpleORM is Java Object Relational Mapping open source project (Apache style licence). It provides a simple but effective implementation of object/relational mapping on top of JDBC at low cost and low overhead. Not even an XML file to configure!</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=182"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/simpleorm">Go To SimpleORM</a></p>
+
+<h3><span><a href="/open-source/persistence/java-ultra-lite-persistence">Java Ultra-Lite Persistence</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+A small (less then 50KB) persistence framework.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=183"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/java-ultra-lite-persistence">Go To Java Ultra-Lite Persistence</a></p>
+
+<h3><span><a href="/open-source/persistence/prevayler">Prevayler</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Prevayler is the free-software Prevalence layer for Java.
+Ridiculously simple, Prevalence is by far the fastest and most transparent persistence, fault-tolerance and load-balancing architecture for Plain Old Java Objects (POJOs).</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=287"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/prevayler">Go To Prevayler</a></p>
+
+<h3><span><a href="/open-source/persistence/jpox-java-persistent-objects">JPOX Java Persistent Objects</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+JPOX is a full compliant implementation of Java Data Objects (JDO) API. The JDO API is a standard interface-based Java model abstraction of persistence. JPOX is free and released under an OpenSource license, and so the source code is available for download along with the JDO implementation.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=385"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jpox-java-persistent-objects">Go To JPOX Java Persistent Objects</a></p>
+
+<h3><span><a href="/open-source/persistence/smyle">Smyle</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Simple data storage API to help developers to focus on their applications instead of writing JDBC code.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=443"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/smyle">Go To Smyle</a></p>
+
+<h3><span><a href="/open-source/persistence/speedo">Speedo</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Speedo is an open source implementation of the JDO (TM) specification.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=557"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/speedo">Go To Speedo</a></p>
+
+<h3><span><a href="/open-source/persistence/xorm">XORM</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+XORM is an extensible object-relational mapping layer for Java applications</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=558"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/xorm">Go To XORM</a></p>
+
+<h3><span><a href="/open-source/persistence/space4j">Space4J</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Space4J (or S4J, for short) is a free prevalence implementation in Java. Prevalence is a concept started by Klaus Wuestefeld on how to store data in a real object oriented way, using only memory snapshots, transaction logs and serialization. In addition to the basic functionality it offers transparent support for clustering,  passivation and indexing.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=667"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/space4j">Go To Space4J</a></p>
+
+<h3><span><a href="/open-source/persistence/jdbcpersistence">JDBCPersistence</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+JDBCPersistence is yet another OR mapping layer. It differs from its peers in both implementation and API. Using bytecode generation at its core the framework generates classes that implement JDBC Logic which is specific to a table/bean pair. JDBCPersistence generates persistor classes at runtime on demand incurring no noticeable overhead on the development process. The entire framework configuration is done via API, which significantly improves start-up time and reduces library size.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=692"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jdbcpersistence">Go To JDBCPersistence</a></p>
+
+<h3><span><a href="/open-source/persistence/ammentos">Ammentos</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+A lightweight persistence framework for Java (JDK5.0 or later). Extremely simple to use, works whith annotations, does not require any configuration/mapping file, runs whith any JDBC compliant database (no SQL dialects to configure) and supports multi-device persistence.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=1045"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ammentos">Go To Ammentos</a></p>
+
+<h3><span><a href="/open-source/persistence/o-r-broker">O/R Broker</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+O/R Broker is a convenience framework for applications that use JDBC. It allows you to externalize your SQL statements into individual files, for readability and easy manipulation, and it allows declarative mapping from tables to objects. Not just JavaBeans objects, but any arbitrary POJO. This is the strength of O/R Broker compared to other similar persistence tools. It allows the developer to design proper object-oriented classes for persistence, without having to be forced to use JavaBeans only, and it has full support for inheritance hierarchies and circular references.
+One of the design goal for O/R Broker was simplicity, which means that there are only 4 public classes, and an XML Schema file for validation of the very simple XML configuration file.
+In short, O/R Broker is a JDBC framework that does not dictate domain class design, whether that be having to conform to the JavaBeans spec, having to extend a superclass or implement an interface, but allows persistence independence and proper object-oriented class design.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=1047"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/o-r-broker">Go To O/R Broker</a></p>
+
+<h3><span><a href="/open-source/persistence/pat">PAT</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+PAT stands for "Persistent Applications Toolkit". Like many other software it simplifies developing of persistence layers of business applications. It does it by providing object-oriented environment for persistence of your objects: POJOs
+And.. it really does it.
+
+PAT provides almost transparent data layer for a business application. It employs state-of-the-art techniques to achieve it. These are OO, AOP (JBossAOP), Java, Prevayler, Ant, JUnit, Log4j, @@annotations and others. It cooperates well with web applications: Struts (and possibly other web frameworks), Tomcat, JBoss AS.
+(AOP term: persistence aspect)</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=1093"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/pat">Go To PAT</a></p>
+
+<h3><span><a href="/open-source/persistence/super-csv">Super CSV</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Super CSV is a CSV package for processing CSV files. Super CSV is designed around solid Object-oriented principles, and thus aims to leverage your Object-oriented code, making it easier to write and maintain.
+
+Super CSV offers the following features:
+
+    <br/><br/>&nbsp;* The ability to read/write POJO beans, Maps and String lists.
+
+    <br/>&nbsp;* The ability to easily convert input/output to integers, dates, trimming strings, etc...
+
+    <br/>&nbsp;* The ability to easily verify data conforms to some specification, such as number ranges, string sizes, uniqueness and even optional columns.
+
+    <br/>&nbsp;* The ability to read/write data from anywhere in any encoding. As long as you provide a Reader or a Writer.
+
+    <br/>&nbsp;* Support for Windows, MAC and Linux line breaks.
+
+    <br/>&nbsp;* Configurable separation character, space character end end of line character (for writing files)
+
+    <br/>&nbsp;* Correctly handling of characters such as " and ,
+
+    <br/>&nbsp;* Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection
+</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=19984"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/super-csv">Go To Super CSV</a></p>
+
+<h3><span><a href="/open-source/persistence/qlor">QLOR</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+QLOR (Q-LOGIC Object Relational Mapping Framework) is a performant Object/Relational Mapping and persistence/query framework for Java. It's easy to use and deploy with other technologies. It is heightly structured and designed. 
+
+Features:
+   <br/><br/>&nbsp;* O2O, O2M and M2M database mappings.
+   <br/>&nbsp;* Multiple primary keys without modifying the class 
+   diagram. 
+   <br/>&nbsp;* Cascading primary keys on associations.
+   <br/>&nbsp;* Easy inheritance and multi inheritance mapping.
+   <br/>&nbsp;* Programmatic mappings.
+   <br/>&nbsp;* Multi-files project mapping.
+   <br/>&nbsp;* Declarative database encryption function.
+   <br/>&nbsp;* Multi-database support.
+   <br/>&nbsp;* Clean and easy to read persistence layer log and more...
+</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=1270"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/qlor">Go To QLOR</a></p>
+
+<h3><span><a href="/open-source/persistence/daozero">Daozero</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Daozero reduces DAO codes based on Spring & iBatis. The old way is to write codes and invoke iBatis API explicitly, but daozero implements DAO interfaces in runtime, invokes iBatis API for developers atuomaticaly. Replace old DAOs with it directly.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=2092"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/daozero">Go To Daozero</a></p>
+
+<h3><span><a href="/open-source/persistence/jgrinder">JGrinder</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+JGrinder is a framework for mapping Objects in Java to various persistent stores. These include relational databases, in memory 'storage', and flat files. The architecture allows additional persistent stores to be supported (such as storing objects over a messaging middleware).</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=2556"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jgrinder">Go To JGrinder</a></p>
+
+<h3><span><a href="/open-source/persistence/velosurf">Velosurf</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Velosurf is a database mapping layer library for the Apache Velocity template engine. It provides automatic database mapping of tables and relationships without any code generation. It is a lightweight placeholder to heavy persistence systems.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=3163"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/velosurf">Go To Velosurf</a></p>
+
+<h3><span><a href="/open-source/persistence/odal">ODAL</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+ODAL is database persistence framework with emphasis on maintainability and performance. Features include query API, ORM, data validation/conversion, stored procedure support, code generation. Minimal dependencies. Short startup time.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=11015"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/odal">Go To ODAL</a></p>
+
+<h3><span><a href="/open-source/persistence/jpersist">jPersist</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+jPersist is an extremely powerful object-relational database persistence API that manages to avoid the need for configuration and annotation; mapping is automatic. It uses JDBC, and can work with any relational database and any type of connection resource. It uses information obtained from the database to handle mapping between the database and Java objects, so mapping configuration is not needed, and annotation is not needed. In fact, there is no configuration needed at all.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=17063"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jpersist">Go To jPersist</a></p>
+
+<h3><span><a href="/open-source/persistence/mr-persister">Mr. Persister</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Mr. Persister is an object persistence API, that makes it possible to read and write objects of any size to and from relational databases.
+The implemented/planned features includes easier JDBC operations via JDBC templates (Spring style), automatic connection / transaction handling, object relational mapping, dynamic reports, connection pooling, caching, replication, debugging and more.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=13705"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/mr-persister">Go To Mr. Persister</a></p>
+
+<h3><span><a href="/open-source/persistence/sequalite">SeQuaLite</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+SeQuaLite is a data access framework over jdbc. Features include CRUD operations, Lazy-Load, Cascading, Paging, on-the-fly SQL generation. It helps reduce development time effectively.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=19977"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/sequalite">Go To SeQuaLite</a></p>
+
+<h3><span><a href="/open-source/persistence/beankeeper">BeanKeeper</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+NetMind BeanKeeper is an O/R (object/relation) mapping library. Its task is to map java objects to a relational database, and to offer a powerful query service to retrieve them.
+</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=15866"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/beankeeper">Go To BeanKeeper</a></p>
+
+<h3><span><a href="/open-source/persistence/persist">Persist</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Persist is a minimalist Java ORM/DAO library designed for high performance and ease of use. Unlike most ORM tools, Persist does not aim to completely isolate application code from relational databases. Instead, it intends to minimize the effort to handle data stored in a RDBMS through JDBC, without making compromises on performance and flexibility.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=19442"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/persist">Go To Persist</a></p>
+
+<h3><span><a href="/open-source/persistence/apache-openjpa">Apache OpenJPA</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+It is a feature-rich implementation of the persistence part of Enterprise Java Beans 3.0, also known as the Java Persistence API (JPA), and is available under the terms of the Apache Software License. OpenJPA can be used as a stand-alone POJO persistence layer, or it can be integrated into any EJB3.0 compliant container and many lightweight frameworks.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=19954"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/apache-openjpa">Go To Apache OpenJPA</a></p>
+
+<h3><span><a href="/open-source/persistence/ebean-orm">Ebean ORM</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Ebean is Object Relational Mapping Persistence Layer.
+
+Ebean is designed to be easy to learn and use. It follows the mapping specification of JPA with annotations such as @Entity, @OneToOne, @OneToMany etc.
+
+Ebean also has a relational api when you want to bypass ORM in favour of using your own SQL for fetching, updating and calling stored procedures.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20064"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ebean-orm">Go To Ebean ORM</a></p>
+
+<h3><span><a href="/open-source/persistence/lightweightmodellayer">LightweightModelLayer</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+LML is a small (82Kb) but reliable persistence engine based in annotations and reflection. It has no dependencies and can be used for standalone and web applications. 
+It's a clean and easy to use library for developers to forget worrying about database communication.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20143"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/lightweightmodellayer">Go To LightweightModelLayer</a></p>
+
+<h3><span><a href="/open-source/persistence/orm-lite">ORM Lite</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+The package provides simple but powerful functionality for persisting Java objects to SQL databases while avoiding the complexity and overhead of more standard ORM packages. All you need to do is simply add Java annotations to your classes. It comes with powerful abstract DAO classes so your database read/write classes can be 5 lines long.  Includes a flexible QueryBuilder to easily construct simple and complex queries.  Supports MySQL, Postgres, Microsoft SQL Server, H2, Derby, HSQLDB, and Sqlite and can be extended to additional databases relatively easily.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20736"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/orm-lite">Go To ORM Lite</a></p>
+
+<h3><span><a href="/open-source/persistence/ormlite">ORMLite</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Object Relational Mapping Lite (ORM Lite) provides some simple, easy, and basic functionality for persisting Java objects to SQL databases while avoiding the complexity and overhead of more standard ORM packages. 
+
+ORMLite supports natively MySQL, Postgres, Microsoft SQL Server, H2, Derby, HSQLDB, and Sqlite and can be extended to additional ones relatively easily.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20769"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ormlite">Go To ORMLite</a></p>
+
+<h3><span><a href="/open-source/persistence/mybatis">MyBatis</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+MyBatis is the new name of the former project Ibatis SQL Maps. At the same time, the code has been moved from Apache Software Foundation to Google Code. Moreover, nothing has been changed.
+It is still a java persistence framework with support for custom SQL, stored procedures and advanced mappings. MyBatis minimizes the need of JDBC code, manual setting of parameters and retrieval of results. The framework can map primitives, Map interfaces and Java POJOs to database record, using XML or Annotations for configuration.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20797"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/mybatis">Go To MyBatis</a></p>
+
+<h3><span><a href="/open-source/persistence/eclipselink">EclipseLink</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+The Eclipse Persistence Services Project (EclipseLink) delivers a comprehensive open-source Java persistence solution. EclipseLink focuses on standards with advanced features, performance and scalability for enterprise software developers across data sources, formats, and containers.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20805"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/eclipselink">Go To EclipseLink</a></p>
+
+<h3><span><a href="/open-source/persistence/ujorm">Ujorm</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+The open-source ORM framework was designed for the rapid Java development based on a relation database and the framework provides a type-safe API for database queries so the most of typing errors are detected before running the application. Developer can take an advantage of a code-completion in their favorite IDE at coding time.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20835"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/ujorm">Go To Ujorm</a></p>
+
+<h3><span><a href="/open-source/persistence/persistence4j">Persistence4J</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Persistence4j is a very simple library which can be used to persist data into Relational databases.This library frees you from writing the Data transfer objects. Just create a POJO and simply save it using this library.I have also integrate Java transaction API with this library
+The library is written 100% in the Java language and minimum Java 1.6 is required.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20863"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/persistence4j">Go To Persistence4J</a></p>
+
+<h3><span><a href="/open-source/persistence/athena-framework-for-java">Athena Framework for Java</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+Athena Framework is a full fledged enterprise object-relational mapping (ORM) framework that employs metadata as mapping configuration. It greatly simplifies Java web application development by removing the requirement of manual mapping and manual database schema updating. In addition to features like Java object persistence, powerful EJBQL querying execution and comprehensive code generation, Athena has built-in support for multi-tenancy which enables developers to build cloud applications easily. Athena can be easily integrated with other libraries like Struts or Spring to provide full stacks of service. 
+
+As a solid ORM framework with built-in support for cloud applications, Athena offers many other distinguished features.
+
+    <br/><br/>&nbsp;* Metadata as the Single Source of Truth
+    <br/>&nbsp;* Implementing Change at the Speed of Your Thought
+    <br/>&nbsp;* Gaining Total Control of EJBQL Querying
+    <br/>&nbsp;* Fine-Grained Query Specific Partial Attribute Loading
+    <br/>&nbsp;* Developing Multi-Tenancy Cloud SaaS Applications With Ease
+    <br/>&nbsp;* Switching Between Soft Deletion and Hard Deletion Quickly
+    <br/>&nbsp;* The Ultimate Solution to Database Versioning and Migration
+</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=20920"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/athena-framework-for-java">Go To Athena Framework for Java</a></p>
+
+<h3><span><a href="/open-source/persistence/jooq">jOOQ</a></span></h3>
+
+    <table style="font-size:12px; margin-top:5px; margin-left:5px;" width="100%">
+        <tr>
+            <td>
+jOOQ is a fluent API for typesafe SQL query construction and execution. It combines these essential features:
+
+<br/><br/>&nbsp;* Code Generation: jOOQ generates a simple Java representation of your database schema. Every table, view, stored procedure, enum, UDT is a class.
+<br/>&nbsp;* Active records: jOOQ implements an easy-to-use active record pattern. It is NOT an OR-mapper, but provides a 1:1 mapping between tables/views and classes. Between columns and members.
+<br/>&nbsp;* Typesafe SQL: jOOQ allows for writing compile-time typesafe querying using its built-in fluent API.
+<br/>&nbsp;* SQL standard: jOOQ supports all standard SQL language features including the more complex UNION's, nested SELECTs, joins, aliasing
+<br/>&nbsp;* Vendor-specific feature support: jOOQ encourages the use of vendor-specific extensions such as stored procedures, UDT's and ARRAY's, recursive queries, and many more.</td>
+            <!--
+        <td>
+            <img sytle="float:right;" width="120" height="90" src="/show-image?id=21090"/>
+            </td>
+        
+        -->
+        </tr>
+    </table>
+    <p style="padding: 0; padding-left:6px;"><a href="/open-source/persistence/jooq">Go To jOOQ</a></p>
+
+<br>
+
+<p>
+    </p>
+
+</div>
+            </td>
+
+            <td style="width:165px; padding-top: 1px;">
+                <script type="text/javascript"><!--
+google_ad_client = "ca-pub-1185571689816607";
+/* XSource - Right */
+google_ad_slot = "8411177203";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><br/> <br/> <br/>
+
+                <div>
+                    <center>
+                        <a href="/feeds/rss2.0.xml">
+                            <img border="0" src="/images/feed-icon16x16.png" alt="RSS Feed"/>
+                        </a>
+
+                        <a href="/feeds/rss2.0.xml">Feed</a>
+                    </center>
+                </div>
+
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <center>
+            <br/>
+            Java is a trademark or registered trademark of Sun Microsystems, Inc. in the United States and other countries. This site is independent of Sun Microsystems, Inc.<br/>
+            <br/>
+        </center>
+    </div>
+
+</div>
+</body>
+</html>

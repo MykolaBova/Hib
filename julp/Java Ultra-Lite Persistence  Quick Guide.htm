@@ -1,0 +1,284 @@
+<!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en" 
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Java Ultra-Lite Persistence: Quick Guide</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="GENERATOR" content="Quanta Plus">
+</head>
+<body>
+<p>
+<i><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=<b>101932</b>&amp;amp;type=4"
+    border="0" alt="SourceForge.net Logo"/></a></i>
+</p>
+ <table>
+  <tbody>
+   <tr>    
+     <td>| <a href="index.html">Home</a></td>
+     <td>| <a href="features.html">Features</a></td>
+     <td>| <a href="faq.html">FAQ</a></td>
+	 <td>| <a href="tipsandtricks.html">Tips and Tricks</a></td>
+	 <td>| <a href="./javadoc/index.html">API</a></td>
+     <td>| <a href="download.html">Download</a> </td>
+    </tr>
+  </tbody>
+</table>
+ <h1>Java Ultra-Lite Persistence (JULP)</h1>
+ <h2>Quick Guide</h2>
+ 
+ To use <b>JULP</b> you need to extend your object from <code>org.julp.AbstractDomainObject</code>. See <a href="tipsandtricks.html">Tips and Tricks</a> to learn a workaround. 
+ This is can be done using small Swing GUI utility: <code>org.julp.gui.generator.GeneratorFrame</code> or commandline utility <code>org.julp.gui.ResultSet2JavaObjectsGenerator</code>.
+ The utilities will generate object which extends <code>org.julp.AbstractDomainObject</code>, object which extends <code>org.julp.DomainObjectFactory</code> and mappings <code>.properties</code>.
+ 
+<br>
+<ul><li>Here is <code>Product</code>:</li></ul>
+
+<pre>
+<code>
+	package org.julp.examples;
+
+	public class Product extends org.julp.AbstractDomainObject implements java.io.Serializable {
+		
+		public Product() {}
+		
+		protected java.lang.Integer id;
+		protected java.lang.String name;
+		protected double price;
+		protected java.lang.String comments;
+		
+		public java.lang.Integer getId() {
+			return this.id;
+		}
+		
+		public void setId(java.lang.Integer id) {
+			if (!isLoading()) {
+				/* DBColumn nullability: NoNulls - modify as needed */
+				if (id == null) {
+					throw new IllegalArgumentException("Missing field: id");
+				}    
+				if (!id.equals(this.id)) {
+					this.modified = true;
+				}
+			}
+			this.id = id;
+		}
+		
+		public java.lang.String getName() {
+			return this.name;
+		}
+		
+		public void setName(java.lang.String name) {
+			if (!isLoading()) {
+				/* DBColumn nullability: NoNulls - modify as needed */
+				if (name == null || name.trim().equals("")) {
+					throw new IllegalArgumentException("Missing field: name");
+				}
+				if (!name.equals(this.name)) {
+					this.modified = true;
+				}
+			}
+			this.name = name;
+		}
+		
+		public double getPrice() {
+			return this.price;
+		}
+		
+		public void setPrice(double price) {
+			if (!isLoading()) {
+				/* DBColumn nullability: NoNulls - modify as needed */
+				if (price != this.price) {
+					this.modified = true;
+				}
+			}
+			this.price = price;
+		}
+		
+		public java.lang.String getComments() {
+			return this.comments;
+		}
+		
+		public void setComments(java.lang.String comments) {
+			if (!isLoading()) {
+				/* DBColumn nullability: Nullable - modify as needed */
+				if (comments == null && this.comments != null) {
+					this.modified = true;
+				}else if (comments != null && this.comments == null) {
+					this.modified = true;
+				}else if (!comments.equals(this.comments)) {
+					this.modified = true;
+				}
+			}
+			this.comments = comments;
+		}    
+	}
+	</code>
+	</pre>
+	<ul><li>Here is <code>ProductFactory</code>:</li></ul>
+	<pre>
+	<code>
+	package org.julp.examples;
+
+	import java.util.*;
+	import org.julp.*;
+	import java.sql.*;
+
+	public class ProductFactory extends org.julp.DomainObjectFactory implements java.io.Serializable {
+		
+		public ProductFactory() {
+			this.setRequestor(Product.class);
+			/* IT IS NOT NESSESARY TO LOAD MAPPINGS THIS WAY, COULD BE ANYTHING: XML, JNDI, DATABASE, ETC... */
+			setMapping(loadMappings("Product.properties"));
+			sqlMap = loadMappings("Product.sql");        
+		}
+		
+		protected Properties sqlMap = null;
+		
+		public Properties loadMappings(String path) {        
+			java.io.InputStream inStream = null;
+			Properties props = new Properties();
+			try {
+				inStream = this.getClass().getResourceAsStream(path);
+				props.load(inStream);
+			} catch(java.io.IOException ioe) {
+				throw new RuntimeException(ioe);
+			} finally {
+				try {
+					inStream.close();
+				} catch(java.io.IOException ioe) {
+					throw new RuntimeException(ioe);
+				}
+			}
+			return props;
+		}
+		
+		public int findAllProducts() {
+			int records = 0;
+			try {
+				records = this.load(this.dbServices.getResultSet(sqlMap.getProperty("findAllProducts")));
+				printAllProducts();
+			} catch (SQLException sqle) {
+				throw new RuntimeException(sqle);
+			}
+			return records;
+		}
+		
+		public void createAndStoreProducts() {
+			int records = findAllProducts();
+			Product product = new Product();
+			// this is NOT proper way to genarate id
+			product.setId(new Integer(records + 1));
+			product.setName("Zaurus SL-5600");
+			product.setPrice(299.98);
+			product.setComments("Good deal!");        
+			this.create(product);
+			System.out.println("\ncreated product: " + product + "\n");             
+			
+	/*       
+			 another way: 
+			 product.create();
+			 product.setObjectId(this.getNextObjectId());
+			 this.getObjectList().add(product);
+			 or:
+			 product.create();
+			 this.setObject(product);
+	*/
+		   
+			java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+			nf.setMaximumFractionDigits(2);
+			ListIterator li = this.objectList.listIterator();
+			while (li.hasNext()) {
+				Product productToUpdate = (Product) li.next();
+				double currentPrice = productToUpdate.getPrice();
+				if (currentPrice < 10) {
+					double newPrice = currentPrice * 1.1;                
+					productToUpdate.setPrice(Double.parseDouble(nf.format(newPrice)));
+					productToUpdate.store();
+				}
+			}
+			
+			System.out.println("\n======================= this is after data modifications ===========================\n");
+			printAllProducts(); 
+			
+			try {
+				this.dbServices.beginTran();
+				boolean success = this.writeData();
+				Throwable t = this.getWhatIsWrong();
+				if (t != null) {
+					throw t;
+				}
+				if (success) {
+					this.dbServices.commitTran();
+				}else{
+					throw new SQLException("Data modification: failed");
+				}            
+				this.syncSqlStatus();
+			} catch (Throwable t) {
+				try {
+					this.dbServices.rollbackTran();
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+					throw new RuntimeException(sqle);
+				}    
+				t.printStackTrace();            
+			} finally {
+				try {
+					this.dbServices.release(true);
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+					throw new RuntimeException(sqle);
+				}
+			}
+			
+			System.out.println("\n======================= this is after COMMIT & syncSqlStatus() or after ROLLBACK ===========================\n");
+			printAllProducts();       
+		}
+		
+		public void getProductPages() {
+			System.out.println("\n======================= this is all products ===========================\n");
+			findAllProducts();
+			this.setPageSize(10);
+			PageHolder page = this.getPage(1);
+			System.out.println("\nTotal records: " + page.getObjectsTotal() + ", Page " + page.getPageNumber() + " of " + page.getPagesTotal() + "\n");
+			Iterator iter1 = page.getPage().iterator();
+			while (iter1.hasNext()) {
+			   Product product = (Product) iter1.next(); 
+			   System.out.println(product);
+			}
+			
+			PageHolder thirdPage = this.getPage(3);
+			System.out.println("\nTotal records: " + thirdPage.getObjectsTotal() + ", Page " + thirdPage.getPageNumber() + " of " + thirdPage.getPagesTotal() + "\n");
+			Iterator iter2 = thirdPage.getPage().iterator();
+			while (iter2.hasNext()) {
+			   Product product = (Product) iter2.next(); 
+			   System.out.println(product);
+			}        
+		}
+		
+		protected void printAllProducts() {
+			List products = this.getObjectList();
+			Iterator productsIter = products.iterator();
+			while (productsIter.hasNext()) {
+				Product product = (Product) productsIter.next();
+				System.out.println(product);
+			}
+		}
+	}
+</code>
+ </pre> 
+ <ul><li>See examples. Please read ProjectJulp/julp-examples/EXAMPLES-README.txt</li></ul> 
+ <br><br><br>
+ <table>
+  <tbody>
+   <tr>    
+     <td>| <a href="index.html">Home</a></td>
+     <td>| <a href="features.html">Features</a></td>
+     <td>| <a href="faq.html">FAQ</a></td>
+	 <td>| <a href="tipsandtricks.html">Tips and Tricks</a></td>
+	 <td>| <a href="./javadoc/index.html">API</a></td>
+     <td>| <a href="download.html">Download</a> |</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,30 @@
+CREATE TABLE object (
+  id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
+  type TEXT NOT NULL
+);
+
+CREATE INDEX object_type_idx ON object (type);
+
+
+CREATE TABLE person (
+  id INTEGER PRIMARY KEY REFERENCES object (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  name TEXT NOT NULL,
+  mother INTEGER REFERENCES person (id) ON DELETE SET NULL ON UPDATE CASCADE,
+  father INTEGER REFERENCES person (id) ON DELETE SET NULL ON UPDATE CASCADE,
+  sex TEXT NOT NULL,
+  dob TEXT NOT NULL,
+  spouse INTEGER REFERENCES person (id) ON DELETE SET NULL ON UPDATE CASCADE,
+  height INTEGER NOT NULL,
+  weight REAL NOT NULL,
+  hair_color CHAR(2) NOT NULL,
+  eye_color CHAR(2) NOT NULL,
+  hair_color_alt CHAR(2)
+);
+
+CREATE TABLE friendmap (
+  person_id1 INTEGER NOT NULL REFERENCES person (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  person_id2 INTEGER NOT NULL REFERENCES person (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX friendmap_person_id1_idx ON friendmap (person_id1);
+CREATE INDEX friendmap_person_id2_idx ON friendmap (person_id2);

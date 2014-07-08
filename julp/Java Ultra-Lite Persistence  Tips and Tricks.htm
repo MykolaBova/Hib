@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Java Ultra-Lite Persistence: Tips and Tricks</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta content="Quanta Plus" name="GENERATOR">
+</head>
+<body>
+<p>
+<i><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=<b>101932</b>&amp;amp;type=4"
+    border="0" alt="SourceForge.net Logo"/></a></i>
+</p>
+<table>
+  <tbody>
+    <tr>
+      <td>| <a href="index.html">Home</a></td>
+      <td>| <a href="features.html">Features</a></td>
+      <td>| <a href="faq.html">FAQ</a></td>
+      <td>| <a href="quickguide.html">Quick Guide</a></td>	  
+	  <td>| <a href="./javadoc/index.html">API</a></td>
+      <td>| <a href="download.html">Download</a> |</td>
+    </tr>
+  </tbody>
+</table>
+<h1>Java Ultra-Lite Persistence (JULP)</h1>
+<h2>Tips and Tricks</h2>
+<ul>
+  <li>If you want to use TIMESTAMP or DATETIME or version column for
+Optimistic concurrency locking you can use this trick:<br>
+<b>JULP</b> supposed to automatically retrieve PrimaryKey info from
+DataBaseMetaData, and you can add your TIMESTAMP/DATETIME/version
+column to PrimaryKey info and this column will be used for creating
+WHERE clause for UPDATE and DELETE:<br>
+    <br>
+    <code> CREATE TABLE PRODUCT(ID INTEGER NOT NULL PRIMARY KEY,NAME
+VARCHAR,PRICE DECIMAL, ..., TIMESTAMP DATE_MODIFIED) <br>
+...<br>
+String catalog;<br>
+String schema;<br>
+String table = "PRODUCT";<br>
+List pk;<br>
+...<br>
+pk = PKCache.getInstance().getPrimaryKey(catalog, schema, table);<br>
+pk.add("PRODUCT.DATE_MODIFIED");<br>
+PKCache.getInstance().setPrimaryKey(catalog, schema, table, pk);<br>
+...<br>
+factory.remove(product);<br>
+...<br>
+</code> 
+Generated SQL would be: <code> DELETE FROM PRODUCT WHERE ID = ? AND DATE_MODIFIED = ?;</code><br>
+Note: retrieving PrimaryKey info from <code>java.sql.DatabaseMetaData</code> occurred once
+per JVM instance in <code>DomainObjectFactory.load()</code> or
+<code>DomainObjectFactory.writeData()</code>, so if those methods never
+called, the info is unavailable.
+However you can call <br>
+    <code>PKCache.getInstance().getPrimaryKey(catalog, schema, table);</code><br>
+or<br>
+    <code>PKCache.getInstance().setPrimaryKey(catalog, schema, table);</code><br>
+  </li>
+  <li>Normally to make your object able to persist you need to extend
+<code>org.julp.AbstractDomainObject</code>
+class. If you can't or don't want to extend, just make your class
+implement <code>org.julp.DomainObject</code> interface and copy and paste members
+and methods from <code>org.julp.AbstractDomainObject</code> into your class. Otherwise object will be enchanced in run-time
+  using CGLIB/ASM libraries.</li>
+  <li>
+      To make field non-persistent just use <code>metaData.setReadOnly(metaData.getColumnIndexByFieldName(fieldName), true);</code>
+  </li>
+</ul>
+<table>
+  <tbody>
+    <tr>
+      <td>| <a href="index.html">Home</a></td>
+      <td>| <a href="features.html">Features</a></td>
+      <td>| <a href="faq.html">FAQ</a></td>
+      <td>| <a href="quickguide.html">Quick Guide</a></td>	
+	  <td>| <a href="./javadoc/index.html">API</a></td>  
+      <td>| <a href="download.html">Download</a> |</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

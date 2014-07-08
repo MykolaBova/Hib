@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ <login>  
+  <user visible="false">leonard</user>     
+  <java.security.auth.login.config>/home/leonard/ProjectIMS/projects/deploy/ims_client/conf/auth.conf</java.security.auth.login.config>  
+  <naming visible="false">
+   <java.naming.factory.initial>org.jnp.interfaces.NamingContextFactory</java.naming.factory.initial>
+   <java.naming.provider.url>127.0.0.1</java.naming.provider.url>
+   <java.naming.factory.url.pkgs>org.jboss.naming</java.naming.factory.url.pkgs>   
+  </naming>  
+  <realm readonly="true" visible="false">IMSDBRealm</realm>  
+ </login>
+ 
+ <defaults>
+  <font>   
+   <name defaultValue="Default" editable="true" help="Enter default font name" values="Serif, Sans, Helvetica">Serif</name>
+   <size datatype="java.lang.Integer" defaultValue="10" editable="false" help="Select default font size" values="8,9,10,11,12,14,16">12</size>   
+  </font>
+  <look-and-feel defaultValue="SystemLookAndFeel" editable="true" help="Select Look and Feel">javax.swing.plaf.metal.MetalLookAndFeel</look-and-feel>  
+  <!--log4j.configuration>/..\\client\\conf\\ims-log.properties</log4j.configuration-->
+  <log4j.configuration>/home/leonard/projects/ProjectIMS/projects/deploy/ims_client/conf/ims-log1.properties</log4j.configuration>  
+ </defaults>
+ 
+ <external-url visible="false">
+  <security-info-url><![CDATA[http://finance.yahoo.com/d/quotes.csv?s\=TICKERS_PLACEHOLDER&f\=snl1d1t1c1ohgv&e\=.]]></security-info-url>
+ </external-url>
+ 
+ <queries visible="false">
+  <!--query1>c:\\ProjectIMS\\client\\conf\\queries1.xml</query1-->
+  <query-file1>/home/leonard/projects/ProjectIMS/client/conf/queries1.xml</query-file1>
+ </queries>
+ 
+ <avail-look-and-feel visible="false">
+  <classname>com.incors.plaf.kunststoff.KunststoffLookAndFeel</classname>
+  <classname>com.oyoaha.swing.plaf.oyoaha.OyoahaLookAndFeel</classname>
+  <classname>net.sourceforge.mlf.metouia.MetouiaLookAndF</classname>
+  <classname>com.birosoft.liquid.LiquidLookAndFeel</classname>
+  <classname>com.oyoaha.swing.plaf.oyoaha.OyoahaLookAndFeel</classname>
+  <classname>napkin.NapkinLookAndFeel</classname>  
+  <classname>de.muntjak.tinylookandfeel.TinyLookAndFeel</classname>  
+  <classname>CrossPlatformLookAndFeel</classname>
+  <classname>com.sun.java.swing.plaf.motif.MotifLookAndFeel</classname> 
+  <classname>SystemLookAndFeel</classname>
+ </avail-look-and-feel>
+ 
+</configuration>

@@ -1,0 +1,1285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>My Tiny Mini ORM with Commons DBUtils and Generics | Iqbalyusuf&#039;s Blog</title>
+<link rel="pingback" href="http://iqbalyusuf.wordpress.com/xmlrpc.php" />
+<meta name="google-site-verification" content="2PbC7Xaw95v0cpmxqPNugH64gq8PRoUTbyndehbmlq0" />
+<meta name="msvalidate.01" content="4FE6B40D72314B805A5B2522A7FF33C1" />
+<link rel="alternate" type="application/rss+xml" title="Iqbalyusuf&#039;s Blog &raquo; Feed" href="http://iqbalyusuf.wordpress.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Iqbalyusuf&#039;s Blog &raquo; Comments Feed" href="http://iqbalyusuf.wordpress.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Iqbalyusuf&#039;s Blog &raquo; My Tiny Mini ORM with Commons DBUtils and&nbsp;Generics Comments Feed" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){oldonload();func();}}}
+/* ]]> */
+</script>
+<link rel='stylesheet' id='all-css-0' href='http://s1.wp.com/_static/??-eJyNktFuwyAMRX9ojKaLpr1M+xZKXOIUMMJOo/z9SNN1rbKiPXGN7jHXFnpKylIUiKLDqJIfHUbWHNDDnDINYOWxerXML/pvzOMJWA8gydiTulQb+8GTuwET5c50rJ2ng/H/8zKG5I0672tJMB4xosxaegglUxoPV7BGWcpQ7kMysjgCdGjAlwaxOnZI7z/UIvsy/HbuTRDNMntYfagjCRYr30TtQQekPFkjSPGhUEdvMNfQDMtSi3S6uO7KGpSIZW2tuTd5ga9nPWWEvA71K5/tpW+ffYK7jhN2DoQvyR1Rl6F8iAX4Cp9Nu2ubZv+xexu+ASDMEMI=' type='text/css' media='all' />
+<link rel='stylesheet' id='print-css-0' href='http://s0.wp.com/wp-content/mu-plugins/global-print/global-print.css?m=1387483371g' type='text/css' media='print' />
+<script type='text/javascript' src='http://s0.wp.com/_static/??-eJyFzVEKwjAMgOEL2bUbCr6IZ6k1jsQlrU3r0NPbgYKCsKdA8pHfzsmEKAWkWFLL8YQTmKqQ/dh2BuUSO9KNbQ4lTPUMukC6VciP91gFhnHMvkDHKB/8VU1RC4NqS/65/qZQ7gjzKiMoyYeryaD4XL4e+dBvndvt+8EN9AIo5lvB'></script>
+<link rel='stylesheet' id='all-css-0' href='http://s2.wp.com/wp-content/mu-plugins/highlander-comments/style.css?m=1377793621g' type='text/css' media='all' />
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='http://s2.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563g&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://iqbalyusuf.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://iqbalyusuf.wordpress.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Using Commons VFS to do&nbsp;SFTP' href='http://iqbalyusuf.wordpress.com/javasnippets/using-commons-vfs-to-do-sftp/' />
+<link rel='next' title='Jersey GWT on Tomcat in&nbsp;Eclipse' href='http://iqbalyusuf.wordpress.com/javasnippets/jersey-gwt-on-tomcat-in-eclipse/' />
+<meta name="generator" content="WordPress.com" />
+<link rel='canonical' href='http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/' />
+<link rel='shortlink' href='http://wp.me/PnkVx-5h' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=json&amp;url=http%3A%2F%2Fiqbalyusuf.wordpress.com%2Fjavasnippets%2Fmy-tiny-mini-orm-with-commons-dbutils-and-generics-2%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/1.0/?format=xml&amp;url=http%3A%2F%2Fiqbalyusuf.wordpress.com%2Fjavasnippets%2Fmy-tiny-mini-orm-with-commons-dbutils-and-generics-2%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="My Tiny Mini ORM with Commons DBUtils and Generics" />
+<meta property="og:url" content="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/" />
+<meta property="og:description" content="Object Relational Mapping is, as per wikipedia.org: “… is a programming technique for converting data between incompatible type systems in object-oriented programming languages. This creates, in ef..." />
+<meta property="article:published_time" content="2011-10-21T15:46:23+00:00" />
+<meta property="article:modified_time" content="2011-10-30T21:30:33+00:00" />
+<meta property="article:author" content="http://iqbalyusuf.wordpress.com/author/iqbalyusuf/" />
+<meta property="og:site_name" content="Iqbalyusuf&#039;s Blog" />
+<meta property="og:image" content="http://iqbalyusuf.files.wordpress.com/2011/10/wlemoticon-smile.png" />
+<meta name="twitter:site" content="@wordpressdotcom" />
+<meta name="twitter:image" content="http://iqbalyusuf.files.wordpress.com/2011/10/wlemoticon-smile.png?w=240" />
+<meta name="twitter:card" content="summary" />
+<meta property="fb:app_id" content="249643311490" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+<link rel="shortcut icon" type="image/x-icon" href="http://s2.wp.com/i/favicon.ico?m=1311975824g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="http://s2.wp.com/i/favicon.ico?m=1311975824g" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon-precomposed" href="http://s0.wp.com/i/webclip.png?m=1391188133g" />
+<link rel='openid.server' href='http://iqbalyusuf.wordpress.com/?openidserver=1' />
+<link rel='openid.delegate' href='http://iqbalyusuf.wordpress.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="http://iqbalyusuf.wordpress.com/osd.xml" title="Iqbalyusuf&#039;s Blog" />
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/opensearch.xml" title="WordPress.com" />
+<meta name="application-name" content="Iqbalyusuf&#039;s Blog" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="Java Cloud Development" /><meta name="msapplication-task" content="name=Subscribe;action-uri=http://iqbalyusuf.wordpress.com/feed/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico" /><meta name="title" content="My Tiny Mini ORM with Commons DBUtils and&nbsp;Generics | Iqbalyusuf&#039;s Blog on WordPress.com" />
+<meta name="description" content="Object Relational Mapping is, as per wikipedia.org: “… is a programming technique for converting data between incompatible type systems in object-oriented programming languages. This creates, in effect, a &quot;virtual object database&quot; that can be used from within the programming language. There are both free and commercial packages available that perform object-relational mapping, although some programmers&hellip;" />
+
+<script type="text/javascript">
+var wpcom_ads = { bid: 5561991, pt: 'permalink', wa: 1, colorscheme: 'light', domain: 'iqbalyusuf.wordpress.com', url: 'http://iqbalyusuf.wordpress.com', gid: '', };
+</script>
+
+		<script type="text/javascript" src="http://partner.googleadservices.com/gampad/google_service.js"></script>
+		<script type="text/javascript">
+			GS_googleAddAdSenseService("ca-pub-3443918307802676");
+			GS_googleEnableAllServices();
+		</script>
+		<script type="text/javascript" src="http://c.amazon-adsystem.com/aax2/amzn_ads.js"></script>
+		<script type="text/javascript">
+			try {
+				amznads.getAds("3033");
+			} catch(e) { /* ignore */ }
+		</script>
+		<script type="text/javascript">
+		var amznKeys = amznads.getKeys();
+		if (typeof amznKeys != "undefined" && amznKeys != "") { for (var i =0; i < amznKeys.length; i++) { var key = amznKeys[i]; GA_googleAddAttr("amzn", key);} }
+		document.close();
+		</script>
+		<script type="text/javascript">
+		GA_googleAddAttr( 'WordAds', '1' );
+GA_googleAddAttr( 'BlogId', '5561991' );
+GA_googleAddAttr( 'Domain', 'iqbalyusuf.wordpress.com' );
+GA_googleAddAttr( 'PageURL', 'http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/' );
+GA_googleAddAttr( 'WordAds-MI', '1' );
+GA_googleAddAttr( 'AdSafe', '1' );
+GA_googleAddAttr( 'NoNetFill', '0' );
+GA_googleAddAttr( 'LangId', '1' );
+GA_googleAddAttr( 'MarkupVer', '2' );
+GA_googleAddAttr( 'Autotag', 'technology' );
+GA_googleAddAttr( 'theme_bg', 'ffffff' );
+GA_googleAddAttr( 'theme_text', '555555' );
+GA_googleAddAttr( 'theme_link', '557799' );
+GA_googleAddAttr( 'theme_border', 'dddddd' );
+GA_googleAddAttr( 'theme_url', 'b4c24b' );
+
+		</script>
+		<script type="text/javascript">
+			GA_googleAddSlot('ca-pub-3443918307802676', 'Wordads_MIS_Mrec_Below_adsafe');
+
+		</script>
+		<script type="text/javascript">
+			GA_googleFetchAds();
+		</script>
+		<script type="text/javascript">
+		jQuery( window ).load( function() {
+			jQuery( "a.wpadvert-about" ).text( "About these ads" );
+		} );
+		</script>
+		<script type="text/javascript">
+		var wpcom_adclk_hovering = false;
+		var wpcom_adclk_recorded = false;
+		var wpcom_adclk_theme = "Simpla";
+		var wpcom_adclk_slot = "belowpost";
+		var wpcom_adclk_network = ( typeof wpcom_adclk_network === "undefined" ) ? "" : wpcom_adclk_network ;
+
+		jQuery(document).ready( function() {
+			function wpcom_adclk_hover_yes() { wpcom_adclk_hovering = true; }
+			function wpcom_adclk_hover_no() { wpcom_adclk_hovering = false; }
+			jQuery(".wpa").click(wpcom_adclk_click);
+			jQuery(".wpa iframe").hover( wpcom_adclk_hover_yes, wpcom_adclk_hover_no );
+			jQuery(".wpa object").hover( wpcom_adclk_hover_yes, wpcom_adclk_hover_no );
+
+			jQuery(window).blur( function() {
+				if ( wpcom_adclk_hovering ) { wpcom_adclk_click(); }
+			});
+		});
+
+		function wpcom_adclk_impression() {
+			var stat_gif = document.location.protocol + "//stats.wordpress.com/g.gif?v=wpcom-no-pv";
+			stat_gif += "&x_ads_imp_theme=" + wpcom_adclk_theme;
+			stat_gif += "&x_ads_imp_placement="+wpcom_adclk_slot;
+			stat_gif += "&x_ads_imp_network=" + wpcom_adclk_network;
+			stat_gif += "&x_ads_imp_theme_network="+wpcom_adclk_theme+"_"+wpcom_adclk_network;
+			new Image().src = stat_gif + "&baba=" + Math.random();
+			return true;
+		}
+
+		function wpcom_adclk_click() {
+			if (wpcom_adclk_recorded) { return true; } // no double counting
+			var stat_gif = document.location.protocol + "//stats.wordpress.com/g.gif?v=wpcom-no-pv";
+			stat_gif += "&x_ads_click_theme=" + wpcom_adclk_theme;
+			stat_gif += "&x_ads_click_placement="+wpcom_adclk_slot;
+			stat_gif += "&x_ads_click_network=" + wpcom_adclk_network;
+			stat_gif += "&x_ads_click_theme_network="+wpcom_adclk_theme+"_"+wpcom_adclk_network;
+
+			new Image().src = stat_gif + "&baba=" + Math.random();
+			wpcom_adclk_recorded = true;
+			var now=new Date(); var end=now.getTime()+250;
+			while(true){now=new Date();if(now.getTime()>end){break;}}
+			return true;
+		}
+		</script><style type="text/css" id="syntaxhighlighteranchor"></style>
+<script type="text/javascript">
+	window.google_analytics_uacct = "UA-52447-2";
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-52447-2']);
+	_gaq.push(['_setDomainName', 'wordpress.com']);
+	_gaq.push(['_initData']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})();
+</script>
+</head>
+<body class="page page-id-327 page-child parent-pageid-260 page-template-default mp6 highlander-enabled highlander-light">
+
+<div id="wrap">
+	<div id="header">
+		<h1><a href="http://iqbalyusuf.wordpress.com/">Iqbalyusuf&#039;s Blog</a></h1>
+		<p class="description">Java Cloud Development</p>
+			</div><!-- / #header -->
+
+	<div id="content">
+									<div class="post-327 page type-page status-publish hentry entry entry-1" id="post-327">
+		<div class="entrytitle">
+			<h2><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/" rel="bookmark">My Tiny Mini ORM with Commons DBUtils and&nbsp;Generics</a></h2>
+		</div>
+		<div class="entrybody">
+			<p>Object Relational Mapping is, as per <a href="http://en.wikipedia.org/wiki/Object-relational_mapping" target="_blank">wikipedia.org</a>: “… is a <a href="http://en.wikipedia.org/wiki/Computer_programming">programming</a> technique for converting data between incompatible <a href="http://en.wikipedia.org/wiki/Type_system">type systems</a> in <a href="http://en.wikipedia.org/wiki/Object-oriented">object-oriented</a> programming languages. This creates, in effect, a &#8220;virtual <a href="http://en.wikipedia.org/wiki/Object_database">object database</a>&#8221; that can be used from within the programming language. There are both free and commercial packages available that perform object-relational mapping, although some programmers opt to create their own ORM tools.”. Yes most of the time we Java developers use either <a href="http://www.hibernate.org/" target="_blank">Hibernet</a> or <a href="http://www.datanucleus.org/" target="_blank">DataNucleus</a> or <a href="http://www.mybatis.org/" target="_blank">MyBatis</a> (formerly iBatis) or some <a href="http://en.wikipedia.org/wiki/List_of_object-relational_mapping_software" target="_blank">other ORM Software</a>.  Using ORM with DAO (Data Access Object) pattern keeps my SQL and database specific information localized in one package. DAO just makes my life easier when it comes to maintenance and makes database access logic easier to understand. However often time using these ORM software may be a overkill for small projects at hand. I have found out that using Commons DBUtils with Java Generics provided me with an light-weight technique to simulate a ORM.</p>
+<h2>Environment</h2>
+<ul>
+<li>Sandbox OS: Windows Vista 32 bit</li>
+<li>RDBMS: MySQL</li>
+<li>IDE : Eclipse Indigo</li>
+<li>Libraries :
+<ul>
+<li>Commons DBUtils</li>
+<li>MySql Connector J</li>
+</ul>
+</li>
+</ul>
+<h2>Problem Definition</h2>
+<p>I wanted to find a solution that would enable me to map RDBMS Table to Java Domain Objects (DO). Well that is not really hard to do. Using JDBC one can retrieve rows from database table and populate Java domain objects. For example a table named Person may have three rows worth of data. After performing a mapping operation I like to have a collection like ArrayList populated with three Java data objects like Person object. I’ll have to repeat the process for each table that I wanted to use as Java objects. Well, I’m too lazy. I simply didn’t want to repeat boiler plate Java code for each and every tables. Using Commons DBUtils and Java Generics kept me lazy.</p>
+<p>I will create two tables “persons” and “addresses” that I will want to mapped to Java objects where each row will be represented by a instance of Person.java and Addresses.java classes. PERSONS and ADDRESSES tables will be represented as ArrayList&lt;Person&gt; and ArrayList&lt;Address&gt; collections.</p>
+<h3>Here are the tables and data in them:</h3>
+<h4>PERSONS Table</h4>
+<pre>+----+--------+----------+
+| id | fname  | lname    |
++----+--------+----------+
+|  1 | John   | Doe      |
+|  2 | Simon  | Davidson |
+|  3 | Bilkis | Banu     |
++----+--------+----------+</pre>
+<h4>ADDRESSES Table</h4>
+<pre>+----+----------+----------+-------------+--------+-------+-------+
+| id | personid | streetno | streetname  | city   | state | zip   |
++----+----------+----------+-------------+--------+-------+-------+
+| 11 |        1 | 1234     | Magnolia St | Austin | TX    | 78758 |
+| 22 |        2 | 52525    | Dallas Ave  | Austin | TX    | 78755 |
++----+----------+----------+-------------+--------+-------+-------+</pre>
+<h3>How to Convert Table to Java Collection</h3>
+<p>Every table that I like to map to a Java objects must have a Java class. Database table column name must match Java member variable name in order to be imported correctly. Also notice that all my Java bean objects implements TableDefinition. TableDefinition is a marker interface with no empty methods. I’ll explain purpose of TableDefinition later when I’ll be explaining Mapper.java class.</p>
+<h4>Person.java</h4>
+<pre class="brush: java; title: ; notranslate" title="">
+......
+.........
+public class Person implements TableDefinition{
+
+	public Person(){};
+
+	//Database Fields
+	private int id ;
+	private String fname ;
+	private String lname ;
+.......
+.....
+//getters and setters omitted
+</pre>
+<h4>Address.java</h4>
+<div id="codeSnippetWrapper">
+<div id="codeSnippet" style="font-size:8pt;overflow:visible;width:100%;color:black;direction:ltr;line-height:12pt;">
+<pre class="brush: java; title: ; notranslate" title="">&lt;/span&gt;
+public class Address implements TableDefinition{
+	private int id;
+	private int personid;
+	private String streetno;
+	private String streetname;
+	private String city;
+	private String state;
+	private String zip;
+//Setters and getters omitted
+..........
+.....
+}
+</pre>
+<h3 style="font-size:8pt;overflow:visible;width:100%;color:black;direction:ltr;line-height:12pt;"><span class="Apple-style-span" style="font-size:12px;line-height:18px;"><span class="Apple-style-span" style="font-family:Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;font-size:15px;font-weight:bold;line-height:19px;white-space:normal;">Data Access Objects</span></span></h3>
+</div>
+</div>
+<p>Let us now examine a very simple data access object for Person class. Basically I define my SQL statement and send the SQL along with database connection object to invoke Mapper class. If I need a new method I just need to write a new SQL only. Notice that I am not doing any result set iteration to extract out database row information column by column to populate my ArraList&lt;Person&gt; collection. All the parsing and extraction of table field values are happening at Mapper class.</p>
+<h4>PersonDAO.java</h4>
+<pre class="brush: java; title: ; notranslate" title="">
+public class PersonDAO {
+
+	private DataSource ds = null;
+
+	private PersonDAO(){}
+
+	public PersonDAO(DataSource ds){
+		this.ds = ds;
+	}
+
+	public ArrayList&lt;Person&gt; getAllPersons() throws Exception {
+		String sql = &quot;select * from persons&quot;;
+		return callMapper(sql);
+	}
+
+	public ArrayList&lt;Person&gt; getPersonById(int id) throws Exception {
+		String sql = &quot;select * from persons where id=&quot;+id;
+		return callMapper(sql);
+	}
+
+	public ArrayList&lt;Person&gt; getPersonsByFirstName(String firstName) throws Exception {
+		String sql = &quot;select * from persons where fname='&quot; + firstName + &quot;'&quot;;
+		return callMapper(sql);
+	}
+
+	public ArrayList&lt;Person&gt; callMapper(String sql) throws Exception{
+		ArrayList&lt;Person&gt; persons = new Mapper().fetchData(ds, Person.class, sql);
+		return persons;
+	}
+}
+</pre>
+<div id="codeSnippet" style="font-size:8pt;overflow:visible;width:100%;color:black;direction:ltr;line-height:12pt;">
+<h3 style="font-size:8pt;overflow:visible;width:100%;color:black;direction:ltr;line-height:12pt;"><span class="Apple-style-span" style="font-family:Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;font-size:15px;font-weight:bold;line-height:19px;white-space:normal;">Mapper the Tiny Great ORM Engine of mine <img class="wlEmoticon wlEmoticon-smile" style="border-style:none;" src="http://iqbalyusuf.files.wordpress.com/2011/10/wlemoticon-smile.png?w=480" alt="Smile" /></span></h3>
+</div>
+<p>Mapper has a single method fetchData() that performs query on database table. Any Domain Object Class that implements TableDefinition interface can be used as input. The output will be a ArrayList encapsulating input Domain Object. This will help reuse this code for most bean like Domain Objects which are basically row of a Table on a RDBMS system. Again notice the absence of any iteration over a result set to extract field information to populate bean’s properties. Also notice the cleanness of the code. Apache Commons DBUtils project is to be given credit for all this magic.</p>
+<p>Excerpt from Commons site</p>
+<p><a href="http://commons.apache.org/dbutils/index.html" target="_blank">Some of the advantages of using DbUtils are:</a></p>
+<ul>
+<ul>
+<li>No possibility for resource leaks. Correct JDBC coding isn&#8217;t difficult but it is time-consuming and tedious. This often leads to connection leaks that may be difficult to track down.</li>
+<li>Cleaner, clearer persistence code. The amount of code needed to persist data in a database is drastically reduced. The remaining code clearly expresses your intention without being cluttered with resource cleanup.</li>
+<li>Automatically populate JavaBean properties from ResultSets. You don&#8217;t need to manually copy column values into bean instances by calling setter methods. Each row of the ResultSet can be represented by one fully populated bean instance.</li>
+</ul>
+</ul>
+<p>Mapper class was written by incorporating codes found at DbUtils examples <a href="http://commons.apache.org/dbutils/examples.html" target="_blank">page</a>. Just to make me a little bit more lazy I added a Generic type information that enabled me to reuse this Mapper class over and over again with all my JavaBeans. This is where TableDefinition interface comes into play. Notice all ArrayList defined in Mapper class has a type definition as &lt;? extends TableDefinition&gt;, which is making it possible to pass any JavaBean objects thus enabling the reuse of Mapper class.</p>
+<pre class="brush: java; title: ; notranslate" title="">
+package com.dclonline.db;
+
+import java.util.ArrayList;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+public class Mapper {
+
+	public ArrayList fetchData(DataSource ds,
+			Class&lt;? extends TableDefinition&gt; claz, String sql) throws Exception {
+
+		if (ds == null || claz.getSuperclass().getName().isEmpty()
+				|| sql.isEmpty()) {
+			throw new java.lang.NullPointerException();
+		}
+
+		ArrayList result = null;
+
+		QueryRunner run = new QueryRunner(ds);
+
+		// Use the BeanListHandler implementation to convert all
+		// ResultSet rows into a List of JavaBeans.
+		ResultSetHandler h = new BeanListHandler(claz);
+
+		// Execute the SQL statement and return the results in a List of
+		// objects generated by the BeanListHandler.
+		result = run.query(sql, h);
+
+		return result;
+	}
+
+}
+</pre>
+<h3>How to Convert View</h3>
+<p>We can also import database views based on Join statements. We will need a template object that will have View fields that we will want to import and a sql statement. Let’s say we want to convert a view that joins PERSONS table with ADDRESSES table. The view will display First Name, Last Name, and Zip Code fields for persons who have address entries on ADDRESSES table.</p>
+<h4>View “PersonAddress”</h4>
+<pre> | LastName | FirstName | ZipCode |
+ +----------+-----------+---------+
+ | Doe      | John      | 78758   |
+ | Davidson | Simon     | 78755   |
+ +----------+-----------+---------+</pre>
+<h4>JavaBean PersonAddressView</h4>
+<pre class="brush: java; title: ; notranslate" title="">
+
+.....
+ ..........
+&lt;pre&gt;public class PersonAddressView implements TableDefinition{
+	private String lastName;
+	private String firstName;
+	private String zipCode;
+&lt;/pre&gt;
+ //setters and getters are omitted
+ ............
+ }
+
+</pre>
+<p>On bean object we have to make sure our properties lastName, firstName, and zipCode actually matches our SQL statement’s select field names. See bellow, field names are marked as blue.</p>
+<blockquote>
+<pre>SELECT p.lname as LastName, p.fname as FirstName, a.zip as ZipCode
+FROM   test.persons p INNER JOIN test.addresses a
+ON     p.id = a.personid</pre>
+<p><span style="font-family:'Courier New';font-size:xx-small;"><br />
+</span></p></blockquote>
+<p>Now let us examine the actual DAO Java code. Nothing new here. The code looks very similar to PersonDAO. So it makes no difference if we retrieve a View or Table from database into our Java collection as long as we take care to define our JavaBeans’s properties to match SQL’s field names.</p>
+<pre class="brush: java; title: ; notranslate" title="">
+package com.dclonline.db;
+
+import java.util.ArrayList;
+
+import javax.sql.DataSource;
+
+public class PersonAddressViewDAO {
+	private DataSource ds = null;
+
+	private PersonAddressViewDAO(){}
+
+	public PersonAddressViewDAO(DataSource ds){
+		this.ds = ds;
+	}
+
+	public ArrayList&lt;PersonAddressView&gt; getAllRows() throws Exception {
+
+		String sql= &quot;SELECT &quot; +
+					&quot;p.lname as lastName, p.fname as firstName, a.zip as zipCode &quot; +
+					&quot;FROM   &quot; +
+					&quot;test.persons p INNER JOIN test.addresses a &quot; +
+					&quot;ON &quot; +
+					&quot;p.id = a.personid&quot;;
+
+		ArrayList&lt;PersonAddressView&gt; personAddressViewRows = new Mapper().fetchData(ds, PersonAddressView.class, sql);
+
+		return personAddressViewRows;
+
+	}
+}
+
+</pre>
+<h3>Conclusion:</h3>
+<p>This tutorial was part of a middle sized project that spanned over 5 months. I wrote many many classes on that project but I felt the most important piece of code I wrote was Mapper.java. It was a a-ha moment for me personally and I finally could get why I would use Generics. It was also nice to see a utility like DbUtils exists which doesn’t force you to use XML for small Java Object persistence operations. <img class="wlEmoticon wlEmoticon-smile" style="border-style:none;" src="http://iqbalyusuf.files.wordpress.com/2011/10/wlemoticon-smile.png?w=480" alt="Smile" /> Hope you enjoyed it.</p>
+<h3>Resources:</h3>
+<ul>
+<li><a href="http://commons.apache.org/dbutils/" target="_blank">Apache Commons DbUtils</a></li>
+<li><a href="https://bitbucket.org/iyusuf/tinyminyorm/src" target="_blank">Source code for this tutorial at bitbucket.org</a></li>
+<li><a href="http://download.oracle.com/javase/tutorial/java/generics/index.html" target="_blank">Java Generics</a></li>
+</ul>
+		<div class="wpcnt">
+		<div class="wpa">
+
+			<a class="wpa-about" href="http://en.wordpress.com/about-these-ads/" rel="nofollow">About these ads</a>
+
+			<div class="u"><script type='text/javascript'>
+			GA_googleFillSlot("Wordads_MIS_Mrec_Below_adsafe");
+
+			</script></div>
+
+		</div>
+		</div><div id="jp-post-flair" class="sharedaddy sd-rating-enabled sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" class="share-twitter sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=twitter" title="Click to share on Twitter" id="sharing-twitter-327"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" class="share-facebook sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=facebook" title="Share on Facebook" id="sharing-facebook-327"><span>Facebook</span></a></li><li class="share-google-plus-1"><a rel="nofollow" class="share-google-plus-1 sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=google-plus-1" title="Click to share on Google+" id="sharing-google-327"><span>Google</span></a></li><li class="share-stumbleupon"><a rel="nofollow" class="share-stumbleupon sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=stumbleupon" title="Click to share on StumbleUpon"><span>StumbleUpon</span></a></li><li class="share-tumblr"><a rel="nofollow" class="share-tumblr sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=tumblr" title="Click to share on Tumblr"><span>Tumblr</span></a></li><li class="share-linkedin"><a rel="nofollow" class="share-linkedin sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=linkedin" title="Click to share on LinkedIn" id="sharing-linkedin-327"><span>LinkedIn</span></a></li><li class="share-email"><a rel="nofollow" class="share-email sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=email" title="Click to email this to a friend"><span>Email</span></a></li><li class="share-digg"><a rel="nofollow" class="share-digg sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=digg" title="Click to Digg this post"><span>Digg</span></a></li><li class="share-print"><a rel="nofollow" class="share-print sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#print" title="Click to print"><span>Print</span></a></li><li class="share-reddit"><a rel="nofollow" class="share-reddit sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=reddit" title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-pinterest"><a rel="nofollow" class="share-pinterest sd-button share-icon" href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?share=pinterest" title="Click to share on Pinterest"><span>Pinterest</span></a></li><li class="share-end"></li></ul></div></div></div><div class='sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded' id='like-post-wrapper-5561991-327-53bbc1550e322' data-src='//widgets.wp.com/likes/#blog_id=5561991&amp;post_id=327&amp;origin=iqbalyusuf.wordpress.com&amp;obj_id=5561991-327-53bbc1550e322' data-name='like-post-frame-5561991-327-53bbc1550e322'><h3 class='sd-title'>Like this:</h3><div class='likes-widget-placeholder post-likes-widget-placeholder' style='height:55px'><span class='button'><span>Like</span></span> <span class="loading">Loading...</span></div><span class='sd-text-color'></span><a class='sd-link-color'></a></div></div>					</div>
+
+		<div class="entrymeta">
+		<div class="postinfo">
+					</div>
+		</div>
+
+	</div>
+	<div class="commentsblock">
+			<h3 id="comments">5 Responses to &#8220;My Tiny Mini ORM with Commons DBUtils and&nbsp;Generics&#8221;</h3>
+
+	<ol class="commentlist">
+	<li class="comment byuser comment-author-sirrotn even thread-even depth-1 parent highlander-comment" id="comment-2523">
+	<div id="div-comment-2523">
+	<div class="comment-author vcard">
+		<img alt='' src='http://0.gravatar.com/avatar/c569040c8dd6a7d3c8c9d4130c46b938?s=32&#038;d=identicon&#038;r=G' class='avatar avatar-32' height='32' width='32' />		<cite class="fn"><a href='http://snippetory.wordpress.com' rel='external nofollow' class='url'>sirrotn</a></cite> Says:
+	</div>
+		<br />
+
+	<small class="comment-meta commentmetadata"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#comment-2523" title="">October 30, 2011 at 4:53 am</a> </small>
+
+	<p>Thank you for this post. This is a approach I really like. However ther is one thing I don&#8217;t understand. I would have expected the fetch data method to be<br />
+&#8230; ArrayList fetchData(DataSource ds,  Class claz,&#8230;<br />
+It should avoid the cast when fetching the data. Is there a reason for this not to work? In fact generics sometimes provide effects hard to predict and I didn&#8217;t test.<br />
+In fact this should integrate fine with <a href="http://www.jproggy.org/snippetory/" rel="nofollow">Snippetory</a><br />
+Have fun,<br />
+Sir RotN</p>
+
+	<div class="reply">
+		<a class='comment-reply-link' href='/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?replytocom=2523#respond' onclick='return addComment.moveForm("div-comment-2523", "2523", "respond", "327")'>Reply</a>	</div>
+	</div>
+<ul class="children">
+<li class="comment byuser comment-author-iqbalyusuf bypostauthor odd alt depth-2 highlander-comment" id="comment-2528">
+	<div id="div-comment-2528">
+	<div class="comment-author vcard">
+		<img alt='' src='http://0.gravatar.com/avatar/9cb7d3baccb9c722808868a82be7f1b9?s=32&#038;d=identicon&#038;r=G' class='avatar avatar-32' height='32' width='32' />		<cite class="fn">iqbalyusuf</cite> Says:
+	</div>
+		<br />
+
+	<small class="comment-meta commentmetadata"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#comment-2528" title="">October 30, 2011 at 4:24 pm</a> </small>
+
+	<p>Thanks sirrotn. You are right about not needing a casting. Fetch data method is working without generic type casting. I&#8217;ve updated sample source code at bitbucket. Thanks again.</p>
+<p>_Iqbal</p>
+
+	<div class="reply">
+		<a class='comment-reply-link' href='/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?replytocom=2528#respond' onclick='return addComment.moveForm("div-comment-2528", "2528", "respond", "327")'>Reply</a>	</div>
+	</div>
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+<li class="comment even thread-odd thread-alt depth-1 highlander-comment" id="comment-3116">
+	<div id="div-comment-3116">
+	<div class="comment-author vcard">
+		<img alt='' src='http://1.gravatar.com/avatar/4dff6107dad698e182775054d31a05f0?s=32&#038;d=identicon&#038;r=G' class='avatar avatar-32' height='32' width='32' />		<cite class="fn">Jim Leo</cite> Says:
+	</div>
+		<br />
+
+	<small class="comment-meta commentmetadata"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#comment-3116" title="">January 2, 2012 at 8:34 pm</a> </small>
+
+	<p>Instead of fetching the datasource multiple time in each dao<br />
+I would suggest that to just fetch it once in the Mapper class.</p>
+<p>Datasource is actually a db connection pool which has to fetch only once (therefore using static field).</p>
+<p>Also: you can make all your DAO classes to extend the<br />
+Mapper class so that you don&#8217;t have to import its methods<br />
+in each DAO class.</p>
+<p>You can do something like:<br />
+Mapper.java</p>
+<p>//imports not shown</p>
+<p>public class Mapper {<br />
+private static DataSource ds;<br />
+private Class claz;</p>
+<p>static {<br />
+   try {<br />
+        DataSource ds = new DataSourceMySql().getDataSource();<br />
+   } catch (Exception e) {<br />
+        e.printStacktrace();<br />
+   }</p>
+<p>  public Mapper(Class claz)<br />
+    {<br />
+        this.claz = claz;<br />
+    }</p>
+<p>public ArrayList fetchData(String sql) throws Exception {<br />
+       //NOTE: parameter passed only String sql.<br />
+//datasource and clasz already set above<br />
+                //your implementation<br />
+        }</p>
+<p>}</p>
+<p>in Person.java for example</p>
+<p>//public class TableNameDAO extends Mapper</p>
+<p>public class PersonDAO extends Mapper {</p>
+<p>//constructor<br />
+PersonDAO() {<br />
+   super(Person.class) //set claz field in Mapper class<br />
+    //super(TableName.class);<br />
+}</p>
+<p> public ArrayList getAllPersons() throws Exception {<br />
+                String sql = &#8220;select * from persons&#8221;;<br />
+                return fetchData(sql);<br />
+ }</p>
+<p>public ArrayList getPersonById(int id) throws Exception {<br />
+                String sql = &#8220;select * from persons where id=&#8221;+id;<br />
+                return fetchData(sql);<br />
+  }</p>
+<p>        public ArrayList getPersonsByFirstName(String firstName) throws Exception {<br />
+                String sql = &#8220;select * from persons where fname=&#8217;&#8221; + firstName + &#8220;&#8216;&#8221;;<br />
+                return fetchData(sql);<br />
+        }</p>
+<p>//no need to implement callMapper()<br />
+}</p>
+
+	<div class="reply">
+		<a class='comment-reply-link' href='/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?replytocom=3116#respond' onclick='return addComment.moveForm("div-comment-3116", "3116", "respond", "327")'>Reply</a>	</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment byuser comment-author-iqbalyusuf bypostauthor odd alt thread-even depth-1 parent highlander-comment" id="comment-3117">
+	<div id="div-comment-3117">
+	<div class="comment-author vcard">
+		<img alt='' src='http://0.gravatar.com/avatar/9cb7d3baccb9c722808868a82be7f1b9?s=32&#038;d=identicon&#038;r=G' class='avatar avatar-32' height='32' width='32' />		<cite class="fn">iqbalyusuf</cite> Says:
+	</div>
+		<br />
+
+	<small class="comment-meta commentmetadata"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#comment-3117" title="">January 2, 2012 at 9:15 pm</a> </small>
+
+	<p>Hi Jim Leo:</p>
+<p>Thanks a ton for your valuable feed backs. I&#8217;ll incorporate your suggestion into code base. Do you have any public blog that I can link back to?</p>
+<p>Thanks again.</p>
+<p>Iqbal</p>
+
+	<div class="reply">
+		<a class='comment-reply-link' href='/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?replytocom=3117#respond' onclick='return addComment.moveForm("div-comment-3117", "3117", "respond", "327")'>Reply</a>	</div>
+	</div>
+<ul class="children">
+<li class="comment even depth-2 highlander-comment" id="comment-3123">
+	<div id="div-comment-3123">
+	<div class="comment-author vcard">
+		<img alt='' src='http://1.gravatar.com/avatar/4dff6107dad698e182775054d31a05f0?s=32&#038;d=identicon&#038;r=G' class='avatar avatar-32' height='32' width='32' />		<cite class="fn">Jim Leo</cite> Says:
+	</div>
+		<br />
+
+	<small class="comment-meta commentmetadata"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#comment-3123" title="">January 3, 2012 at 10:02 am</a> </small>
+
+	<p>You&#8217;re most welcome iqbah. Currently I don&#8217;t have any blog yet on programming. I still have a lot to learn as I&#8217;ll only be graduating next week and will go for my training soon. </p>
+<p>It&#8217;s just coincidence that I&#8217;ve done something similar using Commons DBUtils package since I can&#8217;t get JPA to work with the online server I&#8217;m using, and is tired of boiler plate codes using JDBC having to convert manually ResultSets into Lists/Maps fora all DAO classes.</p>
+<p>The idea i get is from JPA 2.0 code generated by netbeans for sessions beans for entity classes which has an abstract class similar to your Mapper class.</p>
+<p>Regards,</p>
+<p>Jim Leo.</p>
+
+	<div class="reply">
+		<a class='comment-reply-link' href='/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/?replytocom=3123#respond' onclick='return addComment.moveForm("div-comment-3123", "3123", "respond", "327")'>Reply</a>	</div>
+	</div>
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	</ol>
+
+	<div class="navigation">
+		<div class="alignleft"></div>
+		<div class="alignright"></div>
+	</div>
+	<br />
+
+	
+								<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://iqbalyusuf.wordpress.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																										
+
+
+												<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="7062f059f0" /><input type="hidden" name="_wp_http_referer" value="/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/" />
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest" />
+
+<div class="comment-form-field comment-textarea">
+	<label for="comment">Enter your comment here...</label>
+	<div id="comment-form-comment"><textarea id="comment" name="comment" title="Enter your comment here..."></textarea></div>
+</div>
+
+<div id="comment-form-identity">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+			<iframe id="googleplus-sign-in" name="googleplus-sign-in" src="https://public-api.wordpress.com/connect/?googleplus-sign-in=http%3A%2F%2Fiqbalyusuf.wordpress.com" width="24" height="24" scrolling="no" allowtransparency="true" seamless="seamless" frameborder="0"></iframe>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25&amp;d=identicon&amp;forcedefault=y&amp;r=G" alt="Gravatar" width="25" class="no-grav" />
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="text" value="" /></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://s2.wp.com/wp-content/mu-plugins/highlander-comments/images/wplogo.png?m=1391188133g" alt="WordPress.com Logo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="" />
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'wordpress' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25&amp;d=identicon&amp;forcedefault=y&amp;r=G" alt="Twitter picture" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="" />
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'twitter' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25&amp;d=identicon&amp;forcedefault=y&amp;r=G" alt="Facebook photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="" />
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'facebook' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="http://1.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=25&amp;d=identicon&amp;forcedefault=y&amp;r=G" alt="Google+ photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="" />
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'googleplus' );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+	
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;" tabindex="6"/> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of follow-up comments via email.</label></p></div>
+
+												<p class="form-submit">
+							<input name="submit" type="submit" id="comment-submit" value="Post Comment" />
+							<input type='hidden' name='comment_post_ID' value='327' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="9cf9ba0d1d" /></p>
+<input type="hidden" name="genseq" value="1404813653" />
+<p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="105"/></p>					</form>
+							</div><!-- #respond -->
+			<div style="clear: both"></div>	</div>
+	
+	</div>
+<ul id="sidebar">
+<li id="search-3" class="widget widget_search"><form role="search" method="get" id="searchform" class="searchform" action="http://iqbalyusuf.wordpress.com/">
+				<div>
+					<label class="screen-reader-text" for="s">Search for:</label>
+					<input type="text" value="" name="s" id="s" />
+					<input type="submit" id="searchsubmit" value="Search" />
+				</div>
+			</form></li>
+<li id="pages-2" class="widget widget_pages"><h2 class="widgettitle">Pages</h2>
+		<ul>
+			<li class="page_item page-item-260 page_item_has_children current_page_ancestor current_page_parent"><a href="http://iqbalyusuf.wordpress.com/">Java Snippets</a>
+<ul class='children'>
+	<li class="page_item page-item-409"><a href="http://iqbalyusuf.wordpress.com/javasnippets/jersey-gwt-on-tomcat-in-eclipse/">Jersey GWT on Tomcat in&nbsp;Eclipse</a></li>
+	<li class="page_item page-item-327 current_page_item"><a href="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/">My Tiny Mini ORM with Commons DBUtils and&nbsp;Generics</a></li>
+	<li class="page_item page-item-278"><a href="http://iqbalyusuf.wordpress.com/javasnippets/using-commons-vfs-to-do-sftp/">Using Commons VFS to do&nbsp;SFTP</a></li>
+</ul>
+</li>
+<li class="page_item page-item-264 page_item_has_children"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/">Google’s App Engine&nbsp;Java</a>
+<ul class='children'>
+	<li class="page_item page-item-38"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/google-app-engine-jax-rs-jersey/">Google App Engine + JAX-RS&nbsp;Jersey</a></li>
+	<li class="page_item page-item-47"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/gwt-uibinder-helloworld-with-html/">GWT UiBinder &#8220;helloworld&#8221; with&nbsp;HTML</a></li>
+	<li class="page_item page-item-116"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/gwt-uibinder-with-jax-rs-jersey/">GWT UiBinder with JAX-RS&nbsp;Jersey</a></li>
+	<li class="page_item page-item-24"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/java-topology-suite-google-app-engine-restlet-test/">Java Topology Suite + Google App Engine + Restlet&nbsp;(test)</a></li>
+	<li class="page_item page-item-185"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/jersey-guice-on-google-app-engine-java/">Jersey + Guice on Google App Engine&nbsp;Java</a></li>
+	<li class="page_item page-item-2"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/gaej_mini_tutorial_01/">Google App Engine Java + Restlet +&nbsp;Zillow</a></li>
+	<li class="page_item page-item-227"><a href="http://iqbalyusuf.wordpress.com/googles-app-engine-java/jquery-with-jersey-on-gaej/">JQuery with Jersey on&nbsp;GAEj</a></li>
+</ul>
+</li>
+		</ul>
+		</li>
+<li id="blog_subscription-4" class="widget widget_blog_subscription"><h2 class="widgettitle"><label for="subscribe-field">Follow Blog via Email</label></h2>
+
+				<form action="https://subscribe.wordpress.com" method="post" accept-charset="utf-8" id="subscribe-blog">
+											<p>Enter your email address to follow this blog and receive notifications of new posts by email.</p>
+<p>Join 5 other followers</p>
+						<p><input type="text" name="email" style="width: 95%; padding: 1px 2px" value="" id="subscribe-field"/></p>
+					
+					<p>
+						<input type="hidden" name="action" value="subscribe"/>
+						<input type="hidden" name="blog_id" value="5561991"/>
+						<input type="hidden" name="source" value="http://iqbalyusuf.wordpress.com/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/"/>
+						<input type="hidden" name="sub-type" value="widget"/>
+						<input type="hidden" name="redirect_fragment" value="blog_subscription-4" />
+						<input type="hidden" id="_wpnonce" name="_wpnonce" value="c160f2b9ae" />						<input type="submit" value="Follow" />
+					</p>
+				</form>
+			
+</li>
+</ul></div><!-- / #wrap -->
+
+
+<div id="footer">
+	<a href="http://wordpress.com/?ref=footer_blog">Blog at WordPress.com</a>. <a href="http://theme.wordpress.com/themes/simpla/" title="Learn more about this theme">The Simpla Theme</a>.</div><!-- / #footer -->
+
+<script type='text/javascript' src='//0.gravatar.com/js/gprofiles.js?ver=201428x'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s2.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1380573781g'></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-c569040c8dd6a7d3c8c9d4130c46b938">
+	</div>
+	<div class="grofile-hash-map-9cb7d3baccb9c722808868a82be7f1b9">
+	</div>
+	<div class="grofile-hash-map-4dff6107dad698e182775054d31a05f0">
+	</div>
+	</div>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"http:\/\/iqbalyusuf.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/iqbalyusuf.wordpress.com\/wp-login.php?action=logout&_wpnonce=f18d5d62f2","homeURL":"http:\/\/iqbalyusuf.wordpress.com\/","postID":"327","gravDefault":"identicon","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"0","userIsLoggedIn":"","isJetpack":"0"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s1.wp.com/_static/??/wp-content/js/jquery/jquery.autoresize.js,/wp-content/mu-plugins/highlander-comments/script.js?m=1403644162j'></script>
+		<script type="text/javascript">
+		(function() {
+			var a, s = document.getElementsByTagName("script")[0];
+			a = document.createElement("script");
+			a.type = "text/javascript";
+			a.async = true;
+			a.src = "http://www.luminate.com/widget/syndicated/137fe395802/";
+			s.parentNode.insertBefore(a, s);
+		})();
+		</script>
+	<script type="text/javascript">
+		WPCOM_sharing_counts = {"http:\/\/iqbalyusuf.wordpress.com\/javasnippets\/my-tiny-mini-orm-with-commons-dbutils-and-generics-2\/":327}	</script>
+		<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-google-plus-1' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-tumblr' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-linkedin' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+		});
+		</script>
+			<div id="sharing_email" style="display: none;">
+		<form action="/javasnippets/my-tiny-mini-orm-with-commons-dbutils-and-generics-2/" method="post">
+			<label for="target_email">Send to Email Address</label>
+			<input type="email" name="target_email" id="target_email" value="" />
+
+			
+				<label for="source_name">Your Name</label>
+				<input type="text" name="source_name" id="source_name" value="" />
+
+				<label for="source_email">Your Email Address</label>
+				<input type="email" name="source_email" id="source_email" value="" />
+
+			
+			<div class="recaptcha" id="sharing_recaptcha"></div><input type="hidden" name="recaptcha_public_key" id="recaptcha_public_key" value="6LcYW8MSAAAAADBAuEH9yaPcF7lWh11Iq62ZKtoo" />
+			<img style="float: right; display: none" class="loading" src="http://s2.wp.com/wp-content/mu-plugins/post-flair/sharing/images/loading.gif?m=1315610318g" alt="loading" width="16" height="16" />
+			<input type="submit" value="Send Email" class="sharing_send" />
+			<a href="#cancel" class="sharing_cancel">Cancel</a>
+
+			<div class="errors errors-1" style="display: none;">
+				Post was not sent - check your email addresses!			</div>
+
+			<div class="errors errors-2" style="display: none;">
+				Email check failed, please try again			</div>
+
+			<div class="errors errors-3" style="display: none;">
+				Sorry, your blog cannot share posts by email.			</div>
+		</form>
+	</div>
+					<script type="text/javascript">
+			jQuery(document).on('ready', function(){
+				jQuery('body').on('click', 'a.share-pinterest', function(e){
+					e.preventDefault();
+
+					// Load Pinterest Bookmarklet code
+					var s = document.createElement("script");
+					s.type = "text/javascript";
+					s.src = window.location.protocol + "//assets.pinterest.com/js/pinmarklet.js?r=" + ( Math.random() * 99999999 );
+					var x = document.getElementsByTagName("script")[0];
+					x.parentNode.insertBefore(s, x);
+
+					// Trigger Stats
+					var s = document.createElement("script");
+					s.type = "text/javascript";
+					s.src = this + ( this.toString().indexOf( '?' ) ? '&' : '?' ) + 'js_only=1';
+					var x = document.getElementsByTagName("script")[0];
+					x.parentNode.insertBefore(s, x);
+				});
+			});
+			</script>
+				<iframe src='http://widgets.wp.com/likes/master.html?ver=20140528#ver=20140528&amp;mp6=1' scrolling='no' id='likes-master' name='likes-master' style='display:none;'></iframe>
+		<div id='likes-other-gravatars'><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+		<script type="text/javascript">
+		//<![CDATA[
+			var jetpackLikesWidgetQueue = [];
+			var jetpackLikesWidgetBatch = [];
+			var jetpackLikesMasterReady = false;
+
+			function JetpackLikespostMessage( message, target ) {
+				if ( "string" === typeof message ){
+					try{
+						message = JSON.parse( message );
+					}
+					catch(e) {
+						return;
+					}
+				}
+
+				pm( {
+					target: target,
+					type: 'likesMessage',
+					data: message,
+					origin: '*'
+				} );
+			}
+
+			function JetpackLikesBatchHandler() {
+				var requests = [];
+				jQuery( 'div.jetpack-likes-widget-unloaded' ).each( function( i ) {
+					if ( jetpackLikesWidgetBatch.indexOf( this.id ) > -1 )
+						return;
+					jetpackLikesWidgetBatch.push( this.id );
+					var regex = /like-(post|comment)-wrapper-(\d+)-(\d+)-(\w+)/;
+					var match = regex.exec( this.id );
+					if ( ! match || match.length != 5 )
+						return;
+
+					var info = {
+						blog_id: match[2],
+						width:   this.width
+					};
+
+					if ( 'post' == match[1] ) {
+						info.post_id = match[3];
+					} else if ( 'comment' == match[1] ) {
+						info.comment_id = match[3];
+					}
+
+					info.obj_id = match[4];
+
+					requests.push( info );
+				});
+
+				if ( requests.length > 0 ) {
+					JetpackLikespostMessage( { event: 'initialBatch', requests: requests }, window.frames['likes-master'] );
+				}
+			}
+
+			function JetpackLikesMessageListener( event ) {
+				if ( "undefined" == typeof event.event )
+					return;
+
+				if ( 'masterReady' == event.event ) {
+					jQuery( document ).ready( function() {
+						jetpackLikesMasterReady = true;
+
+						var stylesData = {
+								event: 'injectStyles'
+						};
+
+						if ( jQuery( 'iframe.admin-bar-likes-widget' ).length > 0 ) {
+							JetpackLikespostMessage( { event: 'adminBarEnabled' }, window.frames[ 'likes-master' ] );
+
+							stylesData.adminBarStyles = {
+								background: jQuery( '#wpadminbar .quicklinks li#wp-admin-bar-wpl-like > a' ).css( 'background' ),
+								isRtl: ( 'rtl' == jQuery( '#wpadminbar' ).css( 'direction' ) )
+							};
+						}
+
+						if ( !window.addEventListener )
+							jQuery( '#wp-admin-bar-admin-bar-likes-widget' ).hide();
+
+						stylesData.textStyles = {
+							color: jQuery( '.sd-text-color').css( 'color' ),
+							fontFamily: jQuery( '.sd-text-color' ).css( 'font-family' ),
+							fontSize: jQuery( '.sd-text-color' ).css( 'font-size' ),
+							direction: jQuery( '.sd-text-color' ).css( 'direction' ),
+							fontWeight: jQuery( '.sd-text-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-text-color' ).css( 'font-style' ),
+							textDecoration: jQuery( '.sd-text-color' ).css('text-decoration')
+						};
+
+						stylesData.linkStyles = {
+							color: jQuery( '.sd-link-color' ).css('color'),
+							fontFamily: jQuery( '.sd-link-color' ).css('font-family'),
+							fontSize: jQuery( '.sd-link-color' ).css('font-size'),
+							textDecoration: jQuery( '.sd-link-color' ).css('text-decoration'),
+							fontWeight: jQuery( '.sd-link-color' ).css( 'font-weight' ),
+							fontStyle: jQuery( '.sd-link-color' ).css( 'font-style' )
+						};
+
+						JetpackLikespostMessage( stylesData, window.frames[ 'likes-master' ] );
+
+						JetpackLikesBatchHandler();
+
+						jQuery( document ).on( 'inview', 'div.jetpack-likes-widget-unloaded', function() {
+							jetpackLikesWidgetQueue.push( this.id );
+						});
+					});
+				}
+
+				if ( 'showLikeWidget' == event.event ) {
+					jQuery( '#' + event.id + ' .post-likes-widget-placeholder'  ).fadeOut( 'fast', function() {
+						jQuery( '#' + event.id + ' .post-likes-widget' ).fadeIn( 'fast', function() {
+							JetpackLikespostMessage( { event: 'likeWidgetDisplayed', blog_id: event.blog_id, post_id: event.post_id, obj_id: event.obj_id }, window.frames['likes-master'] );
+						});
+					});
+				}
+
+				if ( 'clickReblogFlair' == event.event ) {
+					wpcom_reblog.toggle_reblog_box_flair( event.obj_id );
+				}
+
+				if ( 'showOtherGravatars' == event.event ) {
+					var $container = jQuery( '#likes-other-gravatars' );
+					var $list = $container.find( 'ul' );
+
+					$container.hide();
+					$list.html( '' );
+
+					$container.find( '.likes-text span' ).text( event.total );
+
+					jQuery.each( event.likers, function( i, liker ) {
+						$list.append( '<li class="' + liker.css_class + '"><a href="' + liker.profile_URL + '" class="wpl-liker" rel="nofollow" target="_parent"><img src="' + liker.avatar_URL + '" alt="' + liker.name + '" width="30" height="30" style="padding-right: 3px;" /></a></li>');
+					} );
+
+					var offset = jQuery( "[name='" + event.parent + "']" ).offset();
+
+					$container.css( 'left', offset.left + event.position.left - 10 + 'px' );
+					$container.css( 'top', offset.top + event.position.top - 33 + 'px' );
+
+					var rowLength = Math.floor( event.width / 37 );
+					var height = ( Math.ceil( event.likers.length / rowLength ) * 37 ) + 13;
+					if ( height > 204 ) {
+						height = 204;
+					}
+
+					$container.css( 'height', height + 'px' );
+					$container.css( 'width', rowLength * 37 - 7 + 'px' );
+
+					$list.css( 'width', rowLength * 37 + 'px' );
+
+					$container.fadeIn( 'slow' );
+
+					var scrollbarWidth = $list[0].offsetWidth - $list[0].clientWidth;
+					if ( scrollbarWidth > 0 ) {
+						$container.width( $container.width() + scrollbarWidth );
+						$list.width( $list.width() + scrollbarWidth );
+					}
+				}
+			}
+
+			pm.bind( 'likesMessage', function(e) { JetpackLikesMessageListener(e); } );
+
+			jQuery( document ).click( function( e ) {
+				var $container = jQuery( '#likes-other-gravatars' );
+
+				if ( $container.has( e.target ).length === 0 ) {
+					$container.fadeOut( 'slow' );
+				}
+			});
+
+			function JetpackLikesWidgetQueueHandler() {
+				var wrapperID;
+				if ( ! jetpackLikesMasterReady ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+					return;
+				}
+
+				if ( jetpackLikesWidgetQueue.length > 0 ) {
+					// We may have a widget that needs creating now
+					var found = false;
+					while( jetpackLikesWidgetQueue.length > 0 ) {
+						// Grab the first member of the queue that isn't already loading.
+						wrapperID = jetpackLikesWidgetQueue.splice( 0, 1 )[0];
+						if ( jQuery( '#' + wrapperID ).hasClass( 'jetpack-likes-widget-unloaded' ) ) {
+							found = true;
+							break;
+						}
+					}
+					if ( ! found ) {
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				} else if ( jQuery( 'div.jetpack-likes-widget-unloaded' ).length > 0 ) {
+					// Grab any unloaded widgets for a batch request
+					JetpackLikesBatchHandler();
+
+					// Get the next unloaded widget
+					wrapperID = jQuery( 'div.jetpack-likes-widget-unloaded' ).first()[0].id;
+					if ( ! wrapperID ) {
+						// Everything is currently loaded
+						setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+						return;
+					}
+				}
+
+				if ( 'undefined' === typeof wrapperID ) {
+					setTimeout( JetpackLikesWidgetQueueHandler, 500 );
+					return;
+				}
+
+				var $wrapper = jQuery( '#' + wrapperID );
+				$wrapper.find( 'iframe' ).remove();
+
+				if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='22px' width='68px' frameBorder='0' scrolling='no' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				} else {
+					$wrapper.find( '.post-likes-widget-placeholder' ).after( "<iframe class='post-likes-widget jetpack-likes-widget' name='" + $wrapper.data( 'name' ) + "' height='55px' width='100%' frameBorder='0' src='" + $wrapper.data( 'src' ) + "'></iframe>" );
+				}
+
+				$wrapper.removeClass( 'jetpack-likes-widget-unloaded' ).addClass( 'jetpack-likes-widget-loading' );
+
+				$wrapper.find( 'iframe' ).load( function( e ) {
+					var $iframe = jQuery( e.target );
+					$wrapper.removeClass( 'jetpack-likes-widget-loading' ).addClass( 'jetpack-likes-widget-loaded' );
+
+					JetpackLikespostMessage( { event: 'loadLikeWidget', name: $iframe.attr( 'name' ), width: $iframe.width() }, window.frames[ 'likes-master' ] );
+
+					if ( $wrapper.hasClass( 'slim-likes-widget' ) ) {
+						$wrapper.find( 'iframe' ).Jetpack( 'resizeable' );
+					}
+				});
+				setTimeout( JetpackLikesWidgetQueueHandler, 250 );
+			}
+			JetpackLikesWidgetQueueHandler();
+		//]]>
+		</script>
+<script type='text/javascript' src='http://s1.wp.com/wp-content/mu-plugins/akismet-3.0/_inc/form.js?m=1404442431g'></script>
+<script type='text/javascript' src='http://s1.wp.com/_static/??-eJzTLy/QTc7PK0nNK9EvyClNz8wr1i+uzCtJrMjITM/IAeKS1CJMEWP94uSizIISoOIM5/yiVL2sYh19yo1yKiotzvBKLEsEmmefa2tobGlubmZkamSYBQDROkAK'></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?m=1395343499g&amp;ver=3.0.83c";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?m=1363304414g&amp;ver=3.0.83c";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var recaptcha_options = {"lang":"en"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://s2.wp.com/_static/??/wp-content/js/devicepx.js,/wp-includes/js/comment-reply.min.js,/wp-content/mu-plugins/post-flair/sharing/sharing.js?m=1399919068j'></script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script><script src="http://s.stats.wordpress.com/w.js?21" type="text/javascript"></script>
+<script type="text/javascript">
+st_go({'blog':'5561991','v':'wpcom','tz':'-5','user_id':'0','post':'327','subd':'iqbalyusuf'});
+ex_go({'crypt':'UE5tW3cvZGRmWD9sbHVhMXY/M0pRd2J6NG1lWiVMRnVHcFU5d3NGc0w/aHhOMlI2VUZSY0k/TUYmcVZWbFZfc2FGa2olLVF3MnJnWkdnWiU/S0FfSDdnZmtqbC5Ca0tFazBEQ1EtMyxfT35WTEpfXVNTNFJVendTcnN+NmpuUlgxYm1vPXwseUh4WU15S1ArW3VCMVlPL3l0UGNEUytMWk40ZjVpdnhBSkVNZTZlc3YrX3Rab05XX2VhdVdYSU0='});
+addLoadEvent(function(){linktracker_init('5561991',327);});
+	</script>
+<noscript><img src="http://stats.wordpress.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//stats.wordpress.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script></body>
+</html>

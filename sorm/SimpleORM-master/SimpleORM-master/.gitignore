@@ -1,0 +1,13 @@
+.classpath
+.metadata
+.project
+.settings/
+*.jpage
+target/
+*~
+sorm_example/friendmap.db
+*.aux
+*.log
+*.pdf
+*.toc
+

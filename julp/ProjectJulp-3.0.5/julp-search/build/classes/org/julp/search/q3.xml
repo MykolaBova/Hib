@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries SYSTEM "julp-queries.dtd">
+
+<queries>
+    
+ <!-- If search column is PRODUCT.NAME than sql will have another JOIN:
+ <tables>PRODUCT, ITEM</tables>
+    <conditions>
+     ITEM.INVOICE_ID = INVOICE.INVOICE_ID AND
+     ITEM.PRODUCT_ID = PRODUCT.PRODUCT_ID AND
+     INVOICE.TOTAL &gt; 6000
+    </conditions>
+ -->   
+ <query id="customer1">
+  <select distinct="true">
+   CUSTOMER.CUSTOMER_ID,
+   CUSTOMER.LAST_NAME,
+   CUSTOMER.FIRST_NAME,
+   CUSTOMER.PHONE,
+   CUSTOMER.STREET,
+   CUSTOMER.CITY,
+   INVOICE.INVOICE_ID,
+   INVOICE.TOTAL
+  </select>
+  <from>CUSTOMER, INVOICE</from>
+  <where>
+   CUSTOMER.CUSTOMER_ID = INVOICE.CUSTOMER_ID AND CUSTOMER.CUSTOMER_ID IS NOT NULL
+  </where>
+  <adhoc_mappings>
+   <adhoc>   
+    <columns> 
+     <column>PRODUCT.NAME</column>  
+    </columns> 
+    <tables>PRODUCT, ITEM</tables>
+    <conditions>
+     ITEM.INVOICE_ID = INVOICE.INVOICE_ID AND
+     ITEM.PRODUCT_ID = PRODUCT.PRODUCT_ID AND
+     INVOICE.TOTAL &gt; 6000
+    </conditions>
+   </adhoc>
+  </adhoc_mappings>
+  <order_by>CUSTOMER.LAST_NAME, CUSTOMER.FIRST_NAME</order_by>
+ </query>
+ 
+ <query id="customer2">
+  <ansi_join/> 
+  <select distinct="true">     
+   CUSTOMER.CUSTOMER_ID,
+   CUSTOMER.LAST_NAME,
+   CUSTOMER.FIRST_NAME,
+   CUSTOMER.PHONE,
+   CUSTOMER.STREET,
+   CUSTOMER.CITY,
+   INVOICE.INVOICE_ID,
+   INVOICE.TOTAL
+  </select>
+  <from>CUSTOMER</from>
+  <joins>
+    INNER JOIN INVOICE ON CUSTOMER.CUSTOMER_ID = INVOICE.CUSTOMER_ID
+  </joins>
+  <where>
+   CUSTOMER.CUSTOMER_ID IS NOT NULL
+  </where>
+  <adhoc_mappings>
+   <adhoc>
+    <columns>
+     <column>PRODUCT.NAME</column> 
+    </columns>  
+    <conditions>
+     INNER JOIN ITEM ON INVOICE.INVOICE_ID = ITEM.INVOICE_ID
+     INNER JOIN PRODUCT ON PRODUCT. PRODUCT_ID = ITEM. PRODUCT_ID AND
+     INVOICE.TOTAL &gt; 6000
+    </conditions>
+   </adhoc>
+  </adhoc_mappings>  
+  <group_by>
+  </group_by>
+  <having>
+  </having>
+  <order_by>CUSTOMER.LAST_NAME, CUSTOMER.FIRST_NAME</order_by>
+ </query>
+</queries>
+
+<!--
+SELECT
+   CUSTOMER.CUSTOMER_ID,
+   CUSTOMER.LAST_NAME,
+   CUSTOMER.FIRST_NAME,
+   CUSTOMER.PHONE,
+   CUSTOMER.STREET,
+   CUSTOMER.CITY,
+   INVOICE.INVOICE_ID,
+   INVOICE.TOTAL,
+   ITEM.ITEM,
+   PRODUCT_ID,
+   PRODUCT.NAME
+FROM 
+   CUSTOMER
+        INNER JOIN INVOICE ON CUSTOMER.CUSTOMER_ID = INVOICE.CUSTOMER_ID  
+        INNER JOIN ITEM ON INVOICE.INVOICE_ID = ITEM.INVOICE_ID
+        INNER JOIN  PRODUCT ON  PRODUCT. PRODUCT_ID = ITEM. PRODUCT_ID AND
+        INVOICE.TOTAL > 6000
+WHERE 
+   CUSTOMER.CUSTOMER_ID IS NOT NULL AND
+   PRODUCT.NAME <> 'AAA'
+ORDER BY CUSTOMER.CUSTOMER_ID,  INVOICE.INVOICE_ID, ITEM.ITEM
+-->

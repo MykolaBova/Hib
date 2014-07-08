@@ -1,0 +1,17 @@
+H1 {color:blue;}
+H2 {color:blue;}
+H3 {color:blue;}
+H4 {color:blue;}
+H5 {color:blue;}
+strong {color:blue}
+
+ul {margin-bottom:5; margin-top:5}
+
+em.RED {color:red;}
+<!-- <em class=RED> -->
+strong {color:blue}
+
+tt {color:maroon;}
+code {color:maroon;}
+pre {margin-bottom:3; margin-top:3; color:maroon;}
+xmp {color:maroon;}

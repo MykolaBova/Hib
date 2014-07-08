@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>
+
+  OrmLite - Lightweight Object Relational Mapping (ORM) Java Package
+
+</title>
+<!--skipfrom-->
+<style type="text/css">
+  .bc { margin-left: 3.3em; margin-right: 3.3em; }
+  .pre { white-space:pre; font-family: "Courier New", Courier, monospace; }
+  .fright { float: right; margin: 0.2em }
+  .wikipre {
+      margin-left: 2em;
+      /* border: 1pt dashed black; */
+      font-size: 8pt;
+      overflow: auto;
+      padding: 1em 1em;
+      color: black;
+      background-color: #eeeeff;
+      line-height: 1.2em;
+  }
+  div.footer { font-size: 80%; }
+  body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.9em;
+	max-width: 100em;
+  	margin-left: 10%;
+  }
+</style>
+</head>
+
+<body text="#000000" bgcolor="#ffffff" link="#aa0000" alink="#ff3300" vlink="#005522">
+<!-- header.html starts at the top of the document ^^ -->
+
+<!--skipto-->
+<!-- end of header -->
+
+
+<h1> OrmLite - Lightweight Object Relational Mapping (ORM) Java Package </h1>
+
+<img src="orm.png" width="101" height="453" alt="ORM Lite lightweight orm java package" border="0"
+class="fright" />
+
+<p> Object Relational Mapping Lite (ORM Lite) provides some <a href="simple_orm_java.shtml" >simple</a>,
+lightweight functionality for persisting Java objects to SQL databases while avoiding the complexity and
+overhead of more standard ORM packages. </p>
+
+<ul>
+<li> Download files: &nbsp;&nbsp;
+<a href="releases/" >local repository</a> &nbsp;&nbsp;
+<a href="http://repo1.maven.org/maven2/com/j256/ormlite/" >central maven repository</a> &nbsp;&nbsp;
+<a href="https://sourceforge.net/projects/ormlite/files/releases/com/j256/ormlite/" >SourceForge files</a>
+</li>
+
+<li> Documentation: 
+<ul>
+<li> 
+<a href="docs/getting-started" >Getting Started</a> &nbsp;&nbsp;
+<a href="docs/ormlite.html" >HTML</a> &nbsp;&nbsp;
+<a href="docs/ormlite.pdf" >PDF</a>
+</li>
+<li> Javadocs: &nbsp;&nbsp;
+<a href="javadoc/ormlite-core/" >core</a> &nbsp;&nbsp;
+<a href="javadoc/ormlite-jdbc/" >jdbc</a> &nbsp;&nbsp;
+<a href="javadoc/ormlite-android/">android</a>
+</li>
+<li> <a href="docs/examples" >Code Examples</a> </li>
+<li> <a href="changelog.txt" >Change log file</a> </li>
+<li> <a href="docs/license" >Open source license (ISC)</a> </li>
+<li> <a href="data_types.shtml" >SQL Data Types</a> </li>
+</ul>
+
+<li> Support: 
+<ul>
+<li> Google Groups mailing lists: &nbsp;&nbsp;
+<a href="http://groups.google.com/group/ormlite-user/" >users</a> &nbsp;&nbsp;
+<a href="http://groups.google.com/group/ormlite-android/" >android users</a> &nbsp;&nbsp;
+<a href="http://groups.google.com/group/ormlite-dev/" >developers</a>
+</li>
+<li> <a href="https://sourceforge.net/tracker/?group_id=297653&amp;atid=1255989" >Bug tracking site</a> </li>
+<li> <a href="http://stackoverflow.com/tags/ormlite" >Stackoverflow questions</a> </li>
+<li> <a href="http://sourceforge.net/projects/ormlite/" >SourceForge project page</a> </li>
+</ul>
+
+<li> Source control (GIT): &nbsp;&nbsp;
+<a href="https://github.com/j256/ormlite-core" >core</a> &nbsp;&nbsp;
+<a href="https://github.com/j256/ormlite-jdbc" >jdbc</a> &nbsp;&nbsp;
+<a href="https://github.com/j256/ormlite-android" >android</a>
+</li>
+
+<li> <a href="sqlite_java_android_orm.shtml" >Specific information for Android developers</a> </li>
+</ul>
+
+<p> ORMLite is <a href="easy_java_orm.shtml" >easy</a> to use and provides the following features: </p>
+
+<ul>
+<li> Setup your classes by simply adding Java annotations. </li>
+<li> Powerful abstract Database Access Object (DAO) classes. </li>
+<li> Flexible QueryBuilder to easily construct simple and complex queries. </li>
+<li> Supports MySQL, Postgres, Microsoft SQL Server, H2, Derby, HSQLDB, and Sqlite and can be extended to additional
+databases relatively easily. </li>
+<li> Provisional support for DB2, Oracle, ODBC, and Netezza.  Contact the author if your database type is not supported. </li>
+<li> Handles "compiled" SQL statements for repetitive query tasks. </li>
+<li> Supports "foreign" objects with the class field being the object but an id stored in the database table. </li>
+<li> Basic support for database transactions. </li>
+<li> Auto generates SQL to create and drop database tables. </li>
+<li> Spring configuration support for DOAs and class configurations. </li>
+<li> Support for configuring of tables and fields without annotations. </li>
+
+<li> <a href="sqlite_java_android_orm.shtml" >Supports native calls to Android SQLite database APIs</a> </li>
+</ul>
+
+<h2> Use Annotations to Mark Classes to be Persisted </h2>
+
+<p> To use the package you add the @DatabaseTable annotation to the top of each class and a @DatabaseField annotation to
+each of the fields in the class that are to be persisted to the database. For example: </p>
+
+<p class="bc pre">&#064;DatabaseTable(tableName = "accounts")
+public class Account {
+    &#064;DatabaseField(id = true)
+    private String name;
+    
+    &#064;DatabaseField(canBeNull = false)
+    private String password;
+    ...
+    Account() {
+    	// all persisted classes must define a no-arg constructor with at least package visibility
+    }
+    ...    
+}
+</p>
+
+<p> Classes can also be configured with javax.persistence annotations (JPA),
+Java calls, or Spring wiring.  For more details, see the <a href="/docs/ormlite.html" >online documentation</a>. </p>
+
+<h2> Sample Code Example </h2>
+
+<p> The following is a quick code example to give you a taste on how
+to use the package. </p>
+
+<p class="bc pre">// this uses h2 but you can change it to match your database
+String databaseUrl = "jdbc:h2:mem:account";
+// create a connection source to our database
+ConnectionSource connectionSource =
+     new JdbcConnectionSource(databaseUrl);
+
+// instantiate the DAO to handle Account with String id
+Dao&lt;Account,String&gt; accountDao =
+     DaoManager.createDao(connectionSource, Account.class);
+
+// if you need to create the 'accounts' table make this call
+TableUtils.createTable(connectionSource, Account.class);
+
+// create an instance of Account
+String name = "Jim Smith";
+Account account = new Account(name, "_secret");
+
+// persist the account object to the database
+accountDao.create(account);
+
+// retrieve the account
+Account account2 = accountDao.queryForId(name);
+// show its password
+System.out.println("Account: " + account2.getPassword());
+
+// close the connection source
+connectionSource.close();
+</p>
+
+<!-- start of footer -->
+<!--skipfrom-->
+
+<div class="footer">
+<p>
+
+This web page and associated content is licensed by
+<a href="http://256.com/gray/">Gray Watson</a> under the <a rel="license"
+href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0
+License</a>.
+
+<br />
+This page should be <a
+href="http://validator.w3.org/check?uri=http://ormlite.com/"
+>W3C Valid XHTML</a> and should work with most browsers. <br />
+http://ormlite.com/
+</p>
+</div>
+
+<!-- start of buttons -->
+<p>
+<a href="http://mailnull.com/" >Free&nbsp;Spam&nbsp;Protection</a>&nbsp;&nbsp;
+<a href="http://ormlite.com/" >ORMLite Java ORM</a>&nbsp;&nbsp;
+<a href="http://ormlite.com/sqlite_java_android_orm.html">Android ORM</a>&nbsp;&nbsp;
+<a href="http://256.com/sources/simplemagic/">Simple Java Magic</a>&nbsp;&nbsp;
+<a href="http://256.com/sources/simplejmx/jmx_web_http.shtml">JMX using HTTP</a>&nbsp;&nbsp;
+</p>
+<!-- end of buttons -->
+
+
+<div class="footer">
+<p>
+Your host:
+out.ki.levi9.com
+193.22.140.30:52624 <br />
+
+Your browser: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36 <br />
+
+</p>
+</div> <!-- footer -->
+
+
+
+<script type="text/javascript">
+<!--
+// This script logs my outbound links.  I'm not trying to be big
+// brother here.  Just trying to see what content of mine is driving
+// people off-site.  I also did not want a bounce cgi-bin because
+// then I would not be giving people pagerank bonuses.
+
+// we need the getElementsByTagName and Image functions
+if (document.getElementsByTagName && Image) {
+  var anchors = document.getElementsByTagName('a');
+  for (i = 0; i < anchors.length; i++) {
+    // we need the href test to not tune the 'a name=foo' type anchors
+    if ((! anchors[i].onclick)
+        && anchors[i].href
+        && (anchors[i].href.substring(0, 5) == 'http:'
+	    || anchors[i].href.substring(0, 6) == 'https:')) {
+      // This has to be a function otherwise when you click, they all
+      // get requested.  Very strange.  Also, it must be & and not &amp;.
+      anchors[i].onclick = function() {
+        src = '/cgi-bin/ct?' + escape(this.href) + '&' + escape(document.URL);
+	// if we have Math.random then try to stop client from caching URL
+	if (Math.random) src += '&' + Math.random();
+        (new Image()).src = src;
+      };
+    }
+  }
+}
+// -->
+</script>
+
+
+<!--skipto-->
+<!-- end of footer including /body and /html -->
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>SimpleWebApp-Overview</title>
+  <style>
+H1 {color:blue;}
+H2 {color:blue;}
+H3 {color:blue;}
+H4 {color:blue;}
+H5 {color:blue;}
+ul {margin-bottom:5; margin-top:5}
+em {color:blue; font-style:normal;}
+tt {color:maroon;}
+code {color:maroon;}
+pre {margin-bottom:3; margin-top:3; color:maroon;}
+xmp {color:maroon;}
+  </style>
+</head>
+<body>
+<h1>Agile Java Web Development with SimpleWebApp<br>
+</h1>
+25 June 07, Anthony Berglas, Initial<br>
+5 July 07, Anthony Berglas, Updated examples<br>
+<h2>Introduction</h2>
+SimpleWebApp lets you quickly develop high quality web
+applications.&nbsp;
+It provides reusable templates that encapsulate standard user
+interaction
+patterns that
+list, view and update data (CRUD).&nbsp; SimpleWebApp also cuts through
+the layers to integrate interfaces with databases.&nbsp; This means
+that the only code you need to write is real application logic rather
+than large quantities of repeditive glue code.&nbsp; And the code you
+do write is plain old Java code because developing web application
+should be ... simple.&nbsp; <br>
+<br>
+SimpleWebApp associates rich meta data with each field to specify
+details
+such as their display width, widget type, grouping and whether the
+field must be non-null.&nbsp; This enables templates to be utilized for
+a wide variety of forms without needing to alter the templates
+themselves.&nbsp; The meta data can be
+specified at the interface level or be defaulted from meta data
+associated directly with database fields.&nbsp; Business rules can also
+be incorporated at the
+interface or database definition level.&nbsp; And the templates can be
+selectively overriden to provide non-standard interfaces.<br>
+<br>
+This meta data driven approach enables customers to
+extend a core application's interfaces, business rules, and persisted
+data in external jars without any need to change the core
+application itself.&nbsp; Traditional monolithic applications can then
+be rearchitected as a core services with sepecific extension
+packages.&nbsp; Applications can also be&nbsp; re-branded by providing
+alternative template defintions that
+can radically change their look and feel.&nbsp; Templates can also
+automate
+the provision of web services.<br>
+<br>
+SimpleWebApp uses very transparent Java code, with no code generators,
+reflection, @annotations, EJBs etc.&nbsp; View templates are
+implemented as
+ordinary JSPs, and SimpleWebApp.jar is just 50K.&nbsp; Keeping it
+simple
+makes any problems easy to diagnose and so reduces the technical risk.<br>
+<br>
+SimpleWebApp's lightweight, highly productive design is analagous to
+Ruby
+on Rails.&nbsp; However SimpleWebApp's use of structured meta data is
+more
+suitable for the
+more structured Java type system, and it enables a higher level of
+abstraction
+of common operations.&nbsp; JBoss Seam was inspired by Rails, but
+unlike SimpleWebApp it uses psuedo POJOs to access heavy weight EJB,
+JSF
+and Hibernate technologies.&nbsp; (There is a more detailed comparison
+in the Technical Overiview.)<br>
+<h2>Example of&nbsp; "Automatic" Development<br>
+</h2>
+Consider the following screen which provides a tree view of Users
+classifies by Role or Location.&nbsp; It then enables
+selected users to be Created, Read, Updated or Deleted.<br>
+<br>
+<img alt="User Tree Screenshot" src="UserTree.PNG" height="841"
+ width="833"><br>
+<br>
+A form like this would take substantial effort to implement
+using conventional technologies.&nbsp; However SimpleWebApp's meta data
+driven approach enables it to be created very succinctly by utilizing
+abstract user interface and user interaction patterns.<br>
+<br>
+The following tiny fragment lists the code in <tt>usertreetest.jsp</tt>
+that defines the page's view.&nbsp; The <tt>WPage</tt> tag links
+the page to the <tt>WUserTreePage</tt> controller Java class which
+provides the
+meta data required by <tt>treecrud </tt>to render the page.&nbsp; <tt>treecrud.tag</tt>
+is a
+conventional JSTL template that uses nested JSTL templates to produce
+the HTML for the tree and CRUD
+components.&nbsp; The CRUD component can automatically render the form
+because of the menu, field and button meta data provided by <tt>WUserTreePage</tt>.
+<br>
+<br>
+<pre>   &lt;sw:page&gt;<br>       &lt;sw:<font color="blue">treecrud</font>/&gt;<br>    &lt;/sw:page&gt;<br></pre>
+The form above is rendered using RSA's sophisticated ESG
+template.&nbsp; But tiny
+changes to the jsp can have it rendered in different templates to suit
+different branding requirements.&nbsp; For example, the <a
+ href="UserTreePlain.PNG">plain template</a> provides the same
+interface using very simple HTML.<br>
+<br>
+The Java controller class required for this complex form is also tiny
+as listed below.&nbsp; <tt>WUserTreePage </tt>consists of two
+pagelets, <tt>WUserTreeCrudlet</tt>
+and <tt>WUserTreePagelet</tt> that represent the left and right parts
+of the page.&nbsp; <tt>WUserTreeCrudlet</tt> extends <tt>WGenericCrudPagelet
+</tt>which produces a CRUD form for a specific table,
+in this case the <tt>WUser</tt> table as specified in its
+constructor.&nbsp;&nbsp; <br>
+<br>
+<pre>public class <font color="green">WUserTreePage </font>extends WTestPage {<br>    WTestMenus.Database menus = setMenu(new WTestMenus.Database());<br><br>    public final WUserTreeCrudlet pagelet = new WUserTreeCrudlet(this);<br>    public final WUserTreePagelet treelet = new WUserTreePagelet(this);<br><br>    public static class <font
+ color="green">WUserTreeCrudlet</font> extends <font color="blue">WGenericCrudPagelet</font> {<br>        <font
+ color="#cc6600">//final WFieldInteger userId = addField(identityGroup, new WFieldInteger("userId")).setReadOnly(true);<br>        //final WField name = addField(crudGroup, new WFieldString("name")).setRequired(true); ...</font><br><br>        public WUserTreeCrudlet(WUserTreePage page) {<br>            super(page, <font
+ color="blue">WUser.meta</font>);<br>            page.setRedirectItem(page.menus.userTreeTest);<br>            <font
+ color="blue">generateCrudFields</font>();<br>    }   }<br><br>    public static class <font
+ color="green">WUserTreePagelet </font>extends WTreePagelet {<br>        WTree tree = new WTree();<br>        @Override protected void onPreValidate() throws Exception {<br><br>            WTree.WTreeNode ur = tree.addNode(u, "By Role", "usertreetest.jsp");<br>            new WGenericTree().<font
+ color="blue">addSubTree(tree, ur, WUser.meta, WUser.ROLE, WUser.NAME, WUser.USER_ID)</font>;<br><br>            WTree.WTreeNode ul = tree.addNode(u, "By Location", "usertreetest.jsp");<br>            new WGenericTree().<font
+ color="blue">addSubTree(tree, ul, WUser.meta, WUser.LOCATION, WUser.NAME, WUser.USER_ID)</font>;<br>}  }   }<br></pre>
+<tt><br>
+generateCrudFields </tt>automatically creates meta data objects
+for each column in <tt>WUser</tt>,&nbsp; which in turn causes them to
+be displayed on the rendered form.&nbsp; The meta data can also be
+created manually as illustrated by the commented out lines of code, as
+discussed in the next section.&nbsp; <br>
+<br>
+Likewise <tt>addSubTree </tt>knows how to
+populate a subtree with data from a given table (<tt>WUser</tt>),
+grouped by a specifed column (<tt>ROLE</tt>), displaying a specific
+column (<tt>USER_ID</tt>) etc.&nbsp;&nbsp; (All default behaviors
+can be selectively overridden, as described in the next section.)<br>
+<br>
+The <tt>RSA_USER</tt> table itself is defined using meta data that is
+created by the following SimpleORM code.&nbsp; It simply adds <tt>SFieldMeta
+</tt>objects
+such as <tt>USER_ID</tt> to an <tt>SRecordMeta </tt>object that
+describes the table.&nbsp; Other meta information such as which columns
+form part of the primary key and the width of string fields are
+specified as additional parameters.&nbsp; This definition can be used
+to generate the SQL <tt>CREATE TABLE</tt> statements as well as
+providing the meta data that <tt>WGenericCrudPagelet </tt>uses to
+provide the actual controller logic.<br>
+<br>
+<pre>public class <font color="green">WUser</font> extends WRecordInstance  {<br><br>    public static final SRecordMeta meta =<br>        new SRecordMeta(WUser.class, "RSA_USER");<br><br>    public static final SFieldInteger <font
+ color="blue">USER_ID</font> =<br>        <font color="blue">new SFieldInteger</font>(meta, "userId", SCon.SFD_PRIMARY_KEY,<br>                SCon.SGENERATED_KEY.pvalue(new SGeneratorSelectMax(meta)) );<br><br>    public static final SFieldString <font
+ color="blue">NAME  </font>=<br>        new SFieldString(meta, "name", <font
+ color="blue">40</font>, SCon.SFD_DESCRIPTIVE, SCon.SFD_MANDATORY);<br><br>    public static final SFieldString ROLE  =<br>        new SFieldString(meta, "role", 20, SCon.SFD_MANDATORY);<br><br>    public static final SFieldString LOCATION  =<br>        new SFieldString(meta, "location", 20, SCon.SFD_MANDATORY);<br><br>    static { setOptions(LOCATION, "Here", "There", "Somewhere", "Nowhere");}<br>    ...<br>    public @Override void <font
+ color="blue">validateField</font>(SFieldMeta field, Object newValue) {<br>        if ( field == NAME &amp;&amp; newValue != null  ) {<br>            if (((String)newValue).length() &lt; 5 )<br>                throw new WValidationException("User.Name5Chars", null)<br>                        .setParameter(newValue+"");<br>}  }<br><br></pre>
+Note that the code above specifies that the <tt>NAME</tt> be <tt>40</tt>
+chars lonG and <tt>MANDATORY</tt> (not null).&nbsp;&nbsp; This is used
+to create table columns appropriately.&nbsp; But it is also used to
+make the <tt>NAME</tt> field on the user inteface 40 characters wide,
+and to add a "<tt>*</tt>" to indicate to the user that the field is
+required.&nbsp; It also adds a business rule to the UI code which
+ensures <tt>NAME</tt> is not null.&nbsp; There is never any need to
+respecify that information,
+there is a single source of truth that works through all the layers.<br>
+<br>
+The <tt>validateField </tt>method is called whenever a <tt>WUser </tt>field
+is changed and implements a (silly) business rule on the <tt>NAME </tt>field.&nbsp;
+SimpleWebApp catches any <tt>WValidationExceptions </tt>and presents
+internationalized messages to the user.&nbsp; (There are several ways
+to implement validation methods, including as event objects or per
+field (anonymous) subclasses. They can also be added to specific forms
+rather than database record definitions.)<br>
+<br>
+(The WUser definition uses SimpleORM to access the database.&nbsp; It
+is also possible to use other tools such as Hibernate, with methods
+such as&nbsp; <tt>retrieveBeanProperties(row, getAllFields())</tt>
+automatically utilizing POJOs.&nbsp; But SimpleORM is more transparent,
+requires less ORM code,&nbsp; makes it easier to associate meta data
+with table definitions, and facillitates externally defined
+customizations.)<br>
+<br>
+The use of meta data enables a sophisticated form to be created with
+very little code.&nbsp; This is implemented by very plain Java code
+without the need for generators, XML, @annotations, complex build tasks
+etc.<br>
+<h2>More Manual Components<br>
+</h2>
+SimpleWebApp enables forms to be <i>selectively</i> customized at both
+the view and controller level.&nbsp; For example, the following JSP
+file defines a CRUD form with three fields explicitly named, namely <tt>id</tt>,
+<tt>name </tt>and <tt>alignment</tt>. The <tt>id </tt>field has
+been specified very manually in terms of raw HTML, but the <tt>name </tt>and
+<tt>alignment </tt>fields have been specified more automatically by
+referencing meta data.&nbsp; Likewise menus and buttons have been
+specified completely automatically.<br>
+<br>
+<pre>  &lt;esgp:page-begin/&gt;<br>    &lt;esgp:heading&gt;<br>        &lt;esgp:menuAuto/&gt;<br>        &lt;esgp:body links="&amp;nbsp;"&gt;<br>            &lt;esgp:buttons/&gt;<br>            &lt;esgp:fieldBody&gt;<br>                 &lt;tr&gt;<br>                    &lt;td class=field_info&gt;&amp;nbsp;&lt;/td&gt;<br>                    &lt;td class=field_label&gt;&lt;fmt:message key="id"/&gt;&lt;/td&gt;<br>                     &lt;td class=field_req&gt;*&lt;/td&gt;<br>                     &lt;td class=field_input&gt;<br>                       &lt;input name="<em>id</em>&#8221; value="${fn:escapeXml(wPage.id.text)}"&gt;          <br>                     &lt;/td&gt;<br>                 &lt;/tr&gt;<br>                &lt;esgw:field name="<em>name</em>"/&gt;<br>                &lt;esgw:field name="<em>alignment</em>"/&gt;<br>            &lt;/esgp:fieldBody&gt;<br>            &lt;esgp:buttons/&gt;<br>        &lt;/esgp:body&gt;<br>    &lt;/esgp:heading&gt;<br>  &lt;esgp:page-end/&gt;<br><br></pre>
+The templates themselves are just JSP .tag files, so it is also easy
+for users to create or modify templates.&nbsp; (The templates are
+broadly similar to Ruby on Rails templates, but have richer meta data.)<br>
+<br>
+The<em> <tt>WManualUserCrudPagelet</tt></em> controller below has also
+been specified more manually.&nbsp; The three&nbsp; <tt>WField</tt>
+objects <tt>userId, name </tt>and<tt> location</tt> have been
+specified explicitly as final instance variables rather than having
+been generated directly from a record definition using <tt>generateCrudFields</tt>.&nbsp;
+Properties such as being required or the display length are explicitly
+set.&nbsp; (There is no need to use this coding style, it is plain old
+Java code.)<br>
+<br>
+Forms are normally posted back to themselves when the user presses a
+submitting button.&nbsp; In this case validates and converts all of the
+field values and if there were no errors it calls the <tt>onWasSubmitted
+</tt>method.&nbsp; <tt>onWasSubmitted </tt>then explicitly updates
+the user database record with the values of the form fields.&nbsp;
+Likewise the buttons are explicitly declared and disabled as necessary.<br>
+<br>
+This processing is quite general and any form logic can be implemented,
+inlcuding redirections to other pages.&nbsp; There is no need use a
+database at all, and certainly not the SimpleORM interface shown
+above.&nbsp; It is only classes in the separate <tt>SimpleWebApp.dbute</tt>
+package such as <tt>WGenericCrudPagelet </tt>which link the
+two.&nbsp; However, SimpleORM's ability to easily store and access
+arbitrary meta attributes against fields and records makes it easy to
+use and build tool such as <tt>WGenericCrudPagelet</tt>.&nbsp; <br>
+<br>
+(Posting back to the same page simplifies error processing, and enables
+form oriented view state to be maintained to implement optimistic
+locking.&nbsp; A user can resubmit a
+form if they make an error without losing field values .&nbsp; This
+aspect is like ASP.NET but unlike Rails.)<br>
+<br>
+<pre>public static class <em>WManualUserCrudPagelet </em>extends WPagelet {<br>    WFieldGroup crudGroup = addGroup(this, new WFieldGroup("crud"));<br>    final WFieldInteger <font
+ color="blue">userId </font>= addField(crudGroup, new WFieldInteger("userId")).setReadOnly(true);<br>    final WField <font
+ color="blue">name </font>= addField(crudGroup, new WFieldString("name")).setRequired(true).setDisplayLength(40);<br>    final WField <font
+ color="blue">location </font>= addField(crudGroup, new WFieldString("location"));<br><br>    public void <font
+ color="blue">onWasSubmitted</font>() {...<br>        WUser user = (WUser) WUser.meta.findOrCreate(userId.getValue());<br>        user.setString(WUser.NAME, (String) name.getValue());<br>        user.setString(WUser.LOCATION, (String) location.getValue()); ...<br>    }<br><br>    public WButton update = addNewButton("Update"); ...<br>    @Overrideprotected void <font
+ color="blue">onPreValidate</font>() {<br>        if ( userId.getText() == null ) {<br>            update.setDisabled(true); ...<br>    }   }<br>...<br><br></pre>
+The astute reader may have noticed that the <tt>WUser</tt> definition
+above does not actually contain the Custom Static and Custom Dynamic
+fields that are displayed in the tree crud form above.&nbsp; They are
+actually contained in a seprate class, <tt>WUserCustomize</tt>, which
+could be packaged in a different jar provided by a different team of
+programmers.&nbsp; The code itself simply creates additional <tt>SFieldMeta
+</tt>objects, which may or may not have a corresponding final variable
+to make them easy to access.&nbsp; <br>
+<br>
+Business rules can also be added at this level, and fields and rules
+could also be added to specific pages.<br>
+<br>
+<pre>public class <font color="blue">WUserCustomize </font>{<br>    public static final SFieldString <em>CUSTOM_STATIC</em>  =<br>        new SFieldString(WUser.meta, "customStatic", 20);<br>...<br>        for (String cf: customFields)<br>            new SFieldString(WUser.meta, cf, 20);<br>}<br></pre>
+<br>
+Finally, the same meta data that automates the implementation of user
+interfaces can be used to automate computer interfaces, ie. web
+services.&nbsp; Each field on a JSP page simply becomes an element in a
+web service's XML.&nbsp; The service is accessed by simply changing the
+URL from <tt>.../MyPage.swb</tt> to <tt>.../MyPage.xml</tt>.&nbsp; No
+code is required.&nbsp; (Of course special case web services can also
+be implemented, but SimpleWebApp automates the common case.)<br>
+<h2>Further Reading</h2>
+Other documentation is included in the common/doc folder in the
+distribution.&nbsp; In particular there is tha
+SimpleWebApp-Technical-Overview.ppt which covers this material in more
+detail.&nbsp; There is also the users guide which describes how to
+build SimpleWebApp and run the examples.<br>
+<br>
+SimpleWebApp contains a graduated series of examples which demonstrates
+each of its features.&nbsp; They concise and fairly self expanatory
+because SimpleWebApp is ... Simple.<br>
+<br>
+<br>
+<br>
+</body>
+</html>

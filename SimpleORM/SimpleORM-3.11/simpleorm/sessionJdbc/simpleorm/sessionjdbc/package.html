@@ -1,0 +1,23 @@
+<body>
+  The SimpleORM JDBC Interface which moves data between a JDBC accessed database and an SDataSet.<p>
+        
+This package is dependent on the dataset package which are used to store the data and meta data.  
+It is built in a second step to the dataset package to ensure that there are no dependencies from the dataset package to this one.<p>
+
+This is packaged into simpleorm-sessionJdbc.jar.jar<p>
+    
+ See the <a href="../../../../webSite/sorm/whitepaper.html">../../../../webSite/sorm/whitepaper.html</a> for a
+ more details.<p>
+
+The website is <a href="http://www.simpleorm.org">www.SimpleORM.org</a> which contains current information.  (A local copy is at <a href="../../../../webSite/index.html">../../../../webSite/index.html</a>).<p>
+
+Note that most non public declarations have package scope, not private
+scope.  This includes instance variables.  Further, the simpleorm jar
+is not sealed.  This means that if you do need to hack SimpleORM you
+can generally create a new class within the simpleorm.core package
+with appropriate static methods, and thus not need to change the
+SimpleORM classes themselves.  Of course this is not supported, and
+make sure you let us know what you did so that we can incorporate the
+changes into the main package.<p>
+
+</body>

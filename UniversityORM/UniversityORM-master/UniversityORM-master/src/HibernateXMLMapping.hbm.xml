@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.abogdanov.university.domain.Student" table="STUDENT">
+        <meta attribute="class-description">
+            This class contains the student detail.
+        </meta>
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="firstName" column="first_name" type="string"/>
+        <property name="lastName" column="last_name" type="string"/>
+        <property name="age" column="age" type="int"/>
+    </class>
+
+    <class name="org.abogdanov.university.domain.Teacher" table="TEACHER">
+        <meta attribute="class-description">
+            This class contains the teacher detail.
+        </meta>
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="firstName" column="first_name" type="string"/>
+        <property name="lastName" column="last_name" type="string"/>
+        <many-to-one name="dept" column="dept"
+                     class="org.abogdanov.university.domain.Dept" not-null="true"/>
+    </class>
+
+    <class name="org.abogdanov.university.domain.Dept" table="DEPT">
+        <meta attribute="class-description">
+            This class contains the dept detail.
+        </meta>
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+    </class>
+
+    <class name="org.abogdanov.university.domain.Exam" table="EXAM">
+        <meta attribute="class-description">
+            This class contains the exam detail.
+        </meta>
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="student" column="student"
+                     class="org.abogdanov.university.domain.Student" not-null="true"
+                     lazy="false"/>
+        <many-to-one name="teacher" column="teacher"
+                     class="org.abogdanov.university.domain.Teacher" not-null="true"
+                     lazy="false"/>
+        <many-to-one name="subject" column="subject"
+                     class="org.abogdanov.university.domain.Subject" not-null="true"
+                     lazy="false"/>
+        <property name="grade" column="grade" type="int"/>
+
+    </class>
+
+    <class name="org.abogdanov.university.domain.Subject" table="SUBJECT">
+        <meta attribute="class-description">
+            This class contains the subject records.
+        </meta>
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" column="subject_name" type="string"/>
+        <property name="hours" column="subject_hours" type="int"/>
+    </class>
+</hibernate-mapping>

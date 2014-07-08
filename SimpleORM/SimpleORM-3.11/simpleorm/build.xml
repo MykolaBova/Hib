@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="SimpleORM" default="test-hsql" basedir=".">
+
+	<!-- 
+Ant task to build and run SimpleORM.  See jakarta.apache.org to obtain
+ant.  See www.simpleorm.org for general information about SimpleORM.
+
+This does build the examples, but NOT the ejb examples which are somewhat neglected.
+
+TEST PROPERTY FILE
+
+Without a property file the provided hsqldb is used.  
+
+To use a real database a simpleorm.properties file must be placed in the ${user.home} folder.
+The example/test programs reads this file directly so that it can be run
+directly from an IDE without ant.
+
+The ant "about" task will show you where
+this folder is on the wonderous Microsoft operating systems.  The file
+is a simple java properties file.  For example:-
+
+See examples/TestUte/makeDataSource for details of how database properties are handled.
+
+(Note that this property file has nothing to do with SimpleORM itself, just the provided test/demo 
+programs.  See TestUte.java for to see how the property file is used.)
+
+== HSQLDB == 
+(100% Java. Warning, no record locking, not for serious use.)
+This should just work without any additional configuration.
+
+database.driver=org.hsqldb.jdbcDriver  
+database.url=jdbc:hsqldb:hsqlTempFiles;shutdown=true;
+database.username=sa
+database.password=
+
+== ORACLE ==
+
+// Specifying .datasource instead of .driver uses Oracle's connection pooling instead of the trivial test one.
+database.datasource=oracle.jdbc.pool.OracleDataSource
+database.url=jdbc:oracle:thin:scott/tiger@localhost:1521:orcl
+
+== POSTGRESQL ==
+(Seems to be very solid for a C database.  Multi Record Concurrency Control.)
+
+database.driver=org.postgresql.Driver
+database.url=jdbc:postgresql://localhost/${user.name}
+database.username=${user.name}
+database.password=
+
+==MS SQL ==
+
+database.driver=com.microsoft.jdbc.sqlserver.SQLServerDriver
+database.url=jdbc:microsoft:sqlserver://localhost:1433;SelectMethod=Cursor
+database.username=aberglas2
+database.password=...
+
+(SelectMethod=Cursor is required.)
+
+Big hint, discovered after much stuffing arround:- If you get a message
+  "Not associated with a trusted SQL Server connection" 
+
+You have to go into the "Enterprise Manager", and change the
+properties on the thing under Server Group to Security | SQL Server
+and Windows, otherwise User "SQL Server Authentication" will not be
+enabled.  It is not enough to enable this under Security | Logins.
+Microsoft products are a bit too easy to use for me.
+-->
+
+
+	<property file="${user.home}/simpleorm.properties" />
+    
+	<target name="about">
+		<echo message="user.home: ${user.home}" />
+		<echo message="user.name: ${user.name}" />
+		<echo message="java.home: ${java.home}" />
+		<echo message="database.url ${database.url}" />
+	</target>
+
+	<path id="default.classpath">
+		<pathelement location="built/dataset" />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="built" />
+		<mkdir dir="built/dataset" />
+		<mkdir dir="built/sessionJdbc" />
+		<mkdir dir="built/examples" />
+		<mkdir dir="built/api" />
+		<mkdir dir="temp" />
+		<mkdir dir="lib" />
+	</target>
+
+	<target name="clean" description="Destroy the output folder.">
+		<delete dir="built" />
+		<delete dir="build" /> <delete dir="dist" /><!-- may be created by IDE -->
+        <delete>
+            <fileset dir="." includes="hsqlTempFiles.*"/>
+        </delete>
+	</target>
+
+	<target name="compile" depends="init">
+        <javac srcdir="dataset" destdir="built/dataset" debug="on">
+			<classpath refid="default.classpath" />
+		</javac>
+        <javac srcdir="sessionJdbc" destdir="built/sessionJdbc" debug="on">
+			<classpath refid="default.classpath" />
+		</javac>
+        <javac srcdir="examples"  destdir="built/examples" debug="on">
+			<classpath>
+                <path refid="default.classpath"/>
+                <pathelement location="built/sessionJdbc"/>
+            </classpath>           
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="Build the jar.  Not needed during development.">
+		<jar jarfile="built/simpleorm-dataset.jar" basedir="built/dataset"/>
+		<jar jarfile="built/simpleorm-sessionJdbc.jar" basedir="built/sessionJdbc"/>
+	</target>
+
+	<target name="api" depends="clean, init" description="Build the javadocs.">
+		<!-- <copy todir="built/api/website"> <fileset dir="website" />	</copy> -->
+		<!-- <copy todir="built/api/extraDocs"> <fileset dir="extraDocs" />	</copy> -->
+		<javadoc packagenames="simpleorm.*"  destdir="built/api" overview="overview.html" 
+          access="package" author="true" version="true" use="true" windowtitle="SimpleORM.org Object Releational Mapping" 
+          doctitle="SimpleORM.org Object Releational Mapping" bottom="Copyright &#169; 2002-8 Southern Cross Software Qld, www.SimpleORM.org">
+			<!-- Remove the access="private" to restrict to the actual api. -->
+			<classpath refid="default.classpath" />
+			<!-- <group title="SimpleORM Core" packages="simpleorm.core*" /> -->
+			<!-- link offline="false" href="http://java.sun.com/products/jdk/1.3/docs/api/"/ -->
+            <fileset dir=".">
+                <include name="dataset/**/*.java"/>
+                <include name="sessionJdbc/**/*.java"/>
+            </fileset>
+		</javadoc>
+	</target>
+
+	<target name="zip" depends="clean" description="zip up the source into ../SrcArchive.">
+		<tstamp/>
+		<property name="srcarchive" value="../SimpleOrmArchive" />
+		<mkdir dir="${srcarchive}" />
+        <delete file="${srcarchive}/SimpleORM-${DSTAMP}.zip"/>
+		<zip zipfile="${srcarchive}/SimpleORM-${DSTAMP}.zip">
+			<fileset dir="..">
+				<include name="simpleorm/**" />
+				<exclude name="simpleorm/lib/oracle*" />
+				<exclude name="simpleorm/lib/postgresql*" />
+				<exclude name="simpleorm/lib/ms*" />
+				<exclude name="simpleorm/website/downloads/**" />
+			</fileset>
+		</zip>
+	</target>
+
+	<property name="trace.level" value="" />
+    
+	<target name="test" depends="compile, jar" description="Runs an example/test case, defalut runs all, use with -Dclass=classInExamplesDir.">
+		<property name="class" value="ATestAll" /> <!-- Normally overriden in command line -->
+		<echo message="Running ${class}" />
+		<java classname="simpleorm.examples.${class}" fork="true" failonerror="true">
+            <!-- <jvmarg value="-server"/> -->
+			<classpath>
+                <path refid="default.classpath"/>
+                <pathelement location="built/sessionJdbc"/>
+                <pathelement location="built/examples"/>
+            </classpath>           
+			<sysproperty key="myhome" value="${simpleorm}" />
+			<sysproperty key="useHsql" value="${useHsql}" />
+		</java>
+	</target>
+	<!-- 
+      <jvmarg value="-classic"/>
+      <jvmarg value="-Xrunhprof:cpu=samples,file=built/hprof.txt,depth=10"/> 
+      <jvmarg value="-Xprof"/>
+      java -jar PerfAnal.jar ../built/hprof.txt
+      <jvmarg value="-Xrunhprof:heap=all,file=built/hprof.txt,depth=10"/> 
+-->
+<!--
+	<target name="createdbtest" depends="init" description="See CreateDBTest.java - - not needed to run tests.">
+		<property name="class" value="CreateDBTest" />
+		<antcall target="test" />
+		<sql driver="${database.driver}" url="${database.url}" userid="${database.username}" password="${database.password}" onerror="continue" autocommit="on">
+			<classpath refid="default.classpath" />
+			<transaction src="temp/createdb.sql" />
+		</sql>
+	</target>
+-->    
+
+	<target name="demo" description="Just run the demonstration">
+		<property name="class" value="ADemo" />
+		<antcall target="test" />
+	</target>
+
+    <target name="test-hsql" depends="compile, jar" description="Do testall but always with the provided Hsql datbase.">
+		<property name="useHsql" value="true" />
+		<antcall target="test" />
+	</target>
+
+</project>

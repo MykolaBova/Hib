@@ -1,0 +1,865 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  
+
+ 
+  <title>Leftovers.html</title><link rel="STYLESHEET" type="text/css" href="styles.css"></head>
+<body>
+<h1>Leftovers from Editing Whitepaper</h1><x-sigsep></x-sigsep>Some people, when
+confronted with a
+problem, think "I know, I'll use XML." Now they have two problems.
+-- Jamie Zawinski / James Robertson<br>
+<br>
+The superior pilot uses
+his superior
+judgment to avoid the need for his superior skills. -- Should
+also apply to software!<br><br>(To be revised, tidied and incorporated later.)<br>
+
+<br>
+&lt;!-- TO DO<br>
+
+<br>
+
+* Identifying Foreign Keys &amp; multi column primary keys are in two places.<br>
+
+<br>
+
+* Result Sets &amp; Relationships should be split in two.<br>
+
+<br>
+
+* Create Tables are in two places.<br>
+
+<br>
+
+--&gt;<br>
+<h2>Hibernate</h2>
+We
+often compare SimpleORM to Hibernate because Hibernate has become the
+most widely used ORM. &nbsp;Unlike other early open source ORMs it
+takes database semantics and locking seriously. &nbsp;It is very
+complex, and described in the book "Java Persistence with Hibernate" by
+Bauer &amp; King which contains over 800 pages of dense text.
+&nbsp;(Compared to the few pages required to document SimpleORM.)<br>
+<br>
+<br>
+Hibernate <br>
+It is full featured,&nbsp;<br>
+(Hibernate is
+over 2400K plus about 2000K of dependent Jars.)<br>
+<br>
+Given<br>
+@Entity<br>
+public class Event {&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; @Id @GeneratedValue<br>
+&nbsp;&nbsp;&nbsp;&nbsp; Long id;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; @Column<br>
+&nbsp;&nbsp;&nbsp;&nbsp; String
+title;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp; @OneToMany(mappedBy="event",
+fetch=FetchType.LAZY) // Lazy reccommened pp JPWH p570<br>
+&nbsp;&nbsp;&nbsp;&nbsp; Set&lt;Activity&gt;
+activities = new
+HashSet();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; public Event getThis() {return
+this;}<br>
+}<br>
+<br>
+and<br>
+<br>
+@Entity<br>
+public class Activity {<br>
+&nbsp;&nbsp;&nbsp; @Id @GeneratedValue<br>
+&nbsp;&nbsp;&nbsp; long id;<br>
+&nbsp;&nbsp;&nbsp; @ManyToOne(fetch=FetchType.LAZY) <br>
+&nbsp;&nbsp;&nbsp; Event event;<br>
+&nbsp;&nbsp;&nbsp; @Column<br>
+&nbsp;&nbsp;&nbsp; String name;&nbsp; <br>
+}<br>
+<br>
+Then <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Event event2bPre =
+(Event)session.get(Event.class, 2L);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; Activity act4bPre =
+(Activity)session.get(Activity.class, 4L);&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp; assertEqual("Second Event",
+act4bPre.event.title);<br>
+Works.<br>
+<br>
+But <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Activity act4b =
+(Activity)session.get(Activity.class, 4L);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+assertTrue(act4b.event.getClass().getName().contains("Event$$EnhancerByCGLIB"));
+// Ahh!<br>
+&nbsp;&nbsp;&nbsp;&nbsp; Event event2aPost =
+(Event)session.get(Event.class, 2L);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; assertTrue(null ==
+act4b.event.title);<br>
+Does not work -- act4b.event.title should not be null.<br>
+<br>
+I think that the weird proxy class is to blame.&nbsp; I have
+sometimes even got Entity.getThis() != this(!).<br>
+<br>
+The
+definitions for the classes are as recommended by the book,
+AFAIK.&nbsp; I suspect that the annotations are not properly
+supported/documented, and have weird JPA issues, and so I would
+probably be better off sticking to XML.&nbsp; (Have not tried.)<br>
+<br>
+But I have spent several hours on this trivial example.&nbsp; <br>
+<br>
+Needless complexity is evil.<br><br><h3>&nbsp;
+Load, supposedly lazy</h3>
+<pre> println("\n=================== Acitivity Identity ==================\n");<br> <br> Activity actC1 = (Activity)session.load(Activity.class, 1L);<br> println("ACTIVITY " + actC1.id + System.identityHashCode(actC1) + " " + actC1.id + actC1.getClass().getName());<br>//LE ACTIVITY 021886820 0simpleorm.play.hibernate1.Activity$$EnhancerByCGLIB$$ec22ae8b<br> println(" " + actC1.name);<br>// LE null <br> println(" " + actC1);<br>//LE Hibernate: select activity0_.id as id1_1_, activity0_.event_id as event3_1_1_, activity0_.name as name1_1_, event1_.id as id0_0_, event1_.title as title0_0_ from Activity activity0_ left outer join Event event1_ on activity0_.event_id=event1_.id where activity0_.id=?<br>//LE {Activity 1 FirstAct1 EVENT: First Event 9299042 simpleorm.play.hibernate1.Activity}<br> <br> println(" Act1Event " + actC1.event);<br>//LE Act1Event null<br><br></pre>
+&nbsp;
+<br>
+http://iablog.sybase.com/paulley/2008/05/hibernate-transaction-semantics-are-critical/<br>
+"The reader may very well criticize me at this point that this is
+simply a bug in Hibernate, and I shouldn&#8217;t harp on it - all products
+have bugs, including SQL Anywhere. I agree. My point, however, is that <strong>transactional
+semantics are very difficult to get right</strong>, and the
+complexities offered by Hibernate, particularly with Hibernate&#8217;s
+implementation of caching to &#8220;solve&#8221; performance problems, can easily
+lead an application developer down a garden path, only to discover
+correctness issues after it is too late."&nbsp;
+<br><br><br> &nbsp;<a href="http://www.onjava.com/pub/a/onjava/2006/09/13/dont-let-hibernate-steal-your-identity.html">http://www.onjava.com/pub/a/onjava/2006/09/13/dont-let-hibernate-steal-your-identity.html.</a><br><h2><a class="mozTocH2" name="mozTocId627792"></a>Performance
+and
+Benchmarks</h2>
+Last but by no means least it is very important that an ORM not add
+any significant overheads to an application that is running in an
+enterprise application. To check that that is the case a careful
+series of benchmarks have been constructed.
+<p>The tests are based on the classic Department/Employee schema.
+Rows
+are inserted, queried and updated, both sequentially and randomly. The
+results are for PostgreSQL. (It would be interesting to see how they
+compare with other datbases but care is required, eg. HSQL has
+checkpointing overhead.) </p>
+<p>The tests were done on a single PC with no network overheads.
+Each
+test is run in its own single transaction. All the benchmarks
+actually do something, eg. calculate a total salary and budget, so
+that one can have confidence that they are all actually working
+correctly.</p>
+<p>The tests and times are are as follows. All times are quoted
+in
+terms
+of the number of milliseconds per iteration, with at least 1,000
+iterations depending on the test. (The times vary about 10% between
+runs due to database buffer state etc.)</p>
+<p>
+<table border="1">
+<tbody>
+<tr>
+<td>Test</td>
+<td>Description</td>
+<td>Raw JDBC</td>
+<td>SimpleORM</td>
+</tr>
+<tr>
+<td>Insert</td>
+<td>Insert Emp
+rows.</td>
+<td>2.4</td>
+<td>2.5</td>
+</tr>
+<tr>
+<td>Query Sequential</td>
+<td>Retrieve all the Employees and Departments
+sequentially.</td>
+<td>0.31</td>
+<td>0.39</td>
+</tr>
+<tr>
+<td>Query Random</td>
+<td>Query the Employees
+randomly.</td>
+<td>5.4</td>
+<td>1.7</td>
+</tr>
+<tr>
+<td>Query Field</td>
+<td>Queries five fields in one row,
+repeatedly.</td>
+<td>0.12</td>
+<td>0.0050</td>
+</tr>
+<tr>
+<td>Update Random</td>
+<td>Give random Employees pay
+rises.</td>
+<td>7.8</td>
+<td>3.4</td>
+</tr>
+<tr>
+<td>Update Bulk</td>
+<td>Update all rows in single Update
+statement. </td>
+<td>0.17</td>
+<td>0.18</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>The first result is that SimpleORM adds no measurable overhead
+to
+using raw JDBC. The queries for the Insert and QuerySequential were
+very similar, and so were the results. The over head for building the
+<tt>SRecordInstant</tt> structure and adding it to the
+cache was a
+negligable 0.1 milliseconds/record.</p>
+<p>The cache then made SimpleORM over 3.0 milliseconds per record
+<em>faster</em> than JDBC on the QueryRandom and
+UpdateRandom trials
+because the cache minimized expensive database hits. If a network had
+been used the reduction in database hits would have produced even more
+dramatic improvements. SimpleORM is also faster for repeated field
+access, which is significant because there are typically many fields
+per record.</p>
+<p>The bulk update test updates many rows with one SQL statement.
+The
+times are the same because they are the same SQL statement. But note
+that
+this is an order of magnitude faster than using individual update
+statements for each row, even without the network overhead. Thus it
+is important that an ORM allow the buffer to be flushed and purged so
+that this can be done safely.</p>
+&lt;&gt;But probably the biggest performance issue is not
+tested by the
+benchmark, namely transaction management. JDBC programmers on large
+systems tend to loose track of the connection object across modules,
+and so create far too many transactions. EJB users often use CMT,
+which also tends to produce far too many transactions (eg. the
+Weblogic demos). By associating the connection with the current
+thread, but still giving explicit control over transactions, SimpleORM
+encourages transaction structures that are efficient and correct.
+This performance consideration can dwarf all others<br><br>
+
+
+
+
+
+
+
+
+<h2><a class="mozTocH2" name="mozTocId374725"></a>Future Work</h2>
+
+
+
+
+
+
+
+<p>The following features are ideas for future development of either
+SimpleORM itslef or of companion modules to SimpleORM. Again, the
+generalized design makes this easy to do. Further ideas are welcome.</p>
+
+
+
+
+
+
+
+<ul>
+<li>Basic UI module that utilizes meta properties.</li><li>Enumerations.</li><li>Automated mechanisms to pass packets of related data to a client.</li><li>JDBC 2 delayed queries and batching. Join optimization.</li><li>Advanced sub-type (vs sub-class) mechanism.</li><li>More complex mappings, in particular to be able to pack tightly
+coupled objects into blobs, eg. list of points.</li><li>Tighter integration with specific Databases, JDBC drives and App
+Servers. Look at driver dependent ways to detect transactions that are
+committed outside of SimpleOrm.</li><li>Close integration with an Entity-Relational style modeling tool.</li>
+</ul>
+
+
+
+
+
+
+
+<p>[Note that the following Read Mostly cache has not been
+implemented.]
+</p>
+
+
+
+
+
+
+
+
+<p>The Read Mostly cache is a separate cache to the Transaction Cache.
+Unlike the Transaction Cache, it is shared between different threads
+and spans transactions. It can therefore be very efficient because it
+can substantially reduce the number of times a record needs to be
+retrieved from the database. But it also does not reliably reflect the
+current state of the database. Read Mostly records are only updated
+when they time out or when another transaction in the same JVM happens
+to commit a change to the record. And Read Mostly records have limited
+query options.
+</p>
+
+
+
+
+
+
+
+
+<p>Thus the Read Mostly cache can be used to efficiently retrieve each
+Employee's Department's Name which rarely changes and can be a few
+hours out of date without problems. But it must not be used to
+retrieve the current status of the Employee's time sheet. The Read
+Mostly cache is not used by default, but can be put to good use for
+specific applications. It provides 80% of the benefit of a fully
+updatable cache which would need complex distributed locking and
+querying for about 10% of the effort.</p>
+
+
+
+
+
+
+
+<h2>Enumerations</h2>
+<p>Enumerated types can be implemented as a user defined field
+type as illustrated in the following fragment. <tt>SEnum</tt> is
+a fairly ordinary implementation of poor man's enums that also
+extends <tt>SFieldMeta</tt> (it also handles serialization and
+internationalization issues). </p>
+
+
+
+
+
+
+
+
+
+<pre>class EmployeeType extends SEnum {<br>  static final EeType FULL_TIME = new EmployeeType("FULL_TIME"); <br>  static final EeType PART_TIME = new EmployeeType("PART_TIME"); <br>  static final EeType CONTRACTOR = new EmployeeType("CONTRACTOR");<br>}<br>...<br>class Employee extends SRecordMeta { ...<br>  static final EmployeeType EE_TYPE  = new EmployeeType(meta, "EE_TYPE");<br>...<br>}<br>...<br>EmployeeType eeType = (EmployeeType)employee.getObject(Employee.EE_TYPE);<br>EmployeeType eeType = Employee.EE_TYPE.getValue(employee); // Alternative.<br>...<br>if (!EmployeeType.isValid(locale, usersInput))...</pre>
+
+
+
+
+
+
+
+
+
+<p>Note that this is <i>all</i> the code that is required to
+implement and validate enumerations -- no need to write your own
+getters and setters that convert between database strings and
+enum objects. </p>
+
+
+
+
+
+
+
+
+
+<p>There are other similar declarative validations
+such as checking a string matches a pattern or in the example
+below that a field is bounded.</p>
+
+
+
+
+
+
+
+
+
+<pre>class Employee extends SRecordMeta { ...<br>  static final SFieldMeta SALARY  = new RangedDouble(meta, 0, 200000);</pre>
+
+
+
+
+
+
+
+
+
+<p><tt>SFieldBoolean</tt> is a special case of <tt>SEnum</tt>. It may
+be mapped directly to a boolean type for databases that support that
+(eg. Postgres) or to String or Integer types.
+<a name="rules"></a></p>
+
+
+
+
+
+
+
+
+
+<h2><a class="mozTocH2" name="mozTocId719249"></a></h2>
+<br>
+<h2>Java Data Objects (JDO)</h2>
+
+
+
+
+
+
+
+<p>[Not implemented as of Version 1.0. But easy, just has not been
+requested.]
+</p>
+
+
+
+
+
+
+
+<p>SimpeORM is usually used with the generalized
+<tt>SRecordInstance</tt>s as shown in the rest of this paper. But it
+is also possible to store record state in conventional,
+non-generalized Java objects that are managed outside of SimpleORM.
+</p>
+
+
+
+
+
+
+
+<p>This can be useful for persisting objects created outside the
+current application. For example one might have an existing personnel
+system to which you want to add persistence. This is rare in practice
+because persistence is a fundamental issue, not something that can be
+tacked on. In our example, a personnel system without persistence
+would be useless. However, SimpleORM can support this approach when
+needed.
+</p>
+
+
+
+
+
+
+
+<p>The next fragment shows how to code JDO access in SimpleORM. Each
+<tt>SRecordInstance</tt> contains a pointer to the JDO object. This
+allows key based identity to be maintained. There are then several
+options to synchronize values.
+</p>
+
+
+
+
+
+
+
+<pre> SConnection.begin() Employee employee<br>=&amp;lt;br&amp;gt;&lt;br&gt;<br><br>(Employee)Employee.meta.findOrCreate("123-45-6789");<br>if&amp;lt;br&amp;gt;&lt;br&gt;<br><br>(employee.getJDO() == null) // must be true after<br>begin()&amp;lt;br&amp;gt;&lt;br&gt;<br><br>employee.setJDO( new ExternalEmployee(p1, p2...)); ExternalEmployee<br><br>xe&amp;lt;br&amp;gt;&lt;br&gt;<br><br>= employee.getJDO(); xe.salary=1234; ... Employee employee2<br>=&amp;lt;br&amp;gt;&lt;br&gt;<br><br>(Employee)Employee.meta.findOrCreate("123-45-6789");<br>if&amp;lt;br&amp;gt;&lt;br&gt;<br><br>(employee.getJDO() == null)... // is now false, do<br>nothing.&amp;lt;br&amp;gt;&lt;br&gt;<br><br>ExternalEmployee xe2 = employee.getJDO(); assert(xe ==<br>xe2);&amp;lt;br&amp;gt;&lt;br&gt;<br><br></pre>
+
+
+
+
+
+
+
+<p><tt>getJDO</tt> is null the first time that "<tt>123-45-678</tt>"
+is accessed in the transaction regardless of whether the record
+already exists in the database. The application can then create an
+object specifying arbitrary initialization parameters. Alternatively
+it may retrieve the <tt>ExternalEmployee</tt> from a hash map.
+</p>
+
+
+
+
+
+
+
+<p>Thus SimpleORM gives total flexibility about its JDO life cycle
+(unlike Sun's JDO). SimpleORM will guarantee that there is only one
+JDO object for each SimpleORM record, but it is the application's
+responsibility to ensure that there is only one SimpleORM record for
+each JDO object. (The latter can never be a problem if the JDO
+records are created rather than looked up.)
+</p>
+
+
+
+
+
+
+
+<p>Data values can be manually moved between the record and the JDO
+giving complete flexibility. SimpleORM also provides methods
+<tt>get|setJDOFields|Methods</tt> that reflect into the JDO object and
+automatically get or set the field values, either directly or via
+get/set methods. (References are not copied.)
+</p>
+
+
+
+
+
+
+
+<p>Calls to these methods may be included within the business rule
+framework. In particular, <tt>setJDOFields|Methods</tt> can be called
+from the <tt>postQuery</tt> event method, and
+<tt>getJDOFields|Methods</tt> can be called in placed in the
+<tt>synchronizeRecord</tt> event method. This will ensure that JDO
+object are synchronized with the database.
+</p>
+
+
+
+
+
+
+
+<p>The SimpleORM JDO approach is as safe as possible without resorting
+to byte code post processing or other nasty tricks. However,
+SimpleORM cannot provide the same degree of control as provided for
+<tt>SRecordInstance</tt>s. For example, there is no way to detect
+attempts to access unqueried fields, and it is not possible to
+automatically lazily follow references. Objects can be shared between
+transactions, with potentially disasterous results. Thus the JDO
+approach should only be used where there is existing code that uses
+existing Java objects, and it is meaningful to add persistence to
+them.
+<a name="process"></a></p>
+<br>
+
+<a name="resultsets"></a>
+<h2><a class="mozTocH2" name="mozTocId355"></a>Result Sets and Relationships</h2>
+
+
+
+
+
+
+
+<p>SimpleORM allows fields to be specified using arbitrary SQL
+expressions, which may include subselects. For example
+</p>
+
+
+
+
+
+
+
+<pre>public class Employee extends SRecordInstance { ... <br>  static final SFieldString DEPT_NAME = new SFieldString(<br>    meta, "DEPT_NAME", 1000, SFD_UNQUERIED, <br>    SCOLUMN_QUERY.pvalue( "(SELECT NAME FROM XX_DEPARTMENT D<br>      WHERE D.DEPT_ID = XX_EMPLOYEE.DEPT_ID)"));<br></pre>
+
+
+
+
+
+
+
+<p>The <tt>SCOLUMN_QUERY</tt> text is simply included in the query.
+This can be faster than issuing two queries, and makes the Departement
+Name easily accessible.
+</p>
+
+
+
+
+
+
+
+<p>[Note that the following techniques in this section have not been
+implemented as at version 1.0. However the API has been designed with
+this in mind, so it should be fairly easy to add later.]
+</p>
+
+
+
+
+
+
+
+<p>However, the SimpleORM API has been carefully designed to provide
+more direct and automatic optimizations. In particular, the user does
+not normally control when database queries are actually performed.
+This enables SimpleORM to combine multiple queries into a single JDBC
+2 batch which can substantially reduce network traffic. In the
+example below, the first <tt>findOrCreate()</tt> always returns an
+Employee record regardless of whether it exists on the database. Thus
+both the queries can be deferred until <tt>emp1</tt>'s Name is
+accessed, and so combined into one batch. (We are not aware of any
+other O/R system that allows this.)
+</p>
+
+
+
+
+
+
+
+<pre>  emp1 = Employee.meta.findOrCreate("FIRST");<br>  emp2 = Employee.meta.findOrCreate("SECOND");<br>  name1 = emp1.getString(Employee.NAME); // Both queries can be done here.<br></pre>
+
+
+
+
+
+
+
+<p>Likewise, in the following fragment the retrieval of the Department
+record could be delayed until the last moment (if the JDBC driver
+supports batches). In particular, the department's key fields can be
+referenced without causing a query to be issued. (There is also a
+facility to explicilty denormalize the Department's Name.)
+</p>
+
+
+
+
+
+
+
+<pre>   emp1 = Employee.meta.findOrCreate("FIRST");<br>   Department dept = <br>      (Department)employee.getReference(employee.DEPARTMENT);<br>   ... dept.getString(dept.DEPT_ID); // No query, primary key<br>   ... dept.getString(dept.NAME); // Query only performed now.<br></pre>
+
+
+
+
+
+
+
+<p>Normally the Department is retrieved lazily as a separate query.
+But if it is known that an Employee's Department info will be needed
+then it is also possible to retrieve the Departement as part of the
+same query as the Employee. If Department reference is
+mandatory (declared NOT NULL) then an inner join may be used,
+otherwise only an outer join or subselect must be used, depending what
+is supported by the database.
+</p>
+
+
+
+
+
+
+
+<p>(This optimization is not always optimal. If there a large
+number of Employees per Department then it would be better to just
+retrieve each Department information once using separate queries and
+key based identity rather than retrieving the same information for
+each Employee. Or possibly use one query to retrieve all Departments
+up front, or or just those Departments containing the Employees you
+are interested in.)
+</p>
+
+
+
+
+
+
+
+<p>Note that this join optimization can be achieved without needing to
+artificially create an object that contains both Employee and
+Department information. It is purely a query optimization that does
+not affect the application structure. SimpleORM encourages direect
+mappings between objects in memory and
+tables in the database. If the relational schema design does not
+closely reflects the structure of the applications data it should be
+corrected!</p>
+
+
+
+
+
+
+
+<p>In practice complex mappings have limited use. When the
+subtleties of persistence such as information quality and record
+locking are taken into consideration, their true semantics become
+very difficult to define. (One thing that is useful is packaging up
+large numbers of small memory resident objects into a single
+relational column. This is future work.)</p>
+
+
+
+
+
+
+
+<p>The <tt>SResultSet</tt> cursor is normally only used for reading
+data in a very simple way. &nbsp;Semi-standard JDBC 2.0 features are
+not made available to the user (although they may be used internally
+at flush time). Thus Inserts, Updates and Deletes are performed
+using individual DML statements.&nbsp; This means that their
+visibility from an open cursor is not well defined. &nbsp;Further, one
+can only read forward through the cursor. &nbsp;In the unlikely event
+that this behaviour is important to an application, then manual JDBC
+should be used directly to manipulate the relevant table, and in any
+case the behaviour will probably vary between different database
+products.</p>
+
+
+
+
+
+
+
+<p>(It is also possible to use the <tt>doUpdate</tt> event to provide
+an explicit query or to call an database procedure instead of having
+SimpleORM generate the queries.)<br>
+</p>
+<h2>Generator</h2>
+<br>
+<p>This means that once the Record classes have been written, business
+rules can be added and then the rest of the application developed in
+the normal manenr. There are no XML files to maintain. No special
+techniques are required.
+</p>
+
+
+
+
+
+
+
+
+
+<p>However, if you have a different source of truth such as an XML
+file then you have two choices, namely to generate the SimpleORM files
+or to interpret the XML at run time.
+</p>
+
+
+
+
+
+
+
+
+
+<p>If you generate the SimpleORM classes then be sure to create a
+super class of the record, not the record itself. Eg.
+</p>
+
+
+
+
+
+
+
+
+
+<pre> /** WARNING -- GENERATED CODE -- DO NOT EDIT */<br>class&amp;lt;br&amp;gt;&lt;br&gt;<br><br>EmployeeGenerated extends SRecordInstance { private static<br><br>final&amp;lt;br&amp;gt;&lt;br&gt;<br><br>SRecordMeta meta = new SRecordMeta(Employee.class, "XX_EMPLOYEE");<br><br>}&amp;lt;br&amp;gt;&lt;br&gt;<br><br></pre>
+
+
+
+
+
+
+
+
+
+<p>then you can manually write
+</p>
+
+
+
+
+
+
+
+
+
+<pre> /** Not generated code, edit freely. */ class Employee<br><br>extends&amp;lt;br&amp;gt;&lt;br&gt;<br><br>EmployeeGenerated { // Extra business rules and property defintions<br><br>go&amp;lt;br&amp;gt;&lt;br&gt;<br><br>here }&amp;lt;br&amp;gt;&lt;br&gt;<br><br></pre>
+
+
+
+
+
+
+
+
+
+<p>Be sure to place any generated code in a built directory and NOT
+the main source directory. You may need to change build.xml.
+</p>
+
+
+
+
+
+
+
+
+
+<p>There is also no need to declare all fields in advance as
+constants. New <tt>SFieldMeta</tt> objects may be created at at
+run time that can be used to reference columns that were not known at
+compile time. Thus the XML files can simply be interpreted at
+run time. The class parameter to the <tt>SRecordMeta</tt>
+initializer is just the object type that is returned by
+<tt>findOrCreate</tt> and friends. It could just be be
+<tt>SRecordInstance.class</tt>. You would then access fields using
+</p>
+
+
+
+
+
+
+
+
+
+<pre> String phone =<br><br>employee.getString(employee.getField("PHONE_NR"));&amp;lt;br&amp;gt;&lt;br&gt;<br><br></pre>
+
+
+
+
+
+
+
+
+
+<p>(The string is necessary because you do not have the constants
+available.)
+</p>
+
+
+
+
+
+
+
+
+
+<p>Interpretation rather than generation has the advantage of keeping
+the build process simple and avoiding the need to write a generator.
+More importantly it means that one can can allow end users to add
+extra columns to application tables, and the application can still
+display and manipulate these extra columns. JDBC's meta data can be
+used to make this fairly seamless. However, there will be some
+overhead in loading all the XML every time you run the program.
+</p>
+
+
+
+
+
+
+
+
+
+<p>There will also be a simple boot strap utility to create a default
+record definition from an existing table using JDBC meta data. This
+is normally used as a once off tool to generate a class that is then
+modified. However, it is also possible to generate a dummy class
+which is speciallised with a subclass that augments the definitions
+and adds business rules. [Outstanding.]
+</p>
+
+
+
+
+
+
+
+
+
+<br>
+
+</body></html>

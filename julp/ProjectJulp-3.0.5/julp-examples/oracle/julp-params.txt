@@ -1,0 +1,7 @@
+-dorg.hsqldb.jdbcDriver -rjdbc:hsqldb:hsql://localhost/julp_examples -usa -fc:\\projects\\ProjectJulp-3\\julp-examples\db\\hsqldb\\setup.sql -efindCustomer
+
+-doracle.jdbc.OracleDriver -rjdbc:oracle:thin:@localhost:1521:XE -ujulp -pjulp -fc:\\projects\\ProjectJulp-3\\julp-examples\db\\oracle\\setup.sql -efindCustomer
+
+
+
+-doracle.jdbc.OracleDriver -rjdbc:oracle:thin:@localhost:1521:XE -ujulp -pjulp -fc:\\projects\\ProjectJulp-3\\julp-examples\db\\oracle\\setup.sql -elazyLoading

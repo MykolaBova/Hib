@@ -1,0 +1,118 @@
+EOF/Hibernate -- Maury Markowitz
+
+
+> Don' quite understand you about Hibernate vs EOF.
+
+
+There's some history here.
+
+  When EOF was first being created it was in the enviornment of the existing
+application paradigm - long-lived applications being used as a client-server
+system with one (human) client per application. In this particular case the
+client application was written in Objective-C using NeXTSTEP.
+
+  EOF was tailored to this model. When the user starts the app they start up
+the EOF machinery, and the "editing context" they create as a part of that
+process lives for the lifetime of the application. All communications with
+the database goes through the EOF layer, which caches everything locally.
+All of this is modifyable, of course, but in general you never had too.
+
+  The model is very well suited to these "classic" client-server apps. Since
+users tend to look at the same objects over and over, in most cases anyway,
+EOF's caching saved accesses. In most cases after "priming" the cache, there
+were almost no transactions except when the user hit "save". At this point
+EOF contained both the most up-to-date state for all of the loaded objects
+(including user changes, if any) as well as a complete recording (undo stack
+basically) of what had changed and to what. A single COMMIT put all of this
+back out to disk, but only after comparison of the latest state with the
+historical "snapshot" to isolate those things that had actually changed.
+
+  So comparing normal client-server stuff to EOF was a joke. Since the undo
+stack was global, applications didn't have to force users to save all the
+time in order to reduce programmer workload for dirty tracking. Trying to do
+this in most client-server systems was very difficult, and such apps
+invariably LOOKED like database apps - each "screen" had a save/cancel
+button at the bottom. EOF apps felt much more like "real" applications, you
+hit Save and they would do what you would expect.
+
+  Better yet the same system was also easier to program (due to NeXTSTEP),
+used the network a lot less, and was generally faster. As you said, EOF
+should have ruled the world, but I guess installing NeXTSTEP was too high a
+price to pay.
+
+
+  The problem with EOF started with a change in model. Database applications
+are no longer client-server for the most part, but browser-appserver-server.
+In this model EOF falls apart. No longer do you have a single user attached
+to a process that lives for a "known" lifetime (basically from when the user
+opens to closes the app), but a number of users attached to several apps
+running in tandem with different lifetimes.
+
+  In this case all of the machinery of EOF seems to work against you.
+Although users in particular may still look at a particular set of objects,
+users on a particular appserver do not. The caching goes to hell, and just
+ends up slowing things down. Worse, since the app is typically spread across
+a couple of instances, and often a couple of machines, you have all sorts of
+problems where different users see different caches. The only way to avoid
+this is to lock users into particular instances of the app, which is just
+what you don't want!
+
+  Basically the EOF model just doesn't "work" any more. Many users are on
+and off a system very quickly, you often can't tell when they're done, and
+since the browser forces a pagecentric view, the save/cancel system is
+basically the only way to go anyway (you're not going to find many web apps
+with a File menu!).
+
+  Maintaining a heavyweight transaction system for the lifetime of a user
+just doesn't make sense, that lifetime is highly variable, and is often
+defined by page-flips as opposed to logon/logoff. What you want is something
+that lives for the life of a page, and only caches those objects.
+
+  Hibernate appears to be the "opposite" of the EOF model. It doesn't do
+anything but convert objects to/from the database, when explicitly asked to
+do it. It has no "lifetime" at all, no memory footprint, and no caching. For
+a web-based app where you have lots of one-shot transactions, it seems to
+make a lot more sense to me.
+
+
+> Hibernate seems to be best suited to a "document" application.  Eg.
+> if you were to retrieve and store a self contained CAD model in a
+> RDBMS, and only one user edits it at a time.
+
+
+Well EOF and Hibernate share one part of their model, in that both crawl
+the object model and can save the entire "tree" of an object graph in a
+single operation. The difference is in how they do it. In EOF you explicitly
+tell every object what editing context it is a part of (which can become
+tricky), and then the editing context tracks changes. When you load a
+complex object all of the tree goes into a context.
+
+  In Hibernate you just have objects, and the machinery uses Java reflection
+to figure out what other objects are in the graph. You hand it the root and
+it persists everything. The big difference seems to be that Hibernate has no
+state, it's either loading or saving an object, and then it's done.
+
+
+> Let me know if you can find out what Hibernate actually does!  I get
+> a bad feeling that badly documented tools are not well thought out.
+
+
+I know, when they can't be bothered to write a good doc, are they
+bothering to write good code?
+
+
+> SimpleORM/EOF? is more oriented to a transaction application, eg.
+> where lots of users are accessing fine grained objects.
+
+
+Right, which is kind of what I'm looking for.
+
+  The problem with Java based systems for this is that Java doesn't have
+extensibility. So you end up with lots of subclassing and visitor classes
+and stuff. Not very pretty.
+
+Maury
+
+
+
+

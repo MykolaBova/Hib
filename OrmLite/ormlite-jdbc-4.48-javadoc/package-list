@@ -1,0 +1,4 @@
+com.j256.ormlite.db
+com.j256.ormlite.jdbc
+com.j256.ormlite.logger
+com.j256.ormlite.spring

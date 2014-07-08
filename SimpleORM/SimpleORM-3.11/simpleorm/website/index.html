@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>SimpleORM (like Hibernate) and SimpleWebApp (Ruby on Rails for Java)</title>
+
+<link rel="STYLESHEET" type="text/css" href="sorm/styles.css"></head>
+<body>
+<table border="0" width="100%">
+<tbody>
+<tr valign="bottom">
+<td><font color="blue" size="6">SimpleORM
+</font> <br>
+<font size="5"><i>Simple Java Object
+Relational Mapping</i></font> </td>
+<td halign="right"><img src="sorm/logo.png" alt="Logo" style="width: 175px; height: 107px;" height="107" width="175"> <br>
+<i>Power without complexity.</i> </td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><b>Simple</b> <i>adj. </i><b>1</b>.
+Easy to understand, deal
+with, use etc. &nbsp; <b>2</b>. not elaborate or
+artificial. <b>3</b>.
+unaffected, unassuming. &nbsp;<b>4</b>. not
+&nbsp;complex or
+complicated. &nbsp;[Macquarie Dictionary].</p><h2><font color="red">New! SimpleORM 3.0 released with the new DataSet architecture</font></h2>
+<h2>Overview</h2>
+SimpleORM is a full featured Java object relational mapping system that avoids
+exotic technologies such as byte code generation.&nbsp;
+SimpleWebApp is
+a
+framework that can use SimpleORM to implement Java web applications
+very easily.&nbsp; Simple applications should not be complex to
+implement.<br>
+<br>SimpleORM/Web's extensive use of meta data also enables applications to
+be deeply customized by external jars.&nbsp; This enables more
+complex
+applications to be delivered as core services and separate but deeply
+integrated plug in&nbsp;modules.<br>
+<br>
+Both are open source projects
+(Apache style license).<br>
+<h2>SimpleORM Version 3.*</h2>
+<p>SimpleORM&nbsp;provides similar functionality to Hibernate
+by
+mapping&nbsp;data in a relational database to Java objects in
+memory.
+&nbsp;Queries can be specified in terms of Java objects, object
+identity is aligned with database keys, relationships between objects
+are maintained and modified objects are automatically flushed to the
+database with optimistic locks.</p>
+<p>But
+unlike Hibernate, SimpleORM uses a very simple
+object structure and architecture that avoids the need for complex
+parsing, byte code processing etc. &nbsp;SimpleORM is small and
+transparent, packaged in two jars of just 79K and 52K in size, with
+only one small and optional dependency (Slf4j). &nbsp;(Hibernate is
+over 2400K plus about 2000K of dependent Jars.) &nbsp;This makes
+SimpleORM easy to understand and so greatly reduces technical risk.</p>
+SimpleORM version 3.* is a major upgrade that provides a distinct
+DataSet component while simplifying record definitions.
+<p>See the SimpleORM <a href="sorm/whitepaper.html"><b>White
+Paper</b></a> for
+a full description of how SimpleORM works.</p>
+<h2>SimpleServlets</h2>A very simple environment for running web applications as servlets. &nbsp;No JSPs, no XML at all.<br><br>The
+servlet package creates a "requestlet" object for each invocation,
+which then conveniently stores the request and response objects etc.
+&nbsp;Widgets then provide some simple wrappers around HTML which makes
+it neater to use.&nbsp; <br>So <tt>BW._td()</tt> just outputs "<tt>&lt;/td&gt;</tt>" (and check that it matches a <tt>&lt;td&gt;</tt>). &nbsp;State is stored via "paramattrs", which is a simple wrapper around request.getParameter and<br>request.get|setAttribute
+(attributes override parameters). &nbsp; For easy development it is set
+up to be invoked as an ordinary Java application&nbsp;that listens on
+Port 8080 (using Jetty), &nbsp;although the standard servlets are also easy to package into a war.<br><br>The whole jar&nbsp;is about 30K.<br>&nbsp; <h2>(SimpleWebApp)<br>
+</h2>
+SimpleWebApp lets you quickly develop high quality web
+applications.&nbsp;
+It provides reusable templates that encapsulate standard user
+interaction
+patterns that
+list, view and update data (CRUD).&nbsp; SimpleWebApp also cuts
+through
+the layers to integrate interfaces with databases.&nbsp; This means
+that the only code you need to write is real application logic rather
+than large quantities of repetitive glue code.&nbsp; And the code
+you
+do write is plain old Java code with minimal reflection etc. because
+developing web application
+should be ... simple.&nbsp; <br><br>SimpleWebApp
+is more sophisticated than SimpleServlets. &nbsp;However, simplewebap
+uses JSP technologies to render the templates. &nbsp;This can be rather
+painful if the templates need to be modified. &nbsp;See <a href="SimpleWebApp-Overview/SimpleWebApp-Overview.html">SimpleWebApp</a>
+for a
+comprehensive overview.
+<h2>Mailing Lists</h2>
+<ul>
+<li><a href="http://www.groups.yahoo.com/group/SimpleORMAnnounce">SimpleORMAnnounce</a>
+for occasional announcements about SimpleORM such
+as new versions and any critical bugs. Send email to <a href="mailto:SimpleORMAnnounce-subscribe@yahoogroups.com">SimpleORMAnnounce-subscribe@yahoogroups.com</a>
+to subscribe.</li>
+<li><a href="http://www.groups.yahoo.com/group/SimpleORM">
+SimpleORM</a>
+is the main SimpleORM discussion mailing list. Send email to <a href="mailto:SimpleORM-subscribe@yahoogroups.com">SimpleORM-subscribe@yahoogroups.com</a>
+to subscribe. If you subscribe to this group you should also subscribe
+to the Announce group above.</li>
+</ul>
+<h2>Download</h2>
+<p><a href="sorm/download.html"><b>Download SimpleORM sources.</b></a> </p>
+<h2>Contributions</h2>
+<p>All inquiries, suggestions or offers of assistance most
+welcome. </p>
+<p>Contact<a href="mailto:info@SimpleORM.org">info@SimpleORM.org</a>
+.</p>
+<p><i>Many programmers are clever enough to write clever code, a few programmers are clever enough not to.</i></p><p><i>No
+XML, no reflection, no annotations. It's simply typesafe java code.
+&nbsp;It's easy to use. Because it is open source and the amount of
+source code is rather small, there will be always somebody who will
+maintain the software. &nbsp;The dataset component&nbsp;is independent
+from the jdbc-component. </i>--&nbsp;Thomas Leichner
+</p>
+<hr><a href="http://sourceforge.net"> <img src="http://sourceforge.net/sflogo.php?group_id=72061&amp;type=5" alt="SourceForge.net Logo" border="0" height="62" width="210"></a>
+<p><br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; <br>
+&nbsp; </p>
+<p>Additional Keywords: hibernate Java Simple ORM O/R mapping map
+mapper JDO JPA</p>
+</body></html>

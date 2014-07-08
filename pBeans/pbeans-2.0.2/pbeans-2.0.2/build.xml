@@ -1,0 +1,63 @@
+<!--
+  * To build lib/pbeans.jar, just run 'ant'.
+  * To build a zip distribution, run 'ant distro'.
+  -->
+<project default="distro">
+	<loadfile property="pbeans-version" srcfile="VERSION">
+		<filterchain>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>
+    <property name="pbeans-name" value="pbeans-${pbeans-version}"/>	
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="lib"/>
+		<jar destfile="lib/pbeans.jar">
+			<fileset dir="bin" />
+			<metainf file="VERSION" />
+			<manifest>
+				<attribute name="Version" value="${pbeans-version}" />
+			</manifest>
+		</jar>
+	</target>
+
+   <target name="rebuild">
+        <delete file="lib/pbeans.jar"/>
+        <delete dir="bin"/>
+        <antcall target="jar"/>
+    </target>
+ 	
+	<target name="distro" depends="jar,apidocs">
+		<mkdir dir="lib"/>
+		<mkdir dir="/tmp"/>
+		<zip destfile="/tmp/${pbeans-name}.zip">
+			<zipfileset dir="lib" prefix="${pbeans-name}/lib" excludes="**/CVS"/>
+			<zipfileset dir="src" prefix="${pbeans-name}/src" includes="**/*.java" excludes="**/CVS" />
+			<zipfileset dir="ext" prefix="${pbeans-name}/ext" excludes="**/CVS" />
+			<zipfileset dir="docs" prefix="${pbeans-name}/docs" excludes="**/CVS" />
+			<zipfileset dir="examples" prefix="${pbeans-name}/examples" excludes="**/CVS" />
+			<zipfileset dir="." prefix="${pbeans-name}" includes="build.xml,README,CONTRIBUTORS,CHANGELOG,LICENSE,VERSION" />			
+		</zip>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="bin" />
+		<javac debug="true" debuglevel="source,lines" srcdir="src" destdir="bin" extdirs="ext" />
+	</target>
+
+	  <target name="apidocs" description="pBeans ${pbeans-version} API documentation" depends="compile">
+	  	<delete file="docs/api/*.html"/>
+	    <mkdir dir="docs/api"/>
+	    <javadoc
+	    	windowtitle="pBeans ${pbeans-version} API Documentation"
+	        sourcepath="src"
+	        classpath="ext/servlet.jar"
+	        packagenames="net.sourceforge.pbeans,net.sourceforge.pbeans.annotations,net.sourceforge.pbeans.servlet,net.sourceforge.pbeans.data"
+	        destdir="docs/api"
+	    />
+	  	<copy todir="/opt/websites/pbeans/api">
+	  		<fileset dir="docs/api"/>
+	  	</copy>	  		
+	  </target>
+
+</project>

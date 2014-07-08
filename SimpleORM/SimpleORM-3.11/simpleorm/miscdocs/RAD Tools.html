@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>RAD Tools</title>
+  <link rel="STYLESHEET" type="text/css" href="styles.css">
+</head>
+<body>
+<h1><a class="mozTocH1" name="mozTocId924874"></a>Rapid Application
+Development Tools</h1>
+Dr Anthony Berglas<br>
+July 2004<br>
+July 2006<br>
+<br>
+The following tools go all the way from the database to the UI.&nbsp;
+The can produce CRUD applications very quickly.&nbsp; Ultimately, this
+is the way to go.<br>
+<br>
+For simple web frameworks see <a href="Web%20Frameworks.html">Web
+Frameworks.html</a><br>
+<br>
+<br>
+<ul id="mozToc">
+<!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId924874">Rapid
+Application
+Development Tools</a>
+    <ul>
+      <li><a href="#mozTocId713102">Butler</a></li>
+      <li><a href="#mozTocId494949">Ruby on Rails</a></li>
+      <li><a href="#mozTocId332473">Trails</a></li>
+      <li><a href="#mozTocId520747">Grails/Groovy</a></li>
+      <li><a href="#mozTocId210056">Naked Objects</a></li>
+      <li><a href="#mozTocId877496">JDON</a></li>
+      <li><a href="#mozTocId776537">Fulcrum?</a></li>
+      <li><a href="#mozTocId424771">Optimal/J</a></li>
+      <li><a href="#mozTocId539923">AppFuse</a></li>
+      <li><a href="#mozTocId567065">SiteMesh</a></li>
+      <li><a href="#mozTocId89320">Curam</a></li>
+      <li><a href="#mozTocId863253">Reflexe OpenAge</a></li>
+    </ul>
+  </li>
+</ul>
+<br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId713102"></a>Butler</h2>
+"Table Oriented Programming" -- TOP<br>
+<br>
+Neat and simple.&nbsp; Not widely used.<br>
+<br>
+Reads JDBC schema, creates a hash map of property/values.&nbsp; No need
+for reflection.<br>
+<br>
+No attempt at an ORM -- no identity, no references.&nbsp; Not even a
+schema at the Java level.<br>
+<br>
+Has a JSP level query language rather than raw SQL.&nbsp; I'd prefer
+that aspect to be kept simple.<br>
+<br>
+Very cute and simple.&nbsp; Too simple?&nbsp; The tool looks very
+productive but will not be considered to be cool.<br>
+<br>
+Single developer Fredrik Bertilsson.&nbsp; Very quite project.<strong><font
+ face="verdana, arial, helvetica" size="3"><a
+ href="http://www.javaworld.com/feedback" target="Feedback"><strong></strong></a></font></strong><br>
+<br>
+Very rough documentation.<br>
+<br>
+Note there are two unrelated Java projects named Butler.&nbsp; This one
+is at
+<a
+ href="http://www.javaworld.com/javaworld/jw-10-2004/jw-1018-butler.html">http://www.javaworld.com/javaworld/jw-10-2004/jw-1018-butler.html</a>
+or
+<a href="http://butler.sourceforge.net/">http://butler.sourceforge.net/</a><br>
+<br>
+Example:-<br>
+<br>
+<pre>&lt;table border="1"&gt;<br>  &lt;tr&gt;<br>    &lt;th&gt;ID&lt;/th&gt;<br>    &lt;th&gt;Date&lt;/th&gt;<br>    &lt;th&gt;Contact&lt;/th&gt;<br>  &lt;/tr&gt;<br>  &lt;butler:record-iterator query="OrdersQuery"&gt; // Query defn elsewhere and rather ugly<br>    &lt;tr&gt;<br>      &lt;td&gt;&lt;butler:value record="OrdersQuery" column="OrderID"/&gt;&lt;/td&gt;<br>      &lt;td&gt;&lt;butler:value record="OrdersQuery" column="OrderDate"/&gt;&lt;/td&gt;<br>      &lt;td&gt;&lt;butler:value record="OrdersQuery" fk="FK_Orders_Customers" column="ContactName"/&gt;&lt;/td&gt;<br>    &lt;/tr&gt;<br>  &lt;/butler:record-iterator&gt;<br>  &lt;/table&gt;<br><br>  &lt;butler:table name="Orders" alias="northwind" catalog="Northwind" schema="dbo"/&gt;<br>  &lt;butler:query type="findByPK" table="Orders"/&gt; // From request params<br></pre>
+<br>
+<pre>  &lt;butler:primary-key record="Orders"/&gt;<br><br>  &lt;editor record="Orders" column="CustomerID"/&gt;<br><br>  &lt;butler:update record="Orders"/&gt;  // just matches keys.<br></pre>
+<br>
+<h2><a class="mozTocH2" name="mozTocId494949"></a>Ruby on Rails</h2>
+Very cute, completely automated CRUD aps.&nbsp; But in Ruby langauge.<br>
+<h2><a class="mozTocH2" name="mozTocId332473"></a>Trails</h2>
+<a href="http://www.trailsframework.org/">http://www.trailsframework.org/</a><br>
+Chris Nelson java.net into article <a
+ href="http://today.java.net/pub/a/today/2005/06/23/trails.html">http://today.java.net/pub/a/today/2005/06/23/trails.html</a>
+and advanced <a
+ href="http://today.java.net/pub/a/today/2005/11/04/further-down-the-trail.html">http://today.java.net/pub/a/today/2005/11/04/further-down-the-trail.html</a><br>
+<br>
+<ul>
+  <li>Trails&nbsp; https://trails.dev.java.net/ --
+Ruby Rails inspired. </li>
+  <li>Hibernate POJO data bean + Attibs.&nbsp;&nbsp; Lots of reflection.<br>
+  </li>
+  <li>Auto CRUD from
+POJO. <br>
+  </li>
+  <li>"DDD"&nbsp; Domain Driven Development.&nbsp; Busness rules with
+objects.&nbsp; Minimize layers.<br>
+  </li>
+  <li>Uses standard, cool, complex, overengineered technologies:
+Tapestry, Hibernate.</li>
+  <li>Single developer <a href="mailto:ccnelson@dev.java.net">ccnelson</a>
+(Chris) but some commutity starting.<br>
+  </li>
+  <li>Lousy docs, but this is recognized.</li>
+  <li>Generally very interesting project.</li>
+  <li>Now Tapestry?<br>
+  </li>
+</ul>
+<pre><br><code>@Entity<br>public class Recipe<br>{<br>    private Integer id;<br>    private String title;<br>    private String description;<br>    private Date date;<br><br>    @Id(generate=GeneratorType.AUTO)<br>    public Integer getId(){return id;}<br>    public void setId(Integer id){this.id = id;}<br><br>    public String get|setTitle() //...<br><br></code><code>    private Category category;<br>    @ManyToOne<br>    public Category getCategory(){return category;}<br>    public void setCategory(Category category){this.category = category;}<br>  <br></code><code>}</code> // Auto CRUD app.  List plus update.<br><br><code>@Entity<br>public class Category <br>  // Unclear just how this is wired to Recipe.<br>  // Produces a drop down list on UI.<br>{<br>    private Integer id;<br>    private String name;<br> <br>    @Id(generate=GeneratorType.AUTO)<br>   &nbsp;public Integer getId(){return id;} // ...<br>    <br>    public boolean equals(Object obj){<br>        return EqualsBuilder.reflectionEquals(this, obj);<br>    }<br>    <br>    public String toString(){<br>       return getName();<br>    }<br>}</code><br><br></pre>
+<p></p>
+<h2><a class="mozTocH2" name="mozTocId520747"></a>Grails/Groovy</h2>
+<a href="http://grails.codehaus.org/">http://grails.codehaus.org/</a><br>
+<br>
+Rails ported to Groovey.&nbsp; Very Rails like.&nbsp;&nbsp; Reflection
+into model objects.&nbsp; <br>
+<br>
+Weak docs.&nbsp; See <a
+ href="http://en.wikipedia.org/wiki/Grails_%28Framework%29">http://en.wikipedia.org/wiki/Grails_%28Framework%29</a><br>
+Uses GORM<br>
+All a little scary.<br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId210056"></a>
+Naked Objects</h2>
+Early system.&nbsp; Auto CRUD.&nbsp; Swing rather than web.&nbsp; Java
+1.1 (ie. J&nbsp;&nbsp;&nbsp; #.Net) compliant!<br>
+<h2><a class="mozTocH2" name="mozTocId877496"></a>JDON</h2>
+http://jdon.sourceforge.net/ -- Chinese?&nbsp; Weak docs.&nbsp; XML
+config.&nbsp; Could not figure it out.<br>
+<h2><a class="mozTocH2" name="mozTocId776537"></a>Fulcrum?</h2>
+<h2><a class="mozTocH2" name="mozTocId424771"></a>Optimal/J</h2>
+Complex, "MDA" system from Compuware.&nbsp; Expensive.&nbsp; Looks
+comprahensive.<br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId539923"></a>AppFuse</h2>
+<a href="http://appfuse.org/">http://appfuse.org/</a>&nbsp; (TateJ)
+"kickstarting" webapp development. &nbsp; Struts+Spring+Hibernate...<br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId567065"></a>SiteMesh</h2>
+Faces competitor.&nbsp; But intercepts generated HTML, strips of
+headers, adds its own(!).<br>
+<h2><a class="mozTocH2" name="mozTocId89320"></a>Curam</h2>
+"For social enterprises".&nbsp; But seems to be MDA.<br>
+<br>
+<br>
+<p><span><br>
+Controlling complexity is the essence of computer programming.<br>
+-Brian Kernighan<br>
+<br>
+The
+difference between a good and a poor architect is that the poor
+architect succumbs to every temptation and the good one resists it.<br>
+-Ludwig Wittgenstein<br>
+<br>
+Simplicity does not precede complexity, but follows it.<br>
+-Alan J. Perlis<br>
+<br>
+Perfection (in design) is achieved not when there is nothing more to
+add, but rather when there is nothing more to take away.<br>
+-Antoine de Saint-Exup&eacute;ry<br>
+<br>
+Fools ignore complexity, experts avoid it; geniuses remove it.<br>
+-Alan Perlis<br>
+<br>
+The ability to simplify means to eliminate the unnecessary so that the
+necessary may speak.<br>
+- Hans Hofmann<br>
+<br>
+Increasingly, people seem to misinterpret complexity as
+sophistication, which is baffling&#8212;the incomprehensible should cause
+suspicion rather than admiration. Possibly this trend results from a
+mistaken belief that using a somewhat mysterious device confers an aura
+of power on the user.<br>
+&#8212;Niklaus Wirth<br>
+<br>
+The best programmers write only easy programs.<br>
+- Michael A. Jackson<br>
+<br>
+It is vain to do with more what can be done with less<br>
+- William of Ockham<br>
+</span></p>
+<p><span>Complexity comes in many forms, and one of them is
+oversimplification.<br>
+<br>
+</span><span>The Principle of Least Surprise<br>
+<br>
+&nbsp;&nbsp;&nbsp;1. <a
+ href="http://www.ilstu.edu/%7Easharm4/quotations.htm" target="_blank">http://www.ilstu.edu/~asharm4/quotations.htm</a><br>
+&nbsp;&nbsp;&nbsp;2. <a
+ href="http://www.vanderburg.org/Misc/Quotes/soft-quotes.html"
+ target="_blank">http://www.vanderburg.org/Misc/Quotes/soft-quotes.html</a></span>
+</p>
+<h2><a class="mozTocH2" name="mozTocId863253"></a>Reflexe OpenAge</h2>
+Schema driven.<br>
+<br>
+</body>
+</html>

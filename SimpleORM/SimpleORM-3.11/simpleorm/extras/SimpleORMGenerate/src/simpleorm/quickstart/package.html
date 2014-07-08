@@ -1,0 +1,130 @@
+<BODY>
+
+<b>SimpleORMGenerator</b>
+
+<P><i>SimpleORMGenerator</i> provides a simple way of generating the
+<i>SimpleORM</i> class files for an existing database. Since
+<i>SimpleORMGenerator</i> uses the meta data extracted from the database the
+class files produced should exactly match the database's schema. </P>
+
+<b>Class files produced</b>
+
+<P>Every table produces two class files, a base class that contains
+the field definitions and a public class that extends the base class.</P>
+
+<P>Example given table EMPLOYEE</P>
+
+<i>file Employee_base.java</i><br>
+<code>
+class Employee_base {<br>
+&nbsp;&nbsp;&nbsp;//all table fields are defined here <br>
+}<br>
+</code>
+<br>
+
+<i>File Employee.java</i><br>
+<code>
+public class Employee extends Employee_base{<br>
+&nbsp;&nbsp;&nbsp;//place your business rules in this class.<br>
+}<br>
+</code>
+<br>
+
+<P>The Employee_base class is defined as package private, which means
+that it can't be seen from outside of the package. All interaction to
+the database table has to pass through Employee and therefore through
+any business rules that you add. </P>
+
+<P>The base class is regenerated every time <i>SimpleORMGenerator</i> is run,
+while the public class is only generated if it does not exit. This
+allows you to edit the pubic class to your hearts content and still
+be easily update your classes with any changes made to the database.</P>
+
+<b>Getters and Setters</b>
+
+<P><i>SimpleORMGenerator</i> produces getters and setters for every field in
+the table. As these methods are creates automatically there is no
+method maintenance is required. Having getters and setters makes it
+easy to insure that the correct data type is passed to a field at
+compile time instead of runtime. </P>
+
+<p>Example</P>
+<code>
+public String get_NAME(){<br> 
+&nbsp;&nbsp;&nbsp;return getString(NAME);<br>
+}<br>
+public void set_NAME( String value){<br>
+&nbsp;&nbsp;&nbsp;setString( NAME,value);<br>
+}<br>
+</code>
+<br>
+
+<b>Foreign references key fields.</b>
+
+<P><i>SimpleORMGenerator</i> does generate code that uses
+ <i>SFieldReference</i> fields to represent
+foreign keys. This is because <i>SfieldReference</i> fields represent links
+between tables in a conceptual model of the database. Trying to
+re-engineer these conceptual links from a physical model has not proved
+very successful. The mapping is complex and it appears that <i>SimpleORM</i>
+may contain a number of bugs in this area.</P>
+
+<P>To get around this problem <i>SimpleORMGenerator</i> uses a simple
+solution - getters and setters for reference fields.</P>
+
+<P>Example (simplified)</P>
+<code>
+public Department get_DEPARTMENT(){</br>
+&nbsp;&nbsp;&nbsp;return Department.findOrCreate(get_DEPT_ID());<br>
+}<br>
+public void set_DEPARTMENT( Department value){<br>
+&nbsp;&nbsp;&nbsp;set_DEPT_ID( value.get_DEPT_ID());<br>
+}<br>
+</code>
+
+<P>One side effect of this approach is that if the classes are to
+generate database tables, the foreign keys between tables will be
+lost. The pay off is that there is no type casting required when getting a record!</P>
+
+<b>Find or Create methods.</b>
+
+<P><i>SimpleORMGenerator</i> creates a set of static FindOrCreate methods for
+the classes. These are far simple to use that provided by the meta
+object as the parameters are implicitly defined.</P>
+
+<P>Example</P>
+<code>
+public static Employee findOrCreate( String _EMPEE_ID ){<br>
+&nbsp;&nbsp;&nbsp;return (Employee) meta.findOrCreate( new Object[]{_EMPEE_ID});<br>
+}<br>
+</code>
+
+<P>If a foreign key appears in the primary keys of the table then
+additional FindOrCreate method will be generated with the foreign key
+as one of its parameters</P>
+
+<P>Example</P>
+<code>
+public static PaySlip findOrCreate( Employee _ref, long _YEAR, long _PERIOD){<br>
+&nbsp;&nbsp;&nbsp;return findOrCreate( _ref.get_EMPEE_ID(), _YEAR, _PERIOD);<br>
+}<br>
+</code>
+
+<b>Naming of fields</b>
+
+<P><i>SimpleORMGenerator</i> uses a version of adapter pattern to allow uses
+to implement their own field name strategy. When running
+<i>SimpleORMGenerator</i> a class that implements interface
+<i>simpleorm.quickstart.IniceNameFormatter</i>. This class can then
+implement the required field naming algorithm. See 
+<i>simpleorm.quickstart.SimpleORMNiceNameFormatter</i> 
+for an example.</P>
+
+<b>Running SimpleORMGenerator.</b>
+
+<P>The required system properties must be set. Create an instance of
+<i>SimpleORMGenerator</i> and then call the execute() method. Or do what I do
+and simply edit the code in the main() method!</P>
+
+</BODY>
+

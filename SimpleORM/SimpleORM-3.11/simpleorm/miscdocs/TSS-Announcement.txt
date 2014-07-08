@@ -1,0 +1,27 @@
+SimpleORM v3 released (maps objects to databases)
+
+-------
+
+SimpleORM provides similar functionality to Hibernate by mapping data in a relational database to Java objects in memory with identity.  But it uses simple maps instead of pseudo POJOs.
+
+-------
+
+We are pleased to announce the release of SimpleORM 3.0, which is a major upgrade and simplification of SimpleORM 2.0.
+
+SimpleORM provides a full featured object relational mapping and persistence system in a tiny package that is easy to understand and safe to work with.  The entire SimpleORM jars are just 79K and 52K in size, with only one small and optional dependency (Slf4j).  (Hibernate is over 2400K plus about 2000K of dependent Jars.)
+
+A key technology is to represent objects as essentially a strongly typed map of attributes to their values.  One can then define accessors such as 
+
+public String getPhoneNr() { // Optional get method if you like them
+   return getString(PHONE_NR);
+}
+
+This generalized structure avoids the complex reflection and byte code generation needed to create the pseudo POJOs of other ORMs.  The structure also facilitates a clean, string free query language and provides access to extended field state information such as the initial queried value.  
+
+SimpleORM also packages objects into "DataSets", which enables it to provide well defined semantics for relationships and detached records (unlike other ORMs).   SimpleORM also provides transparent access to user extensible meta data.  The generalized structure can also enable plug in modules to add fields to an existing record and so provide very flexible application architectures.
+
+Keeping it simple and transparent greatly reduces technical risk.  If necessary any competent developer can read from the SimpleORM API to the underlying JDBC calls with a very few clicks of the mouse.
+
+See http://www.simpleorm.org/sorm/whitepaper.html for details.   
+
+ 

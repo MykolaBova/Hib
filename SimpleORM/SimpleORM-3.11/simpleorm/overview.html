@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head></head><body>
+SimpleORM provides a simple, convenient yet powerful way to map
+objects in memory to tables in a relational database.<p>
+
+See the <a href="../../webSite/sorm/whitepaper.html">../../webSite/sorm/whitepaper.html</a> for a
+detailed description of what SimpleORM does and why it is good.</p><p>
+
+<a href="../../webSite/sorm/README.html">../../webSite/sorm/README.html</a> describes how to build
+SimpleORM and contains information about the current release.</p><p>
+
+And see examples/ADemo.java for an example of common usage.
+
+The website is <a href="http://www.simpleorm.org">www.SimpleORM.org</a> which 
+contains current information.  (A local copy is at <a href="../../webSite/index.html">../../webSite/index.html</a>).</p><p>
+
+The code is built by ant, the default task compiles and runs SimpleOrm with the provided Hsqldb database.</p><p>
+
+Note that most non public declarations have package scope, not private
+scope.  This includes instance variables.  Further, the simpleorm jar
+is not sealed.  This means that if you do need to hack SimpleORM you
+can generally create a new class within the simpleorm.core package
+with appropriate static methods, and thus not need to change the
+SimpleORM classes themselves.  Of course this is not supported, and
+make sure you let us know what you did so that we can incorporate the
+changes into the main package.</p><p>
+
+</p></body></html>

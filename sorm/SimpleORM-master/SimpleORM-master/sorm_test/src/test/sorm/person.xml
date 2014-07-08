@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:set expandtab shiftwidth=2 softtabstop=2 tabstop=8: -->
+<sorm pkg="net.jonp.sorm.test"
+      name="Person"
+      super="net.jonp.sorm.test.PersonSuper"
+      xmlns="http://jonp.net/sorm"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jonp.net/sorm http://jonp.net/sorm/sorm.xsd">
+
+    <field type="Integer" name="id" primary="true" generator="Pre" />
+
+    <field type="String" name="name">
+        <get override="true" />
+    </field>
+
+    <field type="PhysicalDescription" name="description" group="true">
+        <get override="true" />
+        <set>
+%{}.setDescription(new PhysicalDescription(%{description.height},
+                                           %{description.weight},
+                                           Color.findByAbbreviation(%{description.hairColor}),
+                                           Color.findByAbbreviation(%{description.eyeColor}),
+                                           Color.findByAbbreviation(%{description.hairColorAlt})))
+        </set>
+    </field>
+
+    <field type="Integer" name="height" parent="description" />
+
+    <field type="Double" name="weight" parent="description" />
+
+    <field type="Color" name="hairColor" sql-type="Char" sql-column="hair_color" parent="description">
+        <get>%{}.getHairColor().getAbbreviation()</get>
+    </field>
+
+    <field type="Color" name="eyeColor" sql-type="Char" sql-column="eye_color" parent="description">
+        <get>%{}.getEyeColor().getAbbreviation()</get>
+    </field>
+
+    <field type="Color" name="hairColorAlt" sql-type="Char" sql-column="hair_color_alt" nullable="true" parent="description">
+        <get>%{}.getHairColorAlt() == null ? null : %{}.getHairColorAlt().getAbbreviation()</get>
+    </field>
+
+    <field type="Integer" name="mother" nullable="true">
+        <link mode="ManyToOne" key-type="Integer" type="Person" />
+    </field>
+
+    <field type="Integer" name="father" nullable="true">
+        <link mode="ManyToOne" key-type="Integer" type="Person" />
+    </field>
+
+    <field type="String" name="gender" sql-column="sex">
+        <get override="true" />
+    </field>
+
+    <field type="java.util.Date" name="dob" sql-type="Date">
+        <get override="true">new java.sql.Date(%{}.getDob().getTime())</get>
+        <set>%{}.setDob(new java.util.Date(%{dob}.getTime()))</set>
+    </field>
+
+    <field type="Integer" name="spouse" nullable="true">
+        <link mode="OneToOne" key-type="Integer" type="Person" />
+    </field>
+
+    <field name="children" type="Collection&lt;Person&gt;">
+        <link mode="OneToMany" key-type="Integer" type="Person">
+            <collection>
+                <read>
+                    <r>
+select id
+  from person
+ where mother = %{id}
+    or father = %{id}
+                    </r>
+                </read>
+            </collection>
+        </link>
+    </field>
+
+    <field name="friends" type="Collection&lt;Person&gt;">
+        <get override="true" />
+        <set override="true" />
+
+        <link mode="ManyToMany" key-type="Integer" type="Person">
+            <collection>
+                <read>
+                    <r dialect="sqlite">
+<!-- SQLite does not support multiple-insert, so it pays for that in longer selects -->
+select person_id2 as id
+  from friendmap
+ where person_id1 = %{id}
+union
+select person_id1
+  from friendmap
+ where person_id2 = %{id}
+                    </r>
+                    <r dialect="*">
+select person_id2 as id
+  from friendmap
+ where person_id1 = %{id}
+                    </r>
+                </read>
+                <create>
+                    <c dialect="sqlite">
+<!-- SQLite needs us to turn on foreign keys when we want to use them -->
+pragma foreign_keys = on;
+
+<!-- SQLite only keeps a single pair because it does not support multiple-insert -->
+insert
+  into friendmap
+  (person_id1, person_id2) values
+  (%{1.id},    %{2.getId():Integer})
+                    </c>
+                    <c dialect="*">
+insert
+  into friendmap
+  (person_id1, person_id2) values
+  (%{1.id},                 %{2.getId():Integer}),
+  (%{2.getId():Integer},    %{1.id})
+                    </c>
+                </create>
+                <delete>
+                    <d>
+delete
+  from friendmap
+ where (person_id1 = %{1.id}
+    and person_id2 = %{2.getId():Integer})
+    or (person_id1 = %{2.getId():Integer}
+    and person_id2 = %{1.id})
+                    </d>
+                </delete>
+            </collection>
+        </link>
+    </field>
+
+    <create>
+        <c>
+insert into person (id,
+                    name,
+                    mother,
+                    father,
+                    sex,
+                    dob,
+                    spouse,
+                    height,
+                    weight,
+                    hair_color,
+                    eye_color,
+                    hair_color_alt)
+            values (%{id},
+                    %{name},
+                    %{mother},
+                    %{father},
+                    %{gender},
+                    %{dob},
+                    %{spouse},
+                    %{description.height},
+                    %{description.weight},
+                    %{description.hairColor},
+                    %{description.eyeColor},
+                    %{description.hairColorAlt})
+        </c>
+    </create>
+
+    <pk>
+        <pk dialect="h2">
+insert into object (type) values ('person');
+select currval('object_id_seq') as id
+        </pk>
+        <pk dialect="mysql">
+insert into object (type) values ('person');
+select last_insert_id() as id
+        </pk>
+        <pk dialect="postgresql">
+insert into object (type) values ('person');
+select currval('person_id_seq') as id
+        </pk>
+        <pk dialect="sqlite">
+pragma foreign_keys = on;
+insert into object (type) values ('person');
+select last_insert_rowid() as id
+        </pk>
+    </pk>
+
+    <read>
+        <r>
+select name,
+       mother,
+       father,
+       sex,
+       dob,
+       spouse,
+       height,
+       weight,
+       hair_color,
+       eye_color,
+       hair_color_alt
+  from person
+ where id = %{}
+        </r>
+    </read>
+
+    <update>
+        <u>
+update person
+   set name = %{name},
+       mother = %{mother},
+       father = %{father},
+       sex = %{gender},
+       dob = %{dob},
+       spouse = %{spouse},
+       height = %{description.height},
+       weight = %{description.weight},
+       hair_color = %{description.hairColor},
+       eye_color = %{description.eyeColor},
+       hair_color_alt = %{description.hairColorAlt}
+ where id = %{id}
+        </u>
+    </update>
+
+    <delete>
+        <d dialect="sqlite">
+<!-- Need to turn on foreign keys so this will work under SQLite -->
+pragma foreign_keys = on;
+delete
+  from object
+ where id = %{id}
+        </d>
+        <d dialect="*">
+delete
+  from object
+ where id = %{id}
+        </d>
+    </delete>
+
+    <query name="getByGender">
+        <param type="String" name="gender" />
+        <q>
+            select id from person where sex = %{gender}
+        </q>
+    </query>
+
+    <query name="getByDob">
+        <param type="java.util.Date" name="dob" sql-type="Date">
+            <set>new java.sql.Date(%{}.getTime())</set>
+        </param>
+        <q>
+            select id from person where dob = %{dob}
+        </q>
+    </query>
+</sorm>

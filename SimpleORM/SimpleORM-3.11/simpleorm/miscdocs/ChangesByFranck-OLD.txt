@@ -1,0 +1,122 @@
+TODO
+-----
+
++ Outer Joins
++ Maybe batching support, along lines of Darren Gilroy.
++ SubSelect Queries
++ Rework SDrivers finding mechanism.  Each SDriver*.java should have a static inner factory class that 
+   registers itself when the class is loaded and can make instances of the parent SDriver.
++ Think about "" vs null eg. for Oracle.  convertToField maybe converts "" to null if SDriver.emptyStringIsNull().
+   Maybe SQuery also -- x == '' always fails in Oracle, I think.  SQuery should have isEmpty.
++ Test MySQL, MSSQL
++ Support Cloudscape / Derby / JavaDB, maybe replace HSQL as the default.  (Now that it has become the 
+  1.6 standard.  Not sure I don't prefer Daffodil...)
+
+PreparedStatement pstmt = con.prepareStatement("INSERT INTO COFFEES VALUES(?, ?, ?, ?, ?)");
+pstmt.setString(1, "Amaretto"); ...
+pstmt.addBatch();...
+int [] updateCounts = pstmt.executeBatch();
+
+
+
+========= QUERIES ==============
+
+Thanks for your examples, now I understand.  It never occurred to me to use Joins the way that you have, I would have done each of them with sub selects (in SQL, regardless of SimpleOrm).
+
+Specifically, the algebra oriented query
+
+SELECT DISTINCT D.* FROM DEPARTMENTS D, EMPLOYEES E, PRODUCTS P
+WHERE E.DEPT_NR = D.DEPT_NR AND E.SALARY < 100 
+    AND P.DEPT_NR = D.DEPT_NR AND P.COLOR = BROWN
+
+becomes the calculus oriented query
+
+SELECT D.* FROM DEPARTMENTS D
+WHERE EXISTS (SELECT * FROM EMPLOYEE E WHERE E.DEPT_NR = D.DEPT_NR AND E.SALARY < 100)
+   AND  EXISTS (SELECT * FROM PRODUCT P WHERE P.DEPT_NR = D.DEPT_NR AND P.COLOR = BROWN)
+
+To me the latter is much clearer, despite the awkward SQL syntax.  
+
+The second query directly reflects your English formulation of the problem, ie. 
+  "query all departments that have (ie. Exists) Employees with salary < 100 and Products that are brown."
+You did not say
+  "Join departments, employees and products and filter by salary < 100 and Products that are brown, and return distinct rows."
+As the queries become more complex getting the Join approach to work properly (with outer joins etc.) can become quite confusing, IMHO.
+
+Regardless, the second approach can easily be done now in SimpleOrm by adding a raw clause to the where.  The following is an existing test case
+
+        SQuery<Employee> subQ1 = new SQuery<Employee>(Employee.meta) 
+          .rawPredicate("? = (SELECT BUDGET FROM XX_DEPARTMENT D WHERE D.DEPT_ID = XX_EMPLOYEE.DEPT_ID)")
+          .rawParameter(20000);
+
+Not as pretty as we would like, but not too bad for a non-trivial query.
+
+Your third query can also be directly expressed as an Exisits subquery "all depts with at least one employee whose manager is Fred".
+
+Your second case is harder "all Depts that are located in the US and their Employees if any".   I would simply make this two simple queries, one for departments, another for employees.  The overhead will be tiny, and I believe it would be clearer.
+  
+One thing that I will do is add a rawFrom(...) clause that can be used to replace the from clause of the query.  This could be used in conjunction with rawPredicate() to implement anything.
+
+The recursive queries can also almost be implemented using sub selects, eg. 
+  SELECT * FROM EMPLOYEE E WHERE 'FRED' = (SELECT M.NAME FROM EMPLOYEE M WHERE E.NAME = M.NAME)
+(The thing that we are lacking at the moment is the alias E.  I might add this in for the short term.  But it could be poked in using the rawFrom().)
+
+And in a future version this could be written elegantly as
+  new SQuery(EMPLOYEE).eq(MANAGER, NAME, "Fred");
+
+So... While I think that there is certainly more to do with SQuery, I also believe that effective use of subqueries will address almost all of your needs in practice.
+
+I propose that short term changes to SQuery be limited to:-
+
++ Outer Join, on clause, rename to .outerJoin()
++ rawFrom().  
+  (Or possibly just rawQuery() that provides the entire sql.  
+   But we currently retrieve column by order, not name.)
++ Default alias for main query table, being first letter of table name.  
+   This will support the recursive query above.  
+   But apparently then need to use the alias in the select list or Oracle breaks.
++ Fix rawQueryDB to return a List of Maps.  This is handy for add hoc SQL queries.
++ Later .eq(MANAGER, NAME, "Fred")
+
+
+To go further with .or() etc.  we really need something like TopLink's expression builder.  The linear structure of SQuery does not capture it properly.  
+
+It should be something nested like
+
+QExpression qx = new SQueryExpressionBuilder(); // stateless class
+// (each qx method returns an object that represents part of a query tree.)
+
+SQuery myq = new SQuery(EMPLOYEE).add(
+    qx.and(qx.gt(SALARY, 10000), 
+              qx.or(
+                  qx.eq(qx.subquery(MANAGER, NAME), "Fred"),
+                  qx.eq(HAPPY, Boolean.TRUE)
+)));
+
+This nested style is more powerful, but it is also much more ugly for the simple cases.  We probably do not want to support both.
+
+My feeling is that we stick with the simple linear structure, and let people just use raw SQL for more complex cases, which are (hopefully) relatively rare.  A few things like or can be poked into the linear structure by having .orBegin()....orEnd().  But this will not scale to a full expression language, which I don't think that we need.
+
+What are your thoughts?
+
+
+For Toplink, see
+  http://www.oracle.com/technology/products/ias/toplink/doc/1013/MAIN/_html/qrybas002.htm
+(Toplink was the first place that I saw this type of thing long ago.)
+
+Or Hibernate query by criteria does a similar thing
+  session.CreateCriteria(User.class)
+    .add(
+        Restrictions.or(
+            Restrictions.like("name", "G%"), 
+            Restrictions.like("nameOops", "H%") ) );
+We could make it a bit less ugly, but is this somewhere we really want to go?  
+Questions for later.
+
+I certainly do not want to invent a whole new query language like HQL!
+
+Thanks for all of your feedback.
+
+Anthony
+---
+

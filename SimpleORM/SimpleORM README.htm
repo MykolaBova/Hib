@@ -1,0 +1,382 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="STYLESHEET" type="text/css" href="styles.css"><title>SimpleORM README</title></head>
+<body style="background-color: rgb(255, 255, 255);">
+<h1>SimpleORM README</h1>
+<h2>Introduction</h2>
+<a href="http://www.SimpleORM.org">SimpleORM</a>
+&nbsp;The jars are
+just provides a very
+simple yet powerful&nbsp;way to map relational tables into java
+classes
+without the need for complex byte code generation, reflection etc.
+&nbsp;It is full featured and manages object identities, queries etc. but
+the&nbsp;jars are
+just 79K and 52K in size&nbsp;(Hibernate is
+over 2400K plus about 2000K of dependent Jars).<br>
+<br>
+The <a href="whitepaper.html">SimpleORM White
+Paper</a> provides a
+detailed description of how SimpleORM works. It is strongly
+recomended that it be read before attempting to run SimpleORM.
+<h2>Downloading</h2><h3>SimpleOrm</h3>
+Packaged versions with source&nbsp;can&nbsp; be obtained from<br>
+<a href="http://simpleorm.org/downloads">
+         http://simpleorm.org/downloads</a>
+<br>(The source is so small we do not bother producing separate binary releases.)<br><br>Th latest can be viewed at<br>
+<a href="http://simpleorm.svn.sourceforge.net/viewvc/simpleorm/">http://simpleorm.svn.sourceforge.net/viewvc/simpleorm/</a><br>
+or checked out from <br>
+svn co
+http://simpleorm.svn.sourceforge.net/svnroot/simpleorm/trunk/simpleorm<br>
+(Older versions are under the brances top level folder in the&nbsp;subversion tree.)<br>
+<br><h3>SimpleServlets</h3>
+svn co
+http://simpleorm.svn.sourceforge.net/svnroot/simpleorm/trunk/simpleservlets<h2>Unpacking and Building</h2>Having unziped, just run ant on the top
+level build file. &nbsp;It now requires Java 1.5 or above. &nbsp; The
+default task compiles the jars and runs the unit tests on the default
+HSQLdb which is supplied. &nbsp;ant api makes the JavaDocs.<br><br>To run on a real database create a ~/simpleorm.properties file as described in build.xml.<br><h2>The Examples</h2>
+The examples package/directory contains examples and test cases based
+on a simple schema involving Department/Employee/Payroll tables.
+Start with ADemo which demonstrates basic DDL and DML operations.
+<h2>Version History</h2>
+
+<h3>Version 3.11</h3><ul><li>Added SQueryTransient, that can produce
+SRecordTransients that do not have a key and are not stored in
+DataSets. &nbsp;Main use is for aggregations such as SUM().</li><li>Made
+SRecrodInstance and SRecord Transient extend SRecordGeneric, &nbsp;thus
+unifying ad hoc queries and object queries. &nbsp;The results are
+SQueryResults which extends ArrayList but adds useful methods such as
+exactlyOne().</li><li>SRecordGeneric&nbsp;implements Map of field names to field values.
+&nbsp;&nbsp;This means that records can be transparently accessed from JSPs with expressions like ${myemp.NAME}.</li><li>(Savepoints have been defered. &nbsp;Will probably use cloning instead.)</li><li>Enabled SConnections to be created with Connections instead of DataSources.</li></ul><h3>Version 3.10</h3><ul><li>Added possibility for fancy joins and tables aliases. Beware, this evolution BREAKS SQuery existing API.</li>
+<li>Added simpleorm.utils.SRecordComparator to sort records based on their fields values.</li>
+<li>SDataSet.findRecordsInDataSet(SRecordMeta meta) can be used to retrieve from dataset only records of a certain type.</li></ul>
+
+<h3>Version 3.03</h3><ul><li>Removed dependency on Java 1.6 (oops). &nbsp;Now runs on 1.5.</li></ul><h3>Version 3.02</h3><ul><li>Runs in Java 1.5 (String.isEmpty removed)</li><li>Support for H2 db</li><li>Tweaks.</li></ul><h3>Version 3.01</h3><ul>
+<li>Detached findReferences now looked up from
+DataSet. &nbsp; Boolean.FALSE only returned from getReferenceNoQuery.
+&nbsp;isNull() optimized for references.</li>
+<li>SDataSet.createDetachedInstance added for compatibility with 2.* applications.</li>
+<li>Enums now stored in instances as Enums, not strings.</li>
+</ul>
+
+<h3>Version 3.00 -- Major upgrade.</h3><ul><li>The concept of a distinct <code>SDataSet</code> has been introduced, and the code split into two indepenent modules.</li><li>Methods such as <code>findOrCreate</code> and query have moved from <code>SRecordMeta</code> to <code>SSession</code> to reflect the DataSet split.</li><li>Reworked detach/attach so that entire datasets are detached. &nbsp;Simple queries for datasets.</li><li>Simplified <code>SFieldReference</code>. &nbsp;The foreign key fields now need to be
+explicitly declared. &nbsp;The automated "conceptual" model was difficult
+for some people to use. &nbsp;More importantly the internal code is much
+cleaner. &nbsp;(The white paper demonstrates the new 3.0 style.)</li>
+<li>Queries now support joins can now be performed.</li>
+<li>Better support for offset/limit queries, including use of &nbsp;scrollable cursor.</li><li>Removal of the <code>SProperites</code>. &nbsp;All meta attributes are simple object fields. &nbsp;<code>userProperties</code> map provided for any extras.</li><li>Removal of <code>SResultSet</code> and <code>SPreparedStatement</code>. &nbsp;Queries always return an List of values. &nbsp;No risk of unclosed cursors. &nbsp;All queries via <code>SQuery</code>. &nbsp;Much cleaner.</li><li>Support for Slf4J logging. &nbsp;Simple <code>SStatistics</code> module.</li><li>The business rule framework has been extended, in particular with field level validation.</li><li>Enum field types now supported and validated.</li><li>Static methods in <code>SConnection</code> are now object methods in <code>SSession</code>. &nbsp;So
+multiple connections per thread is supported. &nbsp;(Sessions are still
+normally connected to each thread for convenience and safety.)</li><li>Full support of 1.5 generics etc. &nbsp;Sadly no longer compatible with J#.net.</li><li><code>findOrCreate</code> always makes new records dirty, so key only records can easily be supported. &nbsp;(<code>find</code> does not.)</li><li>Records
+can be created with Null keys, and the keys generated at flush time.
+&nbsp;Useful when recrods are created while detached.</li><li>Identifiers are not quoted by default, but can be. &nbsp;This has been made consistent.</li><li>Many, many detailed improvements.</li></ul>(The upgrade was instigated&nbsp;by Franck Routier, thanks.)<h3>Version 02.21</h3>
+<ul>
+<li>Fixed SConnection close bug (on secondary generator
+connections).</li>
+<li>Make SQuery handle mixed case Columns properly (ie. call
+SDriver.quoteColumn)<br>
+</li>
+
+</ul>
+<h3>Version 02.20</h3>
+<ul>
+<li>Added SDataSource object.&nbsp; Needed to be able to
+create
+secondary connections for some key generators (see JavaDocs).&nbsp;
+(Does not require a real javax..DataSource.)&nbsp; The
+mainSConnection.attach method has been depricated, just use the
+SDataSource object instead. <br>
+</li>
+<li>find, mustFind and create convenience methods added.</li>
+<li>Martin's validate record bug fixed.<br>
+</li>
+<li>SValidateField called for primary keys.<br>
+</li>
+<li>Uncopied MySQL Index code.</li>
+<li>Tidied code by breaking up some big classes, created static
+SRecordUpdater and SRecordFinder.</li>
+<li>Split SConnectionEJB into classes, but it needs more work.</li>
+</ul>
+<h3>Version 02.19</h3>
+<ul>
+<li>Added new SGenerator classes for generating record
+keys.&nbsp;
+WARNING, slightly changed API for this, see GeneratedKeyTest.java.<br>
+</li>
+<li>Martins foreign key quoting fix and
+SQuery.getSFieldMeta.&nbsp;
+Thanks.</li>
+<li>SQuery.in.needsConjunction fix.&nbsp; Removed
+deprecated JDBC
+calls.&nbsp; Thanks Pierre.</li>
+<li>Convert spaces to tabs.&nbsp; <br>
+</li>
+</ul>
+<h3>Version 02.18</h3>
+<ul>
+<li>Reorganized folder structure for IDE's such as Eclipse<br>
+</li>
+<li>Added Martin's boolean fix, plus extended SQuery equivalent.</li>
+</ul>
+<h3>Version 02.16</h3>
+<ul>
+<li>SQuery combineBegin/End</li>
+<li>Martin's Boolean support.&nbsp; TF and YN.</li>
+<li>Dan's EJB Support.</li>
+<li>Dan's UNREPEATABLE_READ for MS SQL.</li>
+<li>New SDriver instance per connection, ability to easily set
+driver
+parameters. (SConnection.getDriver().setMyFavouriteParam(...))<br>
+</li>
+</ul>
+<h3>Version 02.15</h3>
+<ul>
+<li>Stop SConstants from being a super type of SRecordInstance
+etc.&nbsp; The reason is ease of use within IDE's, and
+compatibility
+issues with
+the J# version. <br>
+</li>
+</ul>
+Incomaptibility Warning:- SRecordInstance etc. will no longer implement
+SConstants, which will be renamed SCon.&nbsp;&nbsp; Code will
+have to
+be changed
+as follows<br>
+<pre wrap=""> new SFieldString(meta, "EMPEE_ID", 20, SFD_PRIMARY_KEY); // Old<br> new SFieldString(meta, "EMPEE_ID", 20, SCon.SFD_PRIMARY_KEY); // New</pre>
+To keep the old behaviour just add SConstants to the extends list in
+SRecordInstance.&nbsp; In Java 1.5 static imports could also be
+used.
+<ul>
+<li>Better communication between applications and the SDrivers
+with
+more parameters to SPreparedStatements.&nbsp; (To avoid a brittle
+structure with an ever growing number of parameters to
+SPreparedStatement, the objects now created in two steps one to create
+the object and set parameters.)<br>
+</li>
+<li>Identifiers are quoted with "s.&nbsp; This avoids the
+problem
+with all the reserved words in different databases.&nbsp; But it
+does
+make them case sensitive."<br>
+</li>
+<li>SFieldMeta, SRecordMeta are now serializable for better
+detachment.&nbsp; Care is taken to avoid duplicate objects.</li>
+<li>Can create new records while being detached.&nbsp; Can
+add keys
+when reattaching.</li>
+<li>For detached records, correctly distinguishes references
+that are
+null vs those that have not been fetched.&nbsp;&nbsp;&nbsp;
+Can
+manually check using isReferenceAvailable.&nbsp; Also
+getReferenceWhileDetached hook to try to fetch the record
+remotely.&nbsp; And can nullReferences when sending them back to
+the
+server.<br>
+</li>
+<li>Added many operators to SQuery, including Join, fieldOrder
+By,.&nbsp; IsNull (references), Distinct?<br>
+</li>
+<li>More public methods.&nbsp; <br>
+</li>
+<li>Logging and toString improved, and bugs fixed.<br>
+</li>
+<li>Simple Alter Table DDL generator.&nbsp; Allows you to
+create a
+new SFieldMeta record at run time and then alter the underlying tables
+to include the corresponding column.&nbsp; Enables end user
+customizations.&nbsp; This would be very hard to do in other ORMS.</li>
+<li>BINARY SFieldObject?</li>
+<li>Added SRecordMeta.sFieldNames to redundantly store an
+ArrayList
+of the names of the fields for debugging.</li>
+<li>Removed&nbsp; nextGeneratedValue from drivers with
+databases that
+support sequences.</li>
+<li>Factories for the datatypes for Integer etc. to allow
+J#.Net to
+use native .Net data types.</li>
+<li>SConnection - hasBegun() and isOpen().</li>
+<li>Way to pass extra info to drivers for queries.&nbsp; <br>
+</li>
+<li>OFFSET/LIMIT added, may not be efficient in all drivers
+though.</li>
+<li>SEXTRA_FKEY_DDL (mainly for ON DELETE CASCADE).</li>
+<li>SFieldBytes.<br>
+</li>
+</ul>
+Many Thanks to Bartek Muszynski for his major contribution to this
+release.<br>
+<h3>Version 01.12</h3>
+<ul>
+<li>Now compatible with J#.Net! Thanks Silvain.</li>
+<li>Added Richard Schmitds quick start reverse engineering code.</li>
+<li>New MSSQL driver (thanks Silvain).</li>
+<li>SDriver.registerDriver to add new drivers.</li>
+<li>Tweaked DB2 and SapDB drivers, thanks for contributions.</li>
+</ul>
+<h3>Version 01.11</h3>
+<ul>
+<li>Reworked and enanced foreign key declarations for Richard,
+(Payrol.UglyPayslipDetail).</li>
+</ul>
+<h3>Version 01.09</h3>
+<ul>
+<li>zip file contains extra level, ie SimpleORM/simpleorm/...,
+thus
+SimpleORM/built is undert the top folder.</li>
+<li>Greg's Optimistic Null fix.</li>
+</ul>
+<h3>Version 01.07</h3>
+<ul>
+<li>Fixed optimistic lock bug due to keys of Select()ed records
+not
+being dirty.</li>
+<li>More vigourous optimisitic Delete locks.</li>
+<li>Update Record with References bug.</li>
+<li>Generated key Long/Int bug fixed. </li>
+</ul>
+<h3>Version 01.05</h3>
+<ul>
+<li>Limit constraint names to 30 chars (oracle) 18 chars (DB2).
+("_nn" now inserted to ensure uniqueness where nn is the field nr.)
+Reduced example table name sizes for DB2.</li>
+<li>if (jdbcConnection.getAutoCommit()) added.</li>
+<li>Close prepared statements from SResultSet.close.</li>
+<li>Tweaked driver identification (driverName()) and added
+Informix.</li>
+<li>No NULL for DB2 DDL. And detachAndClose to rollback before
+closing
+JDBC if trans not committed. YEAR = '2001' in examples.</li>
+<li><tt>SCOLUMN_QUERY</tt> fields no longer produce
+DDL columns. </li>
+<li><tt>SRecordInstance.detach</tt> now nulls any
+undetatched
+referenced records. Avoids problems during serialization. Key values
+still kept. See white paper.</li>
+<li>Can mark fields <tt>SOPTIMISTIC_UNCHECKED</tt>,
+see white
+paper. Also, only dirty fields used for optimistic locks.</li>
+<li>Can flush an optimistically locked record multiple times.</li>
+<li>Use optimistic locking by default for DBs that do not
+support
+locking,
+eg. HSQL. Make "SELECT FOR UPDATE" the default if they do -- might
+break some drivers, let me know.</li>
+<li>Extra locking test case using multiple threads. If this
+breaks,
+you have a problem that needs to be resolved. </li>
+<li>Use <tt>DATE</tt> instead of <tt>TIMESTAMP</tt>
+in Oracle.</li>
+<li>"Quote" identifiers in SQL to avoid reserved word issues.<br>
+</li>
+</ul>
+<h3>Version 01.03</h3>
+<ul>
+<li>Added support for CHAR as well as VARCHAR.</li>
+<li>Made sure cursors closed properly.</li>
+<li>Added SResultSet.getOnlyRecord().</li>
+<li>Filled out SPreparedStatement.setLong etc. </li>
+<li>SetTimestamp etc. accept java.util.Date as well as
+java.sql.Date.</li>
+<li>DATETIME for MS/SQL weblogic.jdbc.mssqlserver4.Driver.</li>
+</ul>
+<h3>Version 01.01</h3>
+<ul>
+<li>Added SQuery class for those that wish to hide SQL queries.
+See
+white paper and <tt>ADemo</tt> for examples. Can handle
+references
+neatly.</li>
+<li>Optionally generates <tt>FOREIGN KEY</tt> DDL.
+See ADemo.java
+for how this can be suppressed if necessary.</li>
+<li>Can retrieve values from several columns at once in a
+single
+query
+with <tt>SCOLUMN_QUERY</tt> (ie. Join support). Can
+sometimes be more
+efficent, see Employee.java.</li>
+<li>SConnection extends SPropertyMap, removed connectionInfo.</li>
+<li>ColumnCacheTest tests queries of a subset of columns.
+Several
+bugs fixed.</li>
+<li>Bound on result set sizes.</li>
+<li><tt>getString</tt> trims trailing spaces now.</li>
+</ul>
+<h3>Version 00.09</h3>
+Enhancements and Incompatibilities:-
+<ul>
+<li>Rounded out the types with TimeStamp, Date, Time, Long, and
+if
+all else fails the generic Object.</li>
+<li>Added a comprehensive benchmark module. Made several
+performance
+improvements (up to 500%) SimpeleORM now rocks! See the white paper
+for details.</li>
+<li><tt>validateField, validateRecord</tt> is the
+first of the
+business rule methods implemented. Feedback most welcome, see
+ADemo.</li>
+<li>Optimistic locking finished. <tt>SQY_UNLOCKED</tt>
+renamed to <tt>SQY_READ_ONLY</tt> </li>
+<li>More Record and Field properties for create
+table.</li>
+<li>Added <tt>purgeAndFlush()</tt> routines to
+better support <tt>rawJDBCUpdates</tt></li>
+<li>Added <tt>unsafeDetach/AttachToThread</tt> for
+completenes.</li>
+<li><tt>SFIELD_METAS, SFIELD_INDEX</tt> properties
+to provide access
+to meta data. Renamed <tt>SRECORD to SRECORD_META</tt>.</li>
+<li>SConnection.detatch renamed to <tt>SConnection.detachWithoutClosing</tt>,
+also <tt>detatchAndClose</tt> --&gt; <tt>detachAndClose</tt>.</li>
+<li>Renamed <tt>SNOT_NULL</tt> to <tt>SMANDATORY</tt>
+to allow for
+separation of these concepts later. Likewise <tt>isNull()</tt>
+changed
+to <tt>isEmpty</tt> etc. </li>
+</ul>
+<h3>Version 00.08</h3>
+<ul>
+<li>The properties package and sub system -- see white paper.</li>
+<li>SwingTest created -- note the way that threads are handled.</li>
+<li>Added automated key generation, Select Max or Sequences for
+PostgreSQL.</li>
+<li>Improved the J2EE/EJB example.</li>
+</ul>
+<h3>Version 00.07</h3>
+Added support and examples for AWT/Swing and J2EE (Weblogic).
+<h3>Version 00.06</h3>
+Added basic detach/attach for multi-tier applications. Also split
+demos and tests -- tables created directly.
+<h3>Version 00.05a</h3>
+Mainly Bug fixes. Now supports MySQL as well as PostgreSQL. Slight
+compatibility issue with extra param to SFieldString (need to add to
+compile).
+<h3>Version 00.04</h3>
+White paper, and some restructuring to fit the better design including
+the database drivers and deferable findOrCreate api.
+<h3>Version 00.03</h3>
+Added references, including identifying foreign keys.
+<h3>Version 00.02</h3>
+Added transaction cache and primary key based object identity. Thus
+need to support an automatic update list. Can now write independent
+business rules.
+<h3>Version 00.01</h3>
+Very basic. Generalized design no transaction cache and hence no
+primary key based object identity. Explicit insert, update, delete.
+Associated connections with the current thread.<h2>WikiPage</h2>
+Phil has started a Wiki page started at<br>
+<br>
+<a href="http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook">http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook</a><br>
+<br>
+Username: simpleorm<br>
+Password: shazam$1<br>
+<br>
+(Has been&nbsp;neglected, the mailing list is the best source of
+communication.)<br>
+<p><!-- // IN EXAMPLES public static neww(key) { return (Student)meta.findOrCreate(key); } --></p>
+</body></html>

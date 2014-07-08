@@ -1,0 +1,111 @@
+WEB OBJECT NOTES -- Mike Kienenberger
+
+Anthony, 
+
+Thanks for creating the Object Relational Mapping Tools paper!
+
+First off, I'm an admittedly-biased WebObjects (WO) user.
+
+One of my clients unconditionally hates anything "Apple" and wants me to 
+move to something else.  The first choice was "build it yourself" which I 
+hope I've avoided.   The second choice is "something oracle".
+
+I was directed to Oracle BC4J (and have seen indirect references to 
+TopLink), so your web page has been very helpful in trying to determine 
+exactly what these productions do and how they do it, and if there's 
+something else out there that might be better.
+
+Congratuations on classifying WO so well, although for the purposes of your 
+report, only EOF really applies.  It's hard to find good documentation on 
+EOF without buying a book.  Apple now has this online documentation -- 
+http://developer.apple.com/techpubs/webobjects/Enterprise_Objects/index.html -- but I haven't read it yet.
+
+The API documentation is also found at 
+http://developer.apple.com/techpubs/webobjects/Reference/API/index.html in 
+these two packages, com.webobjects.eoaccess and com.webobjects.eocontrol.  
+(It's unclear why they were broken into these particular two pieces.)
+
+
+
+"Raw" EOF actually is a little more and a little less than you've described.
+
+How it works is like this.
+
+You create a data file (in plist format which is very similar to XML -- I 
+expect Apple to eventually migrate all of their plist files to XML -- some 
+have already been migrated) which describes your database model.  The tool 
+that creates/maintains this file is called EOModeler and is capable of 
+creating the file simply by reading an existing database schema.
+
+Tables are generally mapped to Entities, fields are mapped to attributes, 
+and each record loaded will be mapped to an object instance.  The entire 
+database schema, including relationships between tables, optimistic locking 
+strategies, and mappings of field types to java types is included in this 
+file.
+
+Note that you don't generally write the XML (or plist in this case) as it's 
+either automatically generated for you, or it's changed via a gui tool 
+(generally using either an spreadsheet-like view or a flowchart-like view).
+
+You can either use each entity as a "Generalized Design based Mappers" or a 
+"Generators/Proxy".
+
+For a GDBM object (EOGenericRecord) each attribute is accessible via
+
+
+String phone = (String)employee.valueForKey("PHONE_NR");
+
+or 
+
+employee.takeValueForKey(phone, "PHONE_NR");
+
+Relationships can be followed simply by creating keys like this
+
+String BossesPhone = (String)employee.valueForKey("toBoss.PHONE_NR");
+
+where toBoss is a relationship to the employee's boss.
+
+
+However, most of the time it's more useful to create a specific class 
+Employee using a generator method.
+
+By default, EOModeler creates a custom class (subclassed from EOCustomObject 
+or a class of your choice) with accessors like:
+
+public String getPhoneNr()
+{
+    return (String)takeStoredValueForKey(""PHONE_NR");
+}
+
+However, the templates used to create the custom class are completely 
+customizable.
+
+As you noted, though, editing this class file would then make it more 
+difficult to change the model.   raw WO handles it by either trying to merge 
+your changes, or if that fails, presenting you with the option to overwrite 
+or merge them yourself.
+
+However, a 3rd party plug-in to EOModeler fixes this problem by splitting 
+the generated code into two files.  One is the parent class and contains all 
+of the generated code (for example, MODELS_Employee).   The second is a 
+subclass of that (Employee) that only contains your modifications to the 
+generated code.  Thus, you can regenerate EOM_Employee at any time without 
+touching your own code.
+
+
+If you're interested in a real world example, I can send you the files for 
+Account.plist, Account.java, and _EOM_Account.java.
+
+
+Again, thanks for your report, and please keep maintaining it :)
+
+I really hope I won't have to switch to another environment, but if I do, I 
+want to be able to make an informed choice.
+
+I just wish there was a similar report out there for tools that map java 
+code to web page generation (the other main part of WebObjects).
+
+-Mike Kienenberger
+
+
+

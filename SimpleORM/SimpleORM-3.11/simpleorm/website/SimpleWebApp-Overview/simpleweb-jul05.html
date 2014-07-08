@@ -1,0 +1,660 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  
+  
+  
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><title>SimpleJSP White Paper</title>
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="STYLESHEET" type="text/css" href="styles.css"></head>
+<body style="background-color: rgb(255, 255, 255);">
+<table border="0" width="100%">
+
+
+
+  <tbody>
+    <tr valign="bottom">
+      <td>
+      <h1 style="font-weight: normal;"><a class="mozTocH1" name="mozTocId415962"></a><font color="blue" size="6">SimpleWeb Rough Working Notes<br>
+</font></h1>&nbsp;
+
+      <font size="5"><i>Web Pages with SimpleORM</i></font>
+      </td>
+      <td halign="right"><img src="logo.png" alt="Logo" style="width: 175px; height: 107px;" title=""> <br>
+      <i>Integration, not separation</i> </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<hr>
+Dr Anthony Berglas<br>July 2005<br>
+<br>
+<br>
+
+
+
+
+<ul id="mozToc"><!--mozToc h2 1 h3 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId92449">Introduction</a></li><li><a href="#mozTocId41560">Raw JSP SimpleORM</a></li><li><a href="#mozTocId551654">SimpleWeb version (KISS)
+</a></li><li><a href="#mozTocId76968">SimpleWeb Condensed version (KISS)</a></li><li><a href="#mozTocId319441">Design Issues</a><ul><li><a href="#mozTocId260747">JSPs</a></li><li><a href="#mozTocId59956">WPagelets </a></li><li><a href="#mozTocId111995">Widget Object Graph vs. just Html Output Methods</a></li><li><a href="#mozTocId740438">WidgetState vs Record State</a></li></ul></li><li><a href="#mozTocId505302">WingS</a></li><li><a href="#mozTocId939090">Others</a></li><li><a href="#mozTocId623879">
+
+
+
+ &nbsp;
+
+
+
+
+
+
+
+
+
+</a></li></ul>
+
+
+
+
+
+
+
+
+<br><span style="font-weight: bold;">Warning: This is an early design document.&nbsp; I am still unclear
+what is the best way to proceed.&nbsp; All feedback most welcome.</span><br>
+<h2><a class="mozTocH2" name="mozTocId92449"></a>Introduction</h2>
+SimpleWeb
+enables web applications to be built very succinctly using the
+SimpleORM Object Relational Mapping software.&nbsp; Most Web
+applications are largely concerned with displaying and updating fields
+in a database.&nbsp; SimpleWeb automates this linkage so that most of
+the unproductive bookkeeping code found in J2EE applications can be
+avoided.<br>
+
+<br>
+
+Consider the following simple forms<br>
+
+<br>
+
+<br>
+
+
+<table style="text-align: left; width: 347px; height: 165px;" border="1" cellpadding="2" cellspacing="0">
+
+
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <span style="color: rgb(0, 0, 128); font-weight: bold;">Employee List<br>
+</span><span style="color: rgb(0, 0, 128);">Department</span>&nbsp;&nbsp;&nbsp; 
+      <select name="dept"><option>Sales</option><option>Production</option></select>
+      <input value="List" type="submit">
+      <table style="width: 100%; text-align: left;" border="0" cellpadding="4" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top; color: rgb(0, 0, 128);">Id<br>
+            </td>
+            <td style="vertical-align: top; color: rgb(0, 0, 128);">Name<br>
+            </td><td style="vertical-align: top; color: rgb(0, 0, 128);">Phone Nr<br>
+            </td>
+            <td style="vertical-align: top; color: rgb(0, 0, 128);">Manager<br>
+            </td>
+            <td style="vertical-align: top;"><span style="text-decoration: underline;">Create</span><br>
+            </td>
+
+          </tr><tr>
+            <td style="vertical-align: top;">E1234<br>
+            </td>
+            <td style="vertical-align: top;">Fred Smith<br>
+            </td>
+            <td style="vertical-align: top;">123 4567<br>
+            </td>
+            <td style="vertical-align: top;">Fred Nerk<br>
+            </td>
+            <td style="vertical-align: top;"><span style="text-decoration: underline;">Edit</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">E321<br>
+            </td>
+            <td style="vertical-align: top;">Fred Nerk<br>
+            </td>
+            <td style="vertical-align: top;">123 7654<br>
+            </td>
+            <td style="vertical-align: top;"><br>
+            </td>
+            <td style="vertical-align: top;"><span style="text-decoration: underline;">Edit</span></td>
+          </tr>
+
+          
+          
+          
+        </tbody>
+      </table><br>
+</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<br>
+
+<br>
+
+<br>
+
+<table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <span style="color: rgb(0, 0, 128); font-weight: bold;">Edit Employee Details</span>
+      <table style="width: 100%; text-align: left;" border="0" cellpadding="4" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">Employee Id<br>
+            </td>
+            <td style="vertical-align: top;">E1234<br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top; text-align: right;">Name<br>
+            </td>
+            <td style="vertical-align: top;"><input size="40" maxlength="40" value="Fred Smith" name="Name"></td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top; text-align: right;">Phone Nr<br>
+            </td>
+            <td style="vertical-align: top;"><input size="15" maxlength="15" name="Phone" value="123 4567"></td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top; text-align: right;">Department<br>
+            </td>
+            <td style="vertical-align: top;"><input size="5" name="Dept" id="dept" value="Sales"> <br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <input value="Update" type="submit"> 
+      <input value="Delete" type="submit">
+      <input name="cancel" value="Cancel" type="button"></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+A brief review of some other frameworks is <a href="RAD%20Tools.html">RAD Tools.html</a><br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId41560"></a>Raw JSP SimpleORM</h2>
+<pre>&lt;html&gt;...&lt;body&gt;<br> &lt;h1&gt;Edit Employee Details&lt;/h1&gt;<br> &lt;%<br>   String empeeId = request."Employee.Id" // ie. the Input<br>   String empeeName, empeePhoneNr, empeeDepartment;<br>  &nbsp;bool isPostBack = empeeId != null<br>   Employee ee = session.getAttribute("Employee");<br>   if ! isPostBack<br>     empeeId = request.getParameter("EmployeeId"); // param from listing form<br>     ee = find(empeeId);<br>     empeeName = ee.Name // needed see notes.<br>     empeePhoneNr = ee.PhoneNr<br>     empeeDepartment = ee.Department.Name <br>     ee.detach<br>     session.setAttribute("Employee", ee); // serializable<br>     commit<br>   else isPostBack<br>     empeeName = request."Name" <br>     empeePhoneNr = request."PhoneNr"<br>     empeeDepartment = reqest."Department"<br>     <br>     try<br>       begin;<br>       assert ee.Id == empeeId<br>       ee.attach();<br>       if Update <br>         ee.Name = empee."Name"<br>         ee.PhoneNr = request."PhoneNr"<br>       else if Delete<br>         ee.delete();<br>       commit;<br>       session.removeAttribute("Employee");<br>      &nbsp;redirect list screen. // If OK<br>     catch SValidationException ex<br>       out.println(ex.message)<br> %&gt;<br> &lt;form&gt;<br>   &lt;table&gt;<br>     &lt;tr&gt;&lt;td&gt;Employee Id&lt;/td&gt;<br>       &lt;td&gt;&lt;input name=Employee.Id value='&lt;%= empeeId %&gt;' readonly&gt;&lt;/td&gt;<br>     &lt;/tr&gt;<br>     &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;<br>       &lt;td&gt;&lt;input name=Employee.Name value=empeeName&gt;&lt;/td&gt;<br>     &lt;/tr&gt;<br>     &lt;tr&gt;&lt;td&gt;Phone Nr&lt;/td&gt;<br>       &lt;td&gt;&lt;input name=Employee.PhoneNr value=empeePhoneNr&gt;&lt;/td&gt;<br>     &lt;/tr&gt;<br>     &lt;tr&gt;&lt;td&gt;Department&lt;/td&gt;<br>       &lt;td&gt;&lt;input name=empeeDepartment &gt;&lt;/td&gt;<br>     &lt;/tr&gt;<br>   &lt;/table&gt;<br>   &lt;input type=submit value=Update&gt;<br>   &lt;input type=submit value=Delete&gt;<br>   &lt;input type=cancel value=Cancel&gt;<br>  &lt;/form&gt;<br>&lt;/form&gt;&lt;/html&gt;<br><br>&lt;%<br>     // ee.detach ?<br>%&gt;<br></pre>
+Notes:-<br>
+<ul>
+  <li>Need empeeName, empeePhoneNr etc.&nbsp; so that we can display
+old values if there is a validation error.&nbsp; Ie. we need both the
+following values of PhoneNr:-</li>
+  <ul>
+    <li>The value entered by the user, which may be invalid.</li>
+    <li>The old or updated value in the SRecordInstance.</li>
+    <li>The optimistic lock value.</li>
+  </ul>
+  <li>Could obviously move initial large scriplet to a different class, but that is orthoganal, it still needs to be written.</li>
+  <li>Problem is that ee.Name (say) is referenced in several places.<br>
+  </li>
+</ul>
+<pre></pre>
+<h2><a class="mozTocH2" name="mozTocId551654"></a>SimpleWeb version (KISS)<br>
+</h2>
+(No Widget Graph, No Response/RequestEvents)<br>
+(Same form as Raw above.)<br>
+<br>
+<pre>&lt;html&gt;...&lt;body&gt;<br> &lt;h1&gt;Edit Employee Details&lt;/h1&gt;<br> &lt;%<br>    WPage page = new WPage(request, response,...);<br>    WRecordEditor emped = new WRecordEditor(page, Employee) {<br>      SRecordInstance findRecord() { // Ie. non-postback<br>           return findOrCreate(request."Employee.Id");	 <br>	}<br>      OnUpdate(){...} // optional extra hooks.<br>    }<br> %&gt;<br> &lt;form&gt;<br>   &lt;table&gt;<br>     &lt;tr&gt;&lt;% new WField(emped, Employee.ID).setReadonly().output() %&gt;&lt;/tr&gt;<br>     &lt;tr&gt;&lt;% new WField(emped, Employee.NAME).output()<br>       // Not possible to add post post validation here, needs to be added on page or recoredEditor. <br>       // (The WField cannot just register itself with emped because it is too late -- were outputting.)  %&gt;&lt;/tr&gt;<br>     &lt;tr&gt;&lt;% new WField(emped, Employee.PHONE_NR).output() %&gt;&lt;/tr&gt;<br>     &lt;tr&gt;&lt;% new WField(emped, Employee.DEPARTMENT).output() %&gt;&lt;/tr&gt;<br>   &lt;/table&gt;<br>   &lt;% new StandardButtons(emped).output() %&gt; // Update/Delete/Cancel<br>  &lt;/form&gt;<br>&lt;/form&gt;&lt;/html&gt;<br></pre>
+<br>
+Notes<br>
+<ul>
+  <li>WField outputs label and &lt;Input&gt; based on defaults from the Employee SRecordMeta.&nbsp; (A field is a label + an input.)<br>
+  </li>
+  <li>emped includes a hashmap of values for the input fields to
+persist state if errors, replacing variables such as empeeName,
+empeePhoneNr in raw eg.</li>
+  <li>WRecordEditor matches http request parameters to Employee fields
+by name.&nbsp; Optional second parameter can change default prefix from
+"Employee."</li>
+  <li>Not sure how to implement isPostBack, but some standard way,
+thence can say page.isPostBack().&nbsp; Options: hidden field, compare
+URLs... avoid dependency on EmpeeId.</li>
+  <li>findRecord finds the record to edit when not isPostBack.&nbsp;
+This would be the default.&nbsp; (isPostBack case can be easily
+automated.)</li>
+  <li>StandardButtons just outputs the three standard buttons.&nbsp;
+WRecordEditor just expects those button request params unless overriden.</li>
+</ul>
+All this needs to be broken down properly.<br>
+<br>
+<h2><a class="mozTocH2" name="mozTocId76968"></a>SimpleWeb Condensed version (KISS)</h2>
+<br>
+<pre>&lt;html&gt;...&lt;body&gt;<br> &lt;%<br>    WPage page = new WPage(request, response,...);<br>    WRecordEditor emped = new WRecordEditor(page, Employee) {<br>      SRecordInstance findRecord() { // Ie. non-postback<br>           return findOrCreate(request."Employee.Id");	 <br>	}<br>      OnUpdate(){...} // optional extra hooks.<br>    }<br> %&gt;<br> &lt;% new WRecoredEditorHtml(emped).output(); %&gt;<br>&lt;/html&gt;<br></pre>
+<br>
+There is nothing in the HTML body in the previous version that could
+not just be generated from the information in the SimpleORM definition.<br>
+
+<span style="font-family: monospace;"></span>
+<h2><a class="mozTocH2" name="mozTocId319441"></a>Design Issues</h2>
+Several interrelated but orghogonal issues:-<br>
+
+<ul>
+<li>Use standard JSPs, our own WPagelet servlet architecture, or something like Tapestry.</li><li>Build a widget object graph or just use methods to output.</li><li>How to handle events after form is posted back.&nbsp; <br>
+  </li>
+</ul>
+
+<span style="font-weight: bold;"><br>
+</span>The big one: do we have per widget post post events independent
+of records?&nbsp; Ie. build a widget object graph in one step and then
+output it in a second step.&nbsp; Ideally also save the widget graph in
+the session state.&nbsp; This means that the same graph can be
+processed twice, once to handle the response (output html etc.) and
+then to handle the subsequent request.&nbsp; (Yes it is a
+response/request cycle, not a request/response one!)<br>
+<ul>
+  <li>If yes, each widget can have its own post post event, independently from persisted data.<br>
+  </li>
+  <li>Requires widget object graph.</li>
+  <li>Butler says no, manually match request parameters to SFields, and which records in multi record.&nbsp; KISS.<br>
+  </li>
+  <li>ASPX actually says yes, the object graph is built.</li>
+  <ul>
+    <li>Can do fine grained events.&nbsp; Must be two pass processing
+first to build graph, then to process request events, then to output
+response.<br>
+    </li>
+    &lt;&gt;But the object graph is not in the view state.&nbsp;&nbsp; I
+think just does postpost processing based on wiget graph generated on
+next invocation.<li>Not sure what happens if form generateds differently, eg. optional fields.&nbsp; Eg. dynamic <code>placehoder.add(new widget)</code>.</li>
+  </ul>
+  <li>Tapestry?<br>
+  </li>
+</ul>
+<h3><a class="mozTocH3" name="mozTocId260747"></a>JSPs</h3>
+<ul>
+  <li>Familiar.&nbsp; No need to build our own servlet structure.<br>
+  </li>
+  <li>Simple, compared to Tapestry etc.</li>
+  <li>Not possible to build widget object graph before outputting with normal usage.&nbsp; Weaker than ASPX.</li>
+  <ul>
+    <li>But is possible to build up (partial) widget object graph an then just <code>&lt;%= top.output %&gt;</code> in body.&nbsp; (Too much of this makes the JSP pointless.)</li>
+    <li>Also possible to build up widget graph during output, and then
+persist on session state for subsequent request processing.&nbsp; But a
+bit wierd for a JSP.<br>
+    </li>
+  </ul>
+  <li>Scriptlets (vs custom tag lib)<br>
+  </li>
+  <ul>
+    <li>Integrate neatly with SimpleORM -- tag lib cannot access SField constants etc.&nbsp; (they are NOT macros!)<br>
+    </li>
+    <li>Can be easily moved into classes or servlets etc.</li>
+    <li>Avoid the need for us to build a tag library.</li>
+    <li>More concise.</li>
+    <li>Not cool.<br>
+    </li>
+  </ul>
+  <li>Specifically not very interested in enabling non-programmers to
+lay out forms.&nbsp; It rarely happens that way in practice.&nbsp; We
+want higher level abstractions.<br>
+  </li>
+</ul>
+<h3><a class="mozTocH3" name="mozTocId59956"></a>WPagelets </h3>
+Insteaad of JSPs.&nbsp; Would be called from our own dispatching servelet.<br>
+<br>
+<pre>class EmpeeDtl extends WPagelet {<br>  private eName <br>  ...<br>  Initialize() { <br>    // Controls not stored in ViewState, just their values<br>    this.controls.add(new FormHeader());<br>    this.controls.add(new Html(this, "my arbitrary &lt;html&gt; ...... "));<br>    this.controls.add(ft = new FieldTable())<br>    eName = new WField<br>    ft.add(eName); name + field<br>  }<br>  OnLoad() {<br>    ...<br>   &nbsp;eName.Bind(erec.ENAME)<br>  }<br>  OnOutput() { // implicit/JSP<br>    eName.Ouput<br>  }<br>  OnViewState() {<br>    forall controls c c.output<br>  }<br>  On_eName_Change() {<br>    ...<br>  }<br>  On_Submit() {<br>    if eName.value ...<br>  }<br>}<br><br></pre>
+
+<p>(P218 Adding ASPX controls dynamically.)<br>
+Issue:- a lot of objects per page.&nbsp; Beware SProperties.<br>
+</p>
+<br>
+<ul>
+  <li>Build aspx object graph -- components.add</li>
+  <li>Can have eg. Form object that outputs html pre and post some embedded objects' output.</li>
+  <li>Can have our own events -- pre form, post form etc.&nbsp; <br>
+  </li>
+  <li>Our own events can support the "response/request" cycle properly, which is<br>
+  </li>
+</ul>
+
+
+<ol>
+<ol><li>Create and output form to user</li><li>User posts back</li><li>Process posted data.</li><li>Select next form (may be same) and go to step 1.</li></ol>
+</ol>
+
+
+<ul>
+<li>(The above is not handled by Struts -- the Action merges steps 1
+and 3.&nbsp; By making the distinction explicit we can do neat things
+with exceptions etc.)</li>
+</ul>
+<ul>
+<li>No "ugly" scriptlets.</li><li>In practice generate all UI anyway.</li><li>No one will complain about business logic in UI.<br>
+</li><li>But scary -- new flow control.&nbsp; JSP is familliar.&nbsp; Other technologies.</li><li>Long strings in Java are a pain.&nbsp; <br>
+  </li>
+  <li>Somewhat orthoganal to main issue.&nbsp; Maybe do later.</li>
+</ul>
+<h3><a class="mozTocH3" name="mozTocId111995"></a>Widget Object Graph vs. just Html Output Methods</h3>
+<ul>
+  <li>Widget graph can have field values set independently from output.</li>
+  <li>Could store widget graph in session state.&nbsp; <br>
+  </li>
+  <ul>
+    <li>Enables clear post Post events, per the object that were actually displayed.</li>
+    <li>post Post events independent of use of SimpleORM.<br>
+    </li>
+    <li>But what if query in a repost returns a different number of rows?&nbsp; Need to generate each time anyway.</li>
+    <li>Alternative just store values / SRecordInstances in session state.&nbsp; Need to do this anyway.</li>
+  </ul>
+  <li>Wiget Graph needs to be built each page display, some overhead.&nbsp; <br>
+  </li>
+  <li>Butler alternative -- just have user specify which records to update.&nbsp; No events.</li>
+  <li>Could also fixed create meta form object analagous to SRecordmeta</li>
+  <ul>
+    <li>Efficient</li>
+    <li>Shared data structure, horrible bugs if updated to display different instances differently.</li>
+    <li>Unnecessary.<br>
+    </li>
+  </ul>
+</ul>
+<span style="font-weight: bold;"></span>
+<h3><a class="mozTocH3" name="mozTocId740438"></a>WidgetState vs Record State</h3>
+<ul>
+  <li>Need to be able to maintain values of Inputs within form if there are user errors.</li>
+  <li>Need to store SRecords for optimistic locking.</li>
+  <li>Need to be able to process events for multi record displays.</li>
+  <li>ViewState is better than SessionState but tough.&nbsp; We dont
+need to solve all problems.&nbsp; Tapestry is thinking about view state.<br>
+  </li>
+  <li>Cost is to build the object graph.&nbsp; Just storing it on
+HttpSession is cheap -- just a pointer.&nbsp; Need to store SRecords
+anyway.&nbsp; (Rarely serialized in practice.)<br>
+  </li>
+</ul>
+<br>
+<h2><a class="mozTocH2" name="mozTocId505302"></a>WingS</h2>
+
+
+<a href="http://wings.mercatis.de/tiki-index.php">http://wings.mercatis.de/tiki-index.php</a> Swing like MVC.&nbsp; Dead?&nbsp; Looks interesting, ASPX-like, pathetic docs.<br>
+
+<br>
+
+<pre>SForm form = new SForm();</pre>
+
+<pre>// ... add to top pane, add layout</pre>
+
+<pre>// The following assumes a template layout, the names "W1", "W2"</pre>
+
+<pre>// identify layout components</pre>
+
+<pre>SLabel label = new SLabel("Enter stuff:");</pre>
+
+<pre>form.add(label, "W1");</pre>
+
+<pre>STextField text = new STextField("initial value");</pre>
+
+<pre>form.add(text, "W2");<br><br>final SButton submit = new SButton("Search");<br>form.add(submit, "W3");<br>ActionListener al = new ActionListener() {<br>public void actionPerformed(ActionEvent e) { ... }<br>};<br>submit.addActionListener(al);<br></pre>
+<br>
+<hr style="width: 100%; height: 2px;"><br>
+<pre><br></pre>
+<h2><a class="mozTocH2" name="mozTocId939090"></a>Others<br>
+</h2>
+<pre><br></pre>
+
+Why does Butler Work?<br>
+<ul>
+  <li>No java constants,&nbsp; JSP compatible.</li>
+  <li>No optimistic locking.&nbsp; No objects in server state.&nbsp; Just Request properties.</li>
+  <li>Where do the UI oriented business rules go?&nbsp; Do I really want to build a JSP query language?</li>
+  <li>--&gt; JSP + Scriplets is the go.</li>
+</ul>
+<h3><a class="mozTocH3" name="mozTocId490865"></a><br>
+</h3>
+<br>
+<br>
+Because SimpleWeb automates much of the HTML generation it is generally
+more convenient to invoke it as a servlet than as a JSP.&nbsp;&nbsp;
+WPagelets are simply despatched from the main Servlet based on the
+URL.&nbsp; MyPagelets is a user written class that extends WPagelets
+and provides standard application functionality such as headers,
+footers and menus.&nbsp;&nbsp; Pagelets are threadsafe and also provide
+convenient variables such as <code>out</code>.&nbsp; (In practice very few projects separate programmers from HTML designers for data intensive applications.)<br>
+<br>
+<br>
+Performance.<br>
+<br>
+<br>
+But as well as outputing the field it associates it with the <code>NAME</code> field of the <code>Employee</code>
+SimpleORM record.&nbsp; This means that the logic to retrieve the field
+from the database and update the field upon completion is
+automated.&nbsp; SimpleORM itself only requires one line of code to
+define the <code>NAME</code> field (see the <a href="whitepaper.html">whitepaper</a>).&nbsp; <br>
+<br>
+Any business rules are typically associated with the SimpleORM records that they relate to.&nbsp; The normal SimpleORM <code>SValidateRecord</code>
+methods can be used to validate all fields, without the need to clutter
+code for fields that do not need special validation.&nbsp; <br>
+<br>
+This is in sharp contrast to other J2EE design patterns.&nbsp; By the
+time one declares ActionForms, Actions, Session Facardes, EJBs, Value
+Objects,&nbsp; Data Access Objects, and Mapping layers a simple form
+can require thousands of lines of code.&nbsp; And all of that code
+needs to be maintained.&nbsp; In particular, common changes such as
+adding a new column to a table typically require changes to be made to
+each of the J2EE layers.&nbsp; Excessive separation of concerns comes
+at a price.<br>
+<br>
+(There are many good alternatives to using JSPs.&nbsp; SimpleORM is
+based on JSPs simply because they are well known and basically
+work.&nbsp; It would be possible and worthwhile to extend the framework
+to other UI technologies.)<br>
+<br>
+<pre> Customer&lt;% WPage wp = new WPage(this) {<br>   OnSubmit() {<br>   };// or EPage extends WPage &gt;<br>  &lt;% wp.ProcessUpdates(Empee); <br>     if postback<br>     else<br>       ee = session.Empee;<br>       ee.Name = req.Name;...<br>       commit; // ee invalidated.<br><br>     if no errors.<br>     Empee ee = findOrCreate(session.EmpeeNr);<br>       <br>  %&gt;<br>  &lt;%= wp.beginForm(); %&gt;<br>  &lt;%= new HtmlForm(wp).setprop(...).output() %&gt; // Adds to the wp page.<br>    &lt;% wp.ErrorMessages(); %&gt;<br>    &lt;table&gt;<br>    &lt;%new WField(wp, ee, ee.NAME).setProp().output() %&gt;<br>    &lt;/table&gt;<br>  &lt;%= wp.endForm(); %&gt;<br>&lt;/table&gt;<br>&lt;/body&gt;&lt;/html&gt;<br><br>&lt;Input name=... value=&lt;cout...&gt;  no need for rawInput.<br><br><br>new WInput(wp, "name", value:).setProp().output() <br>//.output() 1. fn$ or 2. writes to out<br>myinp = new WInput ... // No good, not assigned until output.<br>wp.Input(props[]{...})<br>wp.Widget(INPUT)<br>MyWidgets.Input(wp)<br><br>wf = new WForm(wp...)<br>new WInput(wf, ...) // hierarchy<br></pre>
+
+
+<br>
+
+<pre>EVENTS<br><br>wp.ProcessUpdates();<br>if (wp.isPostBack()) {<br>  ...<br>}<br>wp = new WPage(request, response) {<br>  onSubmit() {<br> 	// request.vars.<br>  }<br>  onNonPostBack() {<br>	// do query<br>  }<br>  onGetValue(field) // <br>}<br><br>new WInput(...) {<br>  OnSubmit(){...} // How is this called?  Regester WInput in session state?<br>}<br></pre>
+
+<br>
+
+<h2><a class="mozTocH2" name="mozTocId623879"></a><br>
+</h2>
+<br>
+<br>
+
+ <p>&nbsp;<img alt="counter" src="http://www.uq.net.au/cgi-bin/counter/width=6/SJSPWHITEPAPER" style="width: 90px; height: 20px;">
+<!--
+
+NULLS
+
+=====
+
+
+
+The big issue with the nulls is that when a user leaves an input
+
+field blank this may end up in the database as either an SQL NULL or
+
+an empty string (not a NULL).
+
+
+
+Most (all?) RDBMS's support SQL's horrible nulls, but some encourage
+
+using empty strings instead.
+
+
+
+So a good tool would introduce a new concept of "empty", which maps
+
+to either "" or NULL.  The isEmpty test becomes (x = '' or x is
+
+null) (which may not index very well!).  Etc.
+
+
+
+Oracle cannot even distinguish between NULL and ''.
+
+
+
+It's on my list but for now I take the normal cop out of mapping SQL
+
+'' to java "" and SQL NULL to java null, and leave the mess up the
+
+the user.
+
+
+
+Do let me know when you produce a list of incompatibilities.  It
+
+might even be possible to base SimpleORM on CrossDB -- factoring out
+
+the SQL issues from the ORM ones.
+
+
+
+Sybase Adaptive Enterprise Server returns null.  Sybase SQL Anywhere
+
+does not returns NULL. It uses ''. Different versions, different
+
+results...
+
+
+
+
+
+
+
+AGGREGATIONS AND OTHER COMPLEX MAPPINGS
+
+=======================================
+
+
+
+Need to explain away, or maybe just provide a crude mechanism to specify the query.  It is actually sort of there already -- COLUMN is the query text.
+
+
+
+There have been a number of interrelated issues raised about queries.  I propose the following enhancements:-
+
+
+
+EQUALITY QUERIES
+
+
+
+For the common case of a single query value by equality could add:-
+
+
+
+  SResultSet emprs 
+
+    = Employee.meta.selectEquals(
+
+      Employee.DEPARTMENT,  dept101, "NAME");
+
+
+
+Which avoids the need to create an explicit ResultSet.  Easy and good.
+
+
+
+RETURING COLLECTIONS
+
+
+
+Add convenience methods
+
+  ArrayList resultSet.loadArrayList([max]);
+
+  void resultSet.loadCollection(Collection col, [max]);
+
+
+
+This avoids the loop.  But the loop is still preferred if you just want to process the records.
+
+
+
+NON-TABLE QUERIES
+
+
+
+Hmm.  Vaughn has implemented SKeyPreparedStatement that can do arbitrary queries involving aggregations into SRecordInstances.  There are many issues here, eg. no primary key, readonly, references to other records, detaching.  
+
+
+
+Should probably not be a separate class, just SPreparedStatement.
+
+
+
+Vaughn, send me your code and I'll look at it.
+
+
+
+@VAR@ VS ?
+
+
+
+JDBC only supports "?"s to mark place holders, and then they have to be referred to by numbers.  Ugly and should be fixed.  Vaughn suggested that we fix it by alowing 
+
+	SELECT ... WHERE col = @var@
+
+and then setString("VAR");
+
+
+
+Easy enough but do we really want to go there?  What if JDBC 3 uses #var#?  In my experience there are never more than a few ?s so it is not too ugly in practice.  There are some efficiency issues with parsing the SQL.
+
+
+
+If people feel that this is important then it can be added, but otherwise I am inclined to push back.
+
+
+
+This issue is orthoganal to non table queries.  If we do this it should definitely become part of the standard SPreparedStatement, and mixtures of ? and @xxx@ should be allowed.
+
+
+
+Does anyone know what Microsoft does?
+
+
+
+JAVA QUERY LANGAUAGE
+
+
+
+I have done some work here but am not happy with it.  
+
+
+
+MISCELLANEOUS
+
+
+
+Might add findOnly and createOnly to supplement findOrCreate with assert[Not]NewRecord.
+
+
+
+--></p>
+
+
+
+
+
+
+
+
+</body></html>

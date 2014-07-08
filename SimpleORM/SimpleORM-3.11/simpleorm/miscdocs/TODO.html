@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="STYLESHEET" type="text/css" href="styles.css"><title>SimpleORM README</title></head>
+<body style="background-color: rgb(255, 255, 255);">
+<h1>SimpleORM TODO</h1><br><ul><li>Use Connection instead of DataSource.</li><li>Make SRecordInstance a Map of strings to field values. &nbsp;Reflectable by JSP etc.</li><li>Maybe batching support, along lines of Darren Gilroy.<br>PreparedStatement pstmt = con.prepareStatement("INSERT INTO COFFEES VALUES(?, ?, ?, ?, ?)");<br>pstmt.setString(1, "Amaretto"); ...<br>pstmt.addBatch();...<br>int [] updateCounts = pstmt.executeBatch();</li><li>SubSelect Queries</li><li>Rework SDrivers finding mechanism.&nbsp; Each SDriver*.java should have a static inner factory class that <br>&nbsp;&nbsp; registers itself when the class is loaded and can make instances of the parent SDriver.</li><li>Think about "" vs null eg. for Oracle.&nbsp; convertToField maybe converts "" to null if SDriver.emptyStringIsNull().<br>&nbsp;&nbsp; Maybe SQuery also -- x == '' always fails in Oracle, I think.&nbsp; SQuery should have isEmpty.<br></li><li>Support Cloudscape / Derby / JavaDB, maybe replace HSQL as the default.&nbsp; (Now that it has become the <br>&nbsp; 1.6 standard.&nbsp; Not sure I don't prefer Daffodil...)<br></li><li></li></ul>
+<h2>Old v 2* List Outstanding To Do List</h2>
+<h3>By Next Point Version (or two)</h3>
+The following list is in rough order of priority. This list also
+shows which documented features are missing. Some of these tasks are
+nicely independent of the core code, all help most welcome.
+<br>
+<ul>
+<li>Default value for (Mandatory?) fields.&nbsp;<br>Also set value without making dirty for inheriting values, and onRead trigger should be investigated.,</li>
+<li>Check column constraints automatically at set
+time.&nbsp; Not
+Null, string length.<br>
+</li>
+<li>Reference.&nbsp; IsNull should not query.</li><li>DataTypesTest.java -- add SDriver.SupportsTrailingSpaces
+etc. to
+SDriver.&nbsp; For MySQL: <br>
+TestUte.assertTrue(dt.getObject(DataTypes.NAME).toString().equals("Trailing&nbsp;
+"));&nbsp; actually returns "Trailing"<br>
+TestUte.assertEqual(""+(now2+50)/100, ""+(now+50)/100); <br>
+TestUte.assertTrue(dt.getBigDecimal(DataTypes.ADECIMAL)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .equals(new
+java.math.BigDecimal("123456789012345678.3333"))); "123456789012.3456"
+works. MySQL 4.1 manual says that NUMERIC has the same max range as
+DOUBLE.</li>
+</ul>
+<h3>Longer Term</h3>
+<ul>
+<li>Triming of strings/CHAR.&nbsp; Tricky to know what to
+do.&nbsp;
+See SRecordInstance.getString for discussion.<br>
+</li>
+<li>Use batchs for flushing.</li>
+<li>Database dependent ways to declare long char fields for
+memos
+etc.
+Eg. Oracle has a 2000 byte limit, MySQL &lt; 1000. A Pain, but the
+drivers allow for it.
+SAPDB: 8,000 max (4,000 UTF16), else Long. </li>
+<li>Maybe add MaxNrCharacters property and validate.&nbsp;
+(Cannot
+use the parameter to SFieldString, it is typically the number of Bytes
+after UTF8 compression, ie. meaningless.)<br>
+</li>
+<li>SINDEX, SUNIQUE -- Maybe create indexes.<br>
+</li>
+<li>SapDB support. Trims trailing spaces on VarCHAR. Unknown
+Database
+'SAP DB' driver 'SAP DB'. Using generic SDriver. YEAR is a reserved
+word (maybe "" all of them.)</li>
+<li>Database independent null Processing (Mandatory vs Null,
+Sybase
+vs Oracle).</li>
+<li>Provide default values for new records (at least constants).</li>
+<li>Batch&nbsp; JDBC updates in flush.</li>
+<li>Way to include SQUERY_COLUMN field definitionss in
+SQuery.eq
+queries.&nbsp; Also add SQuery.SubSelectEq(value,&nbsp;
+reference,
+subquery), eg. for where Order.Product.Type = "XX".<br>
+</li>
+<li>Add table SSchema property (instead of FOO.BAR table names)</li>
+<li><br>
+</li>
+<li>Optimize generated keys -- retrieve in batches.</li>
+</ul>
+<h2>WikiPage</h2>
+Phil has started a Wiki page started at<br>
+<br>
+<a href="http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook">http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook</a><br>
+<br>
+Username: simpleorm<br>
+Password: shazam$1<br>
+<br>
+(Has been&nbsp;neglected, the mailing list is the best source of
+communication.)<br>
+<p><!-- // IN EXAMPLES public static neww(key) { return (Student)meta.findOrCreate(key); } --></p>
+</body></html>

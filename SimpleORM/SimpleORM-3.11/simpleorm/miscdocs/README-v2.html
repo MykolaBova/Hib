@@ -1,0 +1,543 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <title>SimpleORM README</title>
+</head>
+<body style="background-color: rgb(255, 255, 255);">
+<!-- Added to Subversion! -->
+<h1>SimpleORM README</h1>
+<h2>Introduction</h2>
+<a href="http://www.SimpleORM.org">SimpleORM</a> provides a very
+simple and easy way to map relational tables into java classes. It
+uses a novel generalized design to avoid the need for reflection and
+numerous configuration files. SimpleORM takes care with database
+semantics such as locking and caching, and also alows from raw JDBC
+and non-Java database access.
+<p>The <a href="whitepaper.html">SimpleORM White Paper</a> provides a
+detailed description of how SimpleORM works. It is strongly
+recomended that it be read before attempting to run SimpleORM.</p>
+<p>This is a new project, but all of the core features work and have
+been
+tested. Several databases are supported, including PostgreSQL, MySQL,
+HSQL, and Oracle. The documentation is good and there is a growing
+set of examples.</p>
+<p>Because it is simple, very few bugs have been reported, and reported
+bugs have been fixed very quickly. The next release or two will be
+stable, production ready.</p>
+<p>As to simplicity, the .jar is currently just 68kb. The code is well
+documented, and we have taken care with things like toString() and
+exceptions. So if you do decide to use it seriously it should not be
+hard to work with the source.</p>
+<h2>Downloading</h2>
+The current version can&nbsp; be obtained by browsing<br>
+<a href="http://simpleorm.svn.sourceforge.net/viewvc/simpleorm/">http://simpleorm.svn.sourceforge.net/viewvc/simpleorm/</a><br>
+or<br>
+svn co
+https://simpleorm.svn.sourceforge.net/svnroot/simpleorm/trunk&nbsp;
+Simpleorm<br>
+<br>
+Archives are at<br>
+<a href="http://simpleorm.org/SrcArchive">http://simpleorm.org/SrcArchive</a><br>
+Future versions will be branched under the subversion tree.<br>
+<h2>Unpacking and Building</h2>
+The distribution contains the entire source for SimpleORM under the
+simpleorm folder. It is slightly unusual in that it combines java
+package folders at the same level as documentation and build folders
+-- we like broad shallow hierarchies rather than narrow deep ones. It
+contains the following folders.
+<p>
+<table border="0">
+  <tbody>
+    <tr>
+      <td><tt>simpleorm/</tt></td>
+      <td>This contains all only the sources,
+both java and others. other projects may add an extra level called <tt>src</tt>,
+but we prefer to keep things simple.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/core</tt></td>
+      <td>The core simpleorm classes
+themselves. The are in package <tt>simpleorm.core</tt>.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/properties</tt></td>
+      <td>The simpleorm property classes that may be shared with a UI
+layer in the future.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/examples</tt></td>
+      <td>The test and demonstration classes.<br>
+      </td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/build&nbsp;</tt></td>
+      <td>Build scripts.
+SimpleORM is built with apache ant, see build.xml for details. This
+does NOT contain the built <tt>.class</tt> files.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/../built&nbsp;</tt></td>
+      <td>Everything that is
+built by simpleorm. The ant build script creates this folder and all
+subfolders.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/../lib&nbsp;</tt></td>
+      <td><tt>.jar</tt> files to
+add to the class path go here. In particular your JDBC driver. You
+create this folder.</td>
+    </tr>
+    <tr>
+      <td><tt>simpleorm/webSite&nbsp;</tt></td>
+      <td>This gets posted to the SimpleORM.org website. Includes the
+white paper.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">simpleorm/extras/SimpleORMGenerate<br>
+      </td>
+      <td style="vertical-align: top;">Generates SimpleORM definitions
+from existing table DDL using JDBC.<br>
+      </td>
+    </tr>
+    <tr>
+      <td>simpleorm/extras/<tt>EJB/&nbsp;</tt></td>
+      <td>Demonstrates how to use simpleORM with EJBs.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</p>
+<p>Having unziped the distribution you may need to set up a
+<tt>simpleorm.properties</tt> file in order to obtain a proper JDBC
+connection. This is described in <tt>build.xml</tt>.</p>
+<p><tt>ant</tt> will do a clean build, (re)create the tables, and run
+the
+test program which demonstrates most of SimpleORM's features. <tt>ant
+api</tt> will make the documentation.</p>
+<h2>The Examples</h2>
+The examples package/directory contains examples and test cases based
+on a simple schema involving Department/Employee/Payroll tables.
+Start with ADemo, which is run as the default ant task (for the
+time being). It demonstrates how to open a connection, and perform
+DML on records.
+<h2>Version History</h2>
+<h3>Version 02.21</h3>
+<ul>
+  <li>Fixed SConnection close bug (on secondary generator connections).</li>
+  <li>Make SQuery handle mixed case Columns properly (ie. call
+SDriver.quoteColumn)<br>
+  </li>
+  <li><br>
+  </li>
+</ul>
+<h3>Version 02.20</h3>
+<ul>
+  <li>Added SDataSource object.&nbsp; Needed to be able to create
+secondary connections for some key generators (see JavaDocs).&nbsp;
+(Does not require a real javax..DataSource.)&nbsp; The
+mainSConnection.attach method has been depricated, just use the
+SDataSource object instead. <br>
+  </li>
+  <li>find, mustFind and create convenience methods added.</li>
+  <li>Martin's validate record bug fixed.<br>
+  </li>
+  <li>SValidateField called for primary keys.<br>
+  </li>
+  <li>Uncopied MySQL Index code.</li>
+  <li>Tidied code by breaking up some big classes, created static
+SRecordUpdater and SRecordFinder.</li>
+  <li>Split SConnectionEJB into classes, but it needs more work.</li>
+</ul>
+<h3>Version 02.19</h3>
+<ul>
+  <li>Added new SGenerator classes for generating record keys.&nbsp;
+WARNING, slightly changed API for this, see GeneratedKeyTest.java.<br>
+  </li>
+  <li>Martins foreign key quoting fix and SQuery.getSFieldMeta.&nbsp;
+Thanks.</li>
+  <li>SQuery.in.needsConjunction fix.&nbsp; Removed deprecated JDBC
+calls.&nbsp; Thanks Pierre.</li>
+  <li>Convert spaces to tabs.&nbsp; <br>
+  </li>
+</ul>
+<h3>Version 02.18</h3>
+<ul>
+  <li>Reorganized folder structure for IDE's such as Eclipse<br>
+  </li>
+  <li>Added Martin's boolean fix, plus extended SQuery equivalent.</li>
+</ul>
+<h3>Version 02.16</h3>
+<ul>
+  <li>SQuery combineBegin/End</li>
+  <li>Martin's Boolean support.&nbsp; TF and YN.</li>
+  <li>Dan's EJB Support.</li>
+  <li>Dan's UNREPEATABLE_READ for MS SQL.</li>
+  <li>New SDriver instance per connection, ability to easily set driver
+parameters. (SConnection.getDriver().setMyFavouriteParam(...))<br>
+  </li>
+</ul>
+<h3>Version 02.15</h3>
+<ul>
+  <li>Stop SConstants from being a super type of SRecordInstance
+etc.&nbsp; The reason is ease of use within IDE's, and compatibility
+issues with
+the J# version. <br>
+  </li>
+</ul>
+Incomaptibility Warning:- SRecordInstance etc. will no longer implement
+SConstants, which will be renamed SCon.&nbsp;&nbsp; Code will have to
+be changed
+as follows<br>
+<pre wrap="">  new SFieldString(meta, "EMPEE_ID", 20, SFD_PRIMARY_KEY); // Old<br>  new SFieldString(meta, "EMPEE_ID", 20, SCon.SFD_PRIMARY_KEY); // New</pre>
+To keep the old behaviour just add SConstants to the extends list in
+SRecordInstance.&nbsp; In Java 1.5 static imports could also be
+used.
+<ul>
+  <li>Better communication between applications and the SDrivers with
+more parameters to SPreparedStatements.&nbsp; (To avoid a brittle
+structure with an ever growing number of parameters to
+SPreparedStatement, the objects now created in two steps one to create
+the object and set parameters.)<br>
+  </li>
+  <li>Identifiers are quoted with "s.&nbsp; This avoids the problem
+with all the reserved words in different databases.&nbsp; But it does
+make them case sensitive."<br>
+  </li>
+  <li>SFieldMeta, SRecordMeta are now serializable for better
+detachment.&nbsp; Care is taken to avoid duplicate objects.</li>
+  <li>Can create new records while being detached.&nbsp; Can add keys
+when reattaching.</li>
+  <li>For detached records, correctly distinguishes references that are
+null vs those that have not been fetched.&nbsp;&nbsp;&nbsp; Can
+manually check using isReferenceAvailable.&nbsp; Also
+getReferenceWhileDetached hook to try to fetch the record
+remotely.&nbsp; And can nullReferences when sending them back to the
+server.<br>
+  </li>
+  <li>Added many operators to SQuery, including Join, fieldOrder
+By,.&nbsp; IsNull (references), Distinct?<br>
+  </li>
+  <li>More public methods.&nbsp; <br>
+  </li>
+  <li>Logging and toString improved, and bugs fixed.<br>
+  </li>
+  <li>Simple Alter Table DDL generator.&nbsp; Allows you to create a
+new SFieldMeta record at run time and then alter the underlying tables
+to include the corresponding column.&nbsp; Enables end user
+customizations.&nbsp; This would be very hard to do in other ORMS.</li>
+  <li>BINARY SFieldObject?</li>
+  <li>Added SRecordMeta.sFieldNames to redundantly store an ArrayList
+of the names of the fields for debugging.</li>
+  <li>Removed&nbsp; nextGeneratedValue from drivers with databases that
+support sequences.</li>
+  <li>Factories for the datatypes for Integer etc. to allow J#.Net to
+use native .Net data types.</li>
+  <li>SConnection - hasBegun() and isOpen().</li>
+  <li>Way to pass extra info to drivers for queries.&nbsp; <br>
+  </li>
+  <li>OFFSET/LIMIT added, may not be efficient in all drivers though.</li>
+  <li>SEXTRA_FKEY_DDL (mainly for ON DELETE CASCADE).</li>
+  <li>SFieldBytes.<br>
+  </li>
+</ul>
+Many Thanks to Bartek Muszynski for his major contribution to this
+release.<br>
+<h3>Version 01.12</h3>
+<ul>
+  <li>Now compatible with J#.Net! Thanks Silvain.</li>
+  <li>Added Richard Schmitds quick start reverse engineering code.</li>
+  <li>New MSSQL driver (thanks Silvain).</li>
+  <li>SDriver.registerDriver to add new drivers.</li>
+  <li>Tweaked DB2 and SapDB drivers, thanks for contributions.</li>
+</ul>
+<h3>Version 01.11</h3>
+<ul>
+  <li>Reworked and enanced foreign key declarations for Richard,
+(Payrol.UglyPayslipDetail).</li>
+</ul>
+<h3>Version 01.09</h3>
+<ul>
+  <li>zip file contains extra level, ie SimpleORM/simpleorm/..., thus
+SimpleORM/built is undert the top folder.</li>
+  <li>Greg's Optimistic Null fix.</li>
+</ul>
+<h3>Version 01.07</h3>
+<ul>
+  <li>Fixed optimistic lock bug due to keys of Select()ed records not
+being dirty.</li>
+  <li>More vigourous optimisitic Delete locks.</li>
+  <li>Update Record with References bug.</li>
+  <li>Generated key Long/Int bug fixed. </li>
+</ul>
+<h3>Version 01.05</h3>
+<ul>
+  <li>Limit constraint names to 30 chars (oracle) 18 chars (DB2).
+("_nn" now inserted to ensure uniqueness where nn is the field nr.)
+Reduced example table name sizes for DB2.</li>
+  <li>if (jdbcConnection.getAutoCommit()) added.</li>
+  <li>Close prepared statements from SResultSet.close.</li>
+  <li>Tweaked driver identification (driverName()) and added Informix.</li>
+  <li>No NULL for DB2 DDL. And detachAndClose to rollback before
+closing
+JDBC if trans not committed. YEAR = '2001' in examples.</li>
+  <li><tt>SCOLUMN_QUERY</tt> fields no longer produce DDL columns. </li>
+  <li><tt>SRecordInstance.detach</tt> now nulls any undetatched
+referenced records. Avoids problems during serialization. Key values
+still kept. See white paper.</li>
+  <li>Can mark fields <tt>SOPTIMISTIC_UNCHECKED</tt>, see white
+paper. Also, only dirty fields used for optimistic locks.</li>
+  <li>Can flush an optimistically locked record multiple times.</li>
+  <li>Use optimistic locking by default for DBs that do not support
+locking,
+eg. HSQL. Make "SELECT FOR UPDATE" the default if they do -- might
+break some drivers, let me know.</li>
+  <li>Extra locking test case using multiple threads. If this breaks,
+you have a problem that needs to be resolved. </li>
+  <li>Use <tt>DATE</tt> instead of <tt>TIMESTAMP</tt> in Oracle.</li>
+  <li>"Quote" identifiers in SQL to avoid reserved word issues.<br>
+  </li>
+</ul>
+<h3>Version 01.03</h3>
+<ul>
+  <li>Added support for CHAR as well as VARCHAR.</li>
+  <li>Made sure cursors closed properly.</li>
+  <li>Added SResultSet.getOnlyRecord().</li>
+  <li>Filled out SPreparedStatement.setLong etc. </li>
+  <li>SetTimestamp etc. accept java.util.Date as well as java.sql.Date.</li>
+  <li>DATETIME for MS/SQL weblogic.jdbc.mssqlserver4.Driver.</li>
+</ul>
+<h3>Version 01.01</h3>
+<ul>
+  <li>Added SQuery class for those that wish to hide SQL queries. See
+white paper and <tt>ADemo</tt> for examples. Can handle references
+neatly.</li>
+  <li>Optionally generates <tt>FOREIGN KEY</tt> DDL. See ADemo.java
+for how this can be suppressed if necessary.</li>
+  <li>Can retrieve values from several columns at once in a single
+query
+with <tt>SCOLUMN_QUERY</tt> (ie. Join support). Can sometimes be more
+efficent, see Employee.java.</li>
+  <li>SConnection extends SPropertyMap, removed connectionInfo.</li>
+  <li>ColumnCacheTest tests queries of a subset of columns. Several
+bugs fixed.</li>
+  <li>Bound on result set sizes.</li>
+  <li><tt>getString</tt> trims trailing spaces now.</li>
+</ul>
+<h3>Version 00.09</h3>
+Enhancements and Incompatibilities:-
+<ul>
+  <li>Rounded out the types with TimeStamp, Date, Time, Long, and if
+all else fails the generic Object.</li>
+  <li>Added a comprehensive benchmark module. Made several performance
+improvements (up to 500%) SimpeleORM now rocks! See the white paper
+for details.</li>
+  <li><tt>validateField, validateRecord</tt> is the first of the
+business rule methods implemented. Feedback most welcome, see
+ADemo.</li>
+  <li>Optimistic locking finished. <tt>SQY_UNLOCKED</tt> renamed to <tt>SQY_READ_ONLY</tt>
+  </li>
+  <li>More Record and Field properties for create
+table.</li>
+  <li>Added <tt>purgeAndFlush()</tt> routines to better support <tt>rawJDBCUpdates</tt></li>
+  <li>Added <tt>unsafeDetach/AttachToThread</tt> for completenes.</li>
+  <li><tt>SFIELD_METAS, SFIELD_INDEX</tt> properties to provide access
+to meta data. Renamed <tt>SRECORD to SRECORD_META</tt>.</li>
+  <li>SConnection.detatch renamed to <tt>SConnection.detachWithoutClosing</tt>,
+also <tt>detatchAndClose</tt> --&gt; <tt>detachAndClose</tt>.</li>
+  <li>Renamed <tt>SNOT_NULL</tt> to <tt>SMANDATORY</tt> to allow for
+separation of these concepts later. Likewise <tt>isNull()</tt> changed
+to <tt>isEmpty</tt> etc. </li>
+</ul>
+<h3>Version 00.08</h3>
+<ul>
+  <li>The properties package and sub system -- see white paper.</li>
+  <li>SwingTest created -- note the way that threads are handled.</li>
+  <li>Added automated key generation, Select Max or Sequences for
+PostgreSQL.</li>
+  <li>Improved the J2EE/EJB example.</li>
+</ul>
+<h3>Version 00.07</h3>
+Added support and examples for AWT/Swing and J2EE (Weblogic).
+<h3>Version 00.06</h3>
+Added basic detach/attach for multi-tier applications. Also split
+demos and tests -- tables created directly.
+<h3>Version 00.05a</h3>
+Mainly Bug fixes. Now supports MySQL as well as PostgreSQL. Slight
+compatibility issue with extra param to SFieldString (need to add to
+compile).
+<h3>Version 00.04</h3>
+White paper, and some restructuring to fit the better design including
+the database drivers and deferable findOrCreate api.
+<h3>Version 00.03</h3>
+Added references, including identifying foreign keys.
+<h3>Version 00.02</h3>
+Added transaction cache and primary key based object identity. Thus
+need to support an automatic update list. Can now write independent
+business rules.
+<h3>Version 00.01</h3>
+Very basic. Generalized design no transaction cache and hence no
+primary key based object identity. Explicit insert, update, delete.
+Associated connections with the current thread.
+<h2>Outstanding To Do List</h2>
+<h3>By Next Point Version (or two)</h3>
+The following list is in rough order of priority. This list also
+shows which documented features are missing. Some of these tasks are
+nicely independent of the core code, all help most welcome.
+<br>
+<ul>
+  <li>Alexander's bug in SDriver foo.(select...)<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; // } 21.9.2006 Alexander Banthien I think the braces
+were wrong<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; // here: only prefix real columns not columnqueries
+with table <br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; // name. At least MSSQL had syntax errors with it.<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (doJoin) {<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ret.append(quoteTable(tableName));<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ret.append('.');<br>
++&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; } <br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>
+-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if ( doJoin )
+{<br>
+-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ret.append( quoteTable(tableName) );<br>
+-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ret.append( '.' );<br>
+-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>
+-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </li>
+  <li>SQuery.ascending(field) fails due to (non) quoting of
+identifiers, inconsistent case if cols declared Lower Case.&nbsp;
+General Quoting issues.</li>
+  <li>public static Object rawQueryDB(String sql, String [] params, int
+nrColumns) rs.close(); ps.close(); in finally blocks.<br>
+  </li>
+  <li>SResultSet.hasNext calls JDBC.next, but hasNext may be called
+multiple times. (The Itterator semantics are wrong!) Need a magic flag.
+(And actually needs to extend Iterator!)</li>
+  <li>Default value for (Mandatory?) fields.</li>
+  <li>Check column constraints automatically at set time.&nbsp; Not
+Null, string length.<br>
+  </li>
+  <li>Reference.&nbsp; IsNull should not query.</li>
+  <li>More key generators, Key Table based,&nbsp; @@Identity.</li>
+  <li>Add DISPLAY_LENGTH</li>
+  <li>DataTypesTest.java -- add SDriver.SupportsTrailingSpaces etc. to
+SDriver.&nbsp; For MySQL: <br>
+TestUte.assertTrue(dt.getObject(DataTypes.NAME).toString().equals("Trailing&nbsp;
+"));&nbsp; actually returns "Trailing"<br>
+TestUte.assertEqual(""+(now2+50)/100, ""+(now+50)/100); <br>
+TestUte.assertTrue(dt.getBigDecimal(DataTypes.ADECIMAL)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .equals(new
+java.math.BigDecimal("123456789012345678.3333"))); "123456789012.3456"
+works. MySQL 4.1 manual says that NUMERIC has the same max range as
+DOUBLE.</li>
+  <li>More work on SPreparedStatement.setOffset/setLimit.&nbsp; There
+might be something that can be added to the underlying
+ResultSet.setMaxRows.<br>
+  </li>
+</ul>
+<h3>Longer Term</h3>
+<ul>
+  <li>Think carefully about detaching, nulling links.&nbsp; Do we
+detach parent before or after children?&nbsp; What if child.parent is
+referenced during detaching process?&nbsp; etc.</li>
+  <li>Think
+about One end collections.&nbsp; Ie All a depts employees.&nbsp; Maybe
+just as a default query?&nbsp; But detaching is key.</li>
+  <li><br>
+  </li>
+  <li>Triming of strings/CHAR.&nbsp; Tricky to know what to do.&nbsp;
+See SRecordInstance.getString for discussion.<br>
+  </li>
+  <li>Set Isolation.<br>
+  </li>
+  <li>Think about Java 1.4 logging.&nbsp; Or Apache Commons.<br>
+  </li>
+  <li>SCofiguration object.&nbsp; (Open JDBC; for separate transaction
+keys.)</li>
+  <li>Some support for non-database "Transient" records.&nbsp; Ie. What
+Hibernate does after new before Save.</li>
+  <li>Use batchs for flushing.</li>
+  <li>Database dependent ways to declare long char fields for memos
+etc.
+Eg. Oracle has a 2000 byte limit, MySQL &lt; 1000. A Pain, but the
+drivers allow for it.
+SAPDB: 8,000 max (4,000 UTF16), else Long. </li>
+  <li>Maybe add MaxNrCharacters property and validate.&nbsp; (Cannot
+use the parameter to SFieldString, it is typically the number of Bytes
+after UTF8 compression, ie. meaningless.)<br>
+  </li>
+  <li>SINDEX, SUNIQUE -- Maybe create indexes.<br>
+  </li>
+  <li>SapDB support. Trims trailing spaces on VarCHAR. Unknown Database
+'SAP DB' driver 'SAP DB'. Using generic SDriver. YEAR is a reserved
+word (maybe "" all of them.)</li>
+  <li>Database independent null Processing (Mandatory vs Null, Sybase
+vs Oracle).</li>
+  <li>Provide default values for new records (at least constants).</li>
+  <li>Batch&nbsp; JDBC updates in flush.</li>
+  <li>Way to include SQUERY_COLUMN field definitionss in SQuery.eq
+queries.&nbsp; Also add SQuery.SubSelectEq(value,&nbsp; reference,
+subquery), eg. for where Order.Product.Type = "XX".<br>
+  </li>
+  <li>Add table SSchema property (instead of FOO.BAR table names)</li>
+  <li><br>
+  </li>
+  <li><br>
+  </li>
+  <li>Eric's extra events and business rules.<br>
+  </li>
+  <li>Mechanism to allow multiple errors to be thrown at once for UI
+work. (R Grant)</li>
+  <li>Enumerated types and Booleans. (Integration with Java 1.5?).</li>
+  <li>Batch updates during Flush (JDBC 2).&nbsp; Also Lazy
+findOrCreate, JDBC 2 batched queries</li>
+  <li>Optimize generated keys -- retrieve in batches.</li>
+  <li>Automatically join in multiple records into a single query. </li>
+  <li>Different record locking modes. Eg. Serializable. Also optimistic
+&amp; automatic lock promotion upon first update.</li>
+  <li>Maybe some type of dependent object, eg. Address. Easy but
+unclear how useful.</li>
+  <li>Clear as well as Flush, ie. to be able to do large batches in one
+transaction.&nbsp; Caveat: Optimistic locking.</li>
+</ul>
+<h2>JavaDoc</h2>
+Do make the JavaDocs using <tt>ant api</tt>. The core package
+includes an ER/UML diagram which shows all the classes of SimpleORM
+together with the relationships between them and the more important
+methods. It should prove useful when working through the examples.<br>
+<br>
+<h2>WikiPage</h2>
+Phil has started a Wiki page started at<br>
+<br>
+<a
+ href="http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook">http://www.highoctane.be/pmwiki/pmwiki.php/Main/SimpleOrmDevelopersHandbook?action=search&amp;text=SimpleOrmDevelopersHandbook</a><br>
+<br>
+Username: simpleorm<br>
+Password: shazam$1<br>
+<br>
+<p><!--
+
+  // IN EXAMPLES
+
+  public static neww(key) {
+
+    return (Student)meta.findOrCreate(key);
+
+  }
+
+
+
+
+
+--></p>
+</body>
+</html>
